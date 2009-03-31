@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+<head></head>
+{% load i18n %}
+{% block stylesheet %}{% load adminmedia %}{% admin_media_prefix %}css/dashboard.css{% endblock %}
+
+{% block content %}
+<div id="container">
+		{% block branding %}<h1 id="site-name"><font size="4">{% trans 'Error Page' %}</font></h1>{% endblock %}		
+	<div id="content-main">
+		{% if error %}
+			<div class="errornote">{{ error }}</div>
+		{% endif %}
+	</div>
+</div>
+
+{% endblock %}

@@ -1,0 +1,188 @@
+{% extends "base.html" %}
+<head></head>
+{% load i18n %}
+{% block extrahead %}
+<script type="text/javascript" src="/media/js/projectdjango/DHTMLMenuExpanderV2.js"></script>
+<script type="text/javascript" src="/media/js/projectdjango/sample4.js"></script>
+<LINK rel="stylesheet" type="text/css" href="/media/css/projectdjango/horizontal.css">
+<LINK rel="stylesheet" type="text/css" href="../../admin-media/css/dashboard.css">
+{% endblock %}
+
+{% block breadcrumbs %}
+<div id="menuSystem">
+	<table id="mainTable">
+		<tr>
+			<td>
+				<table>
+					<tr>
+						<th width="100">Users</th>
+					</tr>
+					<tr>
+						<td><a href="../../register_student/">Register Students</a></td>
+					</tr>
+					<tr>
+						<td><a href="../../register_assistant/">Register Assistants</a></td>
+					</tr>
+					<tr>
+						<td><a href="../../assign_students/">Assign Students to Assitants</a></td>
+					</tr>
+					<tr>
+						<td><a href="../../users/">Users Details</a></td>
+					</tr>
+					{% if not is_assistant %}
+					<tr>
+						<td><a href="../../actions/">See System Actions</a></td>
+					</tr>
+					{% endif %}
+				</table>
+			</td>
+			<td>
+				<table>
+					<tr>
+						<th width="140">Exercise</th>
+					</tr>
+					<tr>
+						<td><a href="../../add_exercise/">New Exercise</a></td>
+					</tr>
+					<tr>
+						<td><a href="../../exercises/">List Exercises</a></td>
+					</tr>
+				</table>
+			</td>
+			<td>
+				<table>
+					<tr>
+						<th width="100">Test</th>
+					</tr>
+					<tr>
+						<td><a href="../../add_test/">New Test</a></td>
+					</tr>
+					<tr>
+						<td><a href="../../tests/">List Tests</a></td>
+					</tr>
+				</table>
+			</td>
+			<td>
+				<table>
+					<tr>
+						<th width="100">Views</th>
+					</tr>
+					{% if is_assistant %}
+					<tr>
+						<td><a href="../../assistant_view/">Your Students</a></td>
+					</tr>
+					<tr>
+						<td><a href="../../global_assistant_view/">All Students</a></td>
+					</tr>
+					{% else %}
+					<tr>
+						<td><a href="../../teacher_view/">Your Students</a></td>
+					</tr>
+					<tr>
+						<td><a href="../../all_students/">All Students</a></td>
+					</tr>	
+					{% endif %}
+					<tr>
+						<td><a href="../../assigns/">Assistants - Students</a></td>
+					</tr>
+				</table>
+			</td>
+			<td>
+				<table>
+					<tr>
+						<th width="100"><a href="../../logout/">Logout</a></th>
+					</tr>
+				</table>
+			</td>
+			<td>
+				<table>
+					<tr>
+						<th width="100"><a href="../../help" target="_blank">Help</a></th>
+					</tr>
+				</table>
+			</td>
+			<td>
+			<table>
+				<tr>
+					<th width="100"><a href="../../change_password/">Change Password</a></th>
+				</tr>
+				</table>
+			</td>
+		</tr>
+	</table>
+</div>
+<!-- Menu end -->
+{% endblock %}
+
+{% block title %}Exercise View{% endblock %}
+
+{% block content %}
+<div id="container">
+		<br></br>
+		<br></br>
+		<br></br>
+		{% block branding %}<h1 id="site-name"><font size="4">{% trans 'Exercise View' %}</font></h1>
+		{% endblock %}
+	<br>
+	<div id="content-main">
+		
+		<form action="/hoopaloo/change_exercise/id={{exercise.id}}" method="GET">
+		<div><font size="3"><b>Exercise Title: </b> {{ exercise.name }}</font></div>
+		<div><font size="3"><b>Description: </b><pre>{{ exercise.description }}</pre></font></div>
+		<div><font size="3"><b>Available: </b>{% if exercise.available %} Yes {% else %} No {% endif %}</font></div>
+		<div><font size="3"><b>Owner: </b> {{ exercise.owner.username }}</font></div>
+		<div><font size="3"><b>Available Since: </b>{{ exercise.date_availability|date:"d/m/Y H:i:s" }}</font></div>
+		<div><font size="3"><b>Available Until: </b>{{ exercise.date_finish|date:"d/m/Y H:i:s" }}</font></div>
+		<br><p><input type="submit" value="Edit this exercise" /></p></br>
+		</form>
+
+	</div>
+	</br>
+	{% if students %}
+		{% if results %}
+	
+	<div><h1>Exercise Results</h1></div>
+	<table id="list">
+		<thead>
+			<tr>
+				<th scope="col"><center><h4>{% trans 'Student Name' %}</h4></center></th>
+	            <th scope="col"><center><h4>{% trans 'Assistant' %}</h4></center></th>
+				<th scope="col"><center><h4>{% trans 'Submissions Number' %}</h4></center></th>
+				<th scope="col"><center><h4>{% trans 'Errors Number' %}</h4></center></th>
+				<th scope="col"><center><h4>{% trans 'Passes Number' %}</h4></center></th>
+				<th scope="col"><center><h4>{% trans 'Number of Tests' %}</h4></center></th>
+				<th scope="col"><center><h4>{% trans 'Result' %}</h4></center></th>
+				<th scope="col"><center><h4>{% trans 'Note' %}</h4></center></th>
+			</tr>
+        </thead>
+		<tbody>
+				{% for student in students %}
+					{% for r in results %}
+						{% ifequal r.id_student.id student.id %}
+							{% ifequal r.id_exercise.id exercise.id %}
+								<tr>
+								<td><font size=2><a href="">{{ student.user.first_name }} {{ student.user.last_name }}</a></font></td>
+								<td><center><font size=2>{{ student.assistant.username }}<font size=2></center></td>
+								<td><center><font size=2>{{ r.num_submissions }}</font></center></td>
+								<td><center><font size=2>{{ r.errors_number }}</font></center></td>
+								<td><center><font size=2>{{ r.pass_number }}</font></center></td>
+								<td><center><font size=2>{{ exercise.number_tests }}</font></center></td>
+								<td><center><font size=2>{{ r.veredict }}</font></center></td>
+								<td><center><font size=2>{% ifequal r.note None %}{% else %} {{ r.note }}{% endifequal %}</font></center></td>
+								</tr>
+							{% endifequal %}
+						{% endifequal %}
+					{% endfor %}
+				{% endfor %}
+        </tbody>
+	 </table>
+	<br></br>
+	<div><ul>
+		<li><font size=3><a href="../percentual/id={{exercise.id}}">See Exercise Percentual</a></font></li>
+		<li><font size=3><a href="../score_percentual/id={{exercise.id}}">See Score Percentual</a></font></li>
+	</ul></div>
+	{% endif %}
+	{% endif %}
+	 
+</div>
+{% endblock %}

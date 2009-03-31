@@ -1,0 +1,155 @@
+{% extends "base.html" %}
+<head></head>
+{% load i18n %}
+{% block extrahead %}
+<script type="text/javascript" src="/media/js/projectdjango/DHTMLMenuExpanderV2.js"></script>
+<script type="text/javascript" src="/media/js/projectdjango/sample4.js"></script>
+<LINK rel="stylesheet" type="text/css" href="/media/css/projectdjango/horizontal.css">
+
+{% endblock %}
+
+{% block stylesheet %}{% load adminmedia %}{% admin_media_prefix %}css/dashboard.css{% endblock %}
+
+{% block breadcrumbs %}
+<!-- Menu start-->
+<div id="menuSystem">
+	<table id="mainTable">
+		<tr>
+			<td>
+				<table>
+					<tr>
+						<th width="100">Users</th>
+					</tr>
+					<tr>
+						<td><a href="../register_student/" target="_blank">Register Students</a></td>
+					</tr>
+					<tr>
+						<td><a href="../register_assistant/" target="_blank">Register Assistants</a></td>
+					</tr>
+					<tr>
+						<td><a href="../assign_students/" target="_blank">Assign Students to Assitants</a></td>
+					</tr>
+					<tr>
+						<td><a href="../users/"  target="_blank">Users Details</a></td>
+					</tr>
+					{% if not is_assistant %}
+					<tr>
+						<td><a href="../actions/">See System Actions</a></td>
+					</tr>
+					{% endif %}
+				</table>
+			</td>
+			<td>
+				<table>
+					<tr>
+						<th width="140">Exercise</th>
+					</tr>
+					<tr>
+						<td><a href="../add_exercise/" target="_blank">New Exercise</a></td>
+					</tr>
+					<tr>
+						<td><a href="../exercises/" target="_blank">List Exercises</a></td>
+					</tr>
+				</table>
+			</td>
+			<td>
+				<table>
+					<tr>
+						<th width="100">Test</th>
+					</tr>
+					<tr>
+						<td><a href="../add_test/" target="_blank">New Test</a></td>
+					</tr>
+					<tr>
+						<td><a href="../tests/">List Tests</a></td>
+					</tr>
+				</table>
+			</td>
+			<td>
+				<table>
+					<tr>
+						<th width="100">Views</th>
+					</tr>
+					{% if is_assistant %}
+					<tr>
+						<td><a href="../assistant_view/">Your Students</a></td>
+					</tr>
+					<tr>
+						<td><a href="../global_assistant_view/">All Students</a></td>
+					</tr>
+					{% else %}
+					<tr>
+						<td><a href="../teacher_view/">Your Students</a></td>
+					</tr>
+					<tr>
+						<td><a href="../all_students/">All Students</a></td>
+					</tr>	
+					{% endif %}
+					<tr>
+						<td><a href="../assigns/">Assistants - Students</a></td>
+					</tr>
+				</table>
+			</td>
+			<td>
+				<table>
+					<tr>
+						<th width="100"><a href="../logout/">Logout</a></th>
+					</tr>
+				</table>
+			</td>
+			<td>
+				<table>
+					<tr>
+						<th width="100"><a href="../help" target="_blank">Help</a></th>
+					</tr>
+				</table>
+			</td>
+			<td>
+			<table>
+				<tr>
+					<th width="100"><a href="../change_password/">Change Password</a></th>
+				</tr>
+				</table>
+			</td>
+		</tr>
+	</table>
+</div>
+<!-- Menu end -->
+{% endblock %}
+
+{% block title %}Edit Exercise{% endblock %}
+
+{% block content %}
+<div id="container">
+		<br></br>
+		<br></br>
+		<br></br>
+		{% block branding %}<h1 id="site-name"><font size="4">Edit Exercise</font></h1>
+		{% endblock %}
+	<div id="content-main">
+		{% if msg %}
+			<ul class="messagelist"><li>{{ msg }}</li></ul>
+		{% endif %}
+		{% if error %}
+			<div class="errornote">{{ error }}</div>
+		{% endif %}
+		<form action="/hoopaloo/change_exercise/id={{exercise.id}}/" method="POST">
+			<div class="form-row">
+				<label for="name">{% trans 'Exercise Title' %}:</label> <input type="text" name="name" id="name" value={{ exercise.name }} />
+			</div>
+			<div class="form-row">
+				<label for="description">{% trans 'Description' %}:</label><textarea name="description" rows="8" cols="50">{{ exercise.description }}</textarea>
+			</div>
+			<div class="form-row">
+				<label for="available">{% trans 'Available' %}: </label><input type="checkbox" name="available" {% if exercise.available %} checked {% endif %}/>
+			</div>
+			<div class="form-row">
+			<label for="date_finish">{% trans 'Date Finish' %}: </label><input type="text" class="vDateTime" value={{exercise.date_finish|date:"Y-m-d H:i"}} name="calendar"><input type="button" value="View Calendar" onclick="displayCalendar(document.forms[0].calendar,'yyyy-mm-dd hh:ii',this,true)">
+		</div>
+				<br><div class="submit-row">
+			<input type="submit" value="{% trans 'Change Exercise' %}" />
+		</div></br>
+		</form>
+	</div>
+	</div>
+{% endblock %}

@@ -1,0 +1,116 @@
+{% extends "base.html" %}
+<head>
+</head>
+{% load i18n %}
+{% block extrahead %}
+<script type="text/javascript" src="/media/js/projectdjango/DHTMLMenuExpanderV2.js"></script>
+<script type="text/javascript" src="/media/js/projectdjango/sample4.js"></script>
+<LINK rel="stylesheet" type="text/css" href="/media/css/projectdjango/horizontal.css">
+<LINK rel="stylesheet" type="text/css" href="/admin-media/css/dashboard.css">
+{% endblock %}
+
+
+{% block breadcrumbs %}
+
+<div id="menuSystem">
+	<table id="mainTable">
+		<tr>
+			<td>
+				<table>
+					<tr>
+						<th width="100">Exercises</th>
+					</tr>
+					<tr>
+						<td><a href="../../../delivered_exercises/">Delivered Exercises</a></td>
+					</tr>
+					<tr>
+						<td><a href="../../../undelivered_exercises/">Undelivered Exercises</a></td>
+					</tr>
+					<tr>
+						<td><a href="../../../available_exercises/">Available Exercises</a></td>
+					</tr>
+				</table>
+			</td>
+			<td>
+			<table>
+					<tr>
+						<th width="100">Submissions</th>
+					</tr>
+					<tr>
+						<td><a href="../../../submission/">Submit</a></td>
+					</tr>
+					<tr>
+						<td><a href="../../../see_submissions/">See Submissions</a></td>
+					</tr>
+				</table>
+			</td>
+			<td>
+				<table>
+					<tr>
+						<th width="100"><a href="../logout/">Logout</a></th>
+					</tr>
+				</table>
+			</td>
+			<td>
+				<table>
+					<tr>
+						<th width="100"><a href="../../../help_student" target="_blank">Help</a></th>
+					</tr>
+				</table>
+			</td>
+			<td>
+			<table>
+				<tr>
+					<th width="100"><a href="../../../change_password/">Change Password</a></th>
+				</tr>
+				</table>
+			</td>
+		</tr>
+	</table>
+</div>
+<!-- Menu end -->
+{% endblock %}
+
+{% block title %}Submission View{% endblock %}
+
+{% block content %}
+<div id="container">
+	<br></br>
+	<br></br>
+	<br></br>
+	{% block branding %}<h1 id="site-name">{% trans 'Submission View' %}</h1>
+	{% endblock %}	
+
+	<div id="content-main">
+		<div>
+				<div><font size="3"><b>Exercise Title: </b>{{ exercise.name }}</font></div>
+				<div><font size="3"><b>Description: </b> <pre>{{ exercise.description }}</pre></font></div>
+				<div>
+					<font size="3"><b>Number of tests: </b>{{ exercise.number_tests }}</font>
+				</div>
+				<div>
+					<font size="3"><b>Number of errors: </b>{{ result.errors_number }}</font>
+				</div>
+				<div>
+					<font size="3"><b>Messages of Errors: </b>{{ result.errors_to_student }}</font>
+				</div>
+				<div>
+					<font size="3"><b>Comments: </b>{{ result.comments }}</font>
+				</div>
+				<div><font size="3"><b>Score: </b> {% if result.note %}{{ result.note }}{% endif %}</font></div>
+				<br></br>
+				<h1><font size="3"><b>Your code</b></font></h1>
+				<br></br>
+				<pre>{{code}}</pre>
+			
+			{% if exercise.available %}
+				<div>
+					<font size=3><a href="../../submission">Submit again</a></font>
+				</div>
+			{% endif %}
+		</div>
+	</div>
+<br></br>
+</div>
+{% endblock %}
+

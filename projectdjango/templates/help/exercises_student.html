@@ -1,0 +1,27 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+{% extends "base.html" %}
+{% load i18n %}
+<head>
+</head>
+
+{% block title %}Help - Exercises of Student{% endblock %}
+{% block content %}
+
+<div id="content-main">
+<h3><font color="#003333" face="Verdana, Arial, Helvetica, sans-serif">Exercises
+    of a student</font></h3>
+<p>To see at this page, you must click at a link
+  in General Students View. This page is a view with details about all exercises
+  delivered by a student.</p>
+<p align="center"><img src="../../media/img/projectdjango/Exercise_of_student.jpg" width="1018" height="272"></p>
+<p align="justify">The details about the exercises are showed in a table, in
+  which each line is a different exercise. The columns contains informations
+  as: the name of exercise (a link to see details of submission - code, comments,
+  note), the number of submission realized by this student, the date of last
+  submission, the number of tests registered to this exercise, the number of
+  errors of student's code (result of test execution), the note of student and
+  the percentage of right of the class.</p>
+<p align="justify">Only
+the teacher and the assistants can see details of students' exercises.</p>
+</div>
+{%endblock%}
