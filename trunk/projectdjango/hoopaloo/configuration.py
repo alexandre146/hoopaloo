@@ -27,7 +27,7 @@ SUBMISSION_WITHOUT_TEST_EMAIL_TO_TEACHER = "Teacher,\nThere are submissions to t
 RESULT_TEST_FILE = 'result.txt'
 
 PERCENT_OF_TESTS = [100, 90, 70, 50, 30, 20, 10, 0]
-PERCENT_OF_NOTE = [(10.0, 9.1), (9.0, 8.1), (8.0, 7.1), (7.0, 6.1), (6.0, 5.1), (5.0, 4.1), (4.0, 3.1), (3.0, 2.1), (2.0, 1.1), (1.0, 0.0)]
+PERCENT_OF_SCORE = [(10.0, 9.1), (9.0, 8.1), (8.0, 7.1), (7.0, 6.1), (6.0, 5.1), (5.0, 4.1), (4.0, 3.1), (3.0, 2.1), (2.0, 1.1), (1.0, 0.0)]
 
 LOGIN_SUCESS = 'You are logged'
 LOGOUT_SUCESS = 'You are unlogged'

@@ -12,8 +12,8 @@ MANAGERS = ADMINS
 
 DATABASE_ENGINE = 'mysql'           # 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
 DATABASE_NAME = 'projectdjango'             # Or path to database file if using sqlite3.
-DATABASE_USER = 'submission'             # Not used with sqlite3.
-DATABASE_PASSWORD = 'application.v1'         # Not used with sqlite3.
+DATABASE_USER = 'mariana'             # Not used with sqlite3.
+DATABASE_PASSWORD = 'mariana'         # Not used with sqlite3.
 DATABASE_HOST = 'localhost'             # Set to empty string for localhost. Not used with sqlite3.
 DATABASE_PORT = ''             # Set to empty string for default. Not used with sqlite3.
 
@@ -36,7 +36,7 @@ USE_I18N = True
 
 # Absolute path to the directory that holds media.
 # Example: "/home/media/media.lawrence.com/"
-MEDIA_ROOT = '/home/mariana/www/projectdjango/media/uploads'
+MEDIA_ROOT = 'C:\\Documents and Settings\\Mari\\workspaceVE\\projectdjango\\media\\uploads'
 
 # URL that handles the media served from MEDIA_ROOT. Make sure to use a
 # trailing slash if there is a path component (optional in other cases).
@@ -71,7 +71,7 @@ ROOT_URLCONF = 'projectdjango.urls'
 SESSION_ENGINE = "django.contrib.sessions.backends.db"
 
 TEMPLATE_DIRS = (
-    '/home/mariana/www/projectdjango/templates'
+    'C:\\Documents and Settings\\Mari\\workspaceVE\\projectdjango\\templates'
 )
 
 AUTH_PROFILE_MODULE = ('hoopaloo.Assistant', 'hoopaloo.Student')

@@ -146,7 +146,7 @@ def list_score_percentual(request, index, id_exercise):
 	"""Shows a list of students that aimed a percentual of score between X and Y."""
 	
 	if request.user.is_authenticated():
-		students = util.get_students_note_percent(int(index), id_exercise)
+		students = util.get_students_score_percent(int(index), id_exercise)
 		return render_to_response("list_note_percentual.html", {'students' : students, 'is_assistant': util.is_assistant(request.user),}, context_instance=RequestContext(request))
 	else:	
 		form = LoginForm()
@@ -219,7 +219,7 @@ def undelivered_exercises(request):
 			undelivered = []
 			for ex in exercises:
 				try:
-					result = Result.objects.get(id_student=student.id, id_exercise=ex.id)
+					submissions = Submission.objects.get(id_student=student.id, id_exercise=ex.id)
 				except:
 					undelivered.append(ex)
 			explication = configuration.UNDELIVERED_EXERCISES_MSG
@@ -234,7 +234,8 @@ def actions(request):
 	
 	if request.user.is_authenticated():
 		if request.user.has_perm("hoopaloo.see_actions"):
-			actions = Actions_log.objects.all().order_by('date').reverse()
+			# last 100 actions
+			actions = Actions_log.objects.all().order_by('date').reverse()[:100]
 			return render_to_response("actions.html", {'actions':actions, }, context_instance=RequestContext(request))
 		else:
 			error = configuration.SEE_ACTIONS_NOT_PERMISSION

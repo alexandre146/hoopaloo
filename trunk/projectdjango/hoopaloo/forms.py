@@ -3,7 +3,14 @@
 #Hoopaloo - Version 1.0 - 2008/2009
 #Author: Mariana Romao do Nascimento - mariana@dsc.ufcg.edu.br
 
-from hoopaloo.models import Exercise, Student, Assistant, Test, Submission, Result, Class
+import smtplib
+import util
+import random
+import sha
+import os
+import re
+from datetime import date, datetime
+from django.utils.encoding import smart_str
 from django.core.files.uploadedfile import UploadedFile
 from django.core.files.storage import default_storage
 from django.contrib.auth.models import get_hexdigest
@@ -11,21 +18,13 @@ from django.core.files.base import ContentFile
 from django.forms.util import ValidationError
 from django.contrib.auth.models import User
 from django.core.mail import send_mail
-from datetime import date, datetime
 from django.utils import encoding
 from django.conf import settings
-from hoopaloo.util import update_students, isValidStudentID, generate_aleatory_password, isValidEmail, isValidUsername, listToString, send_email, register_action, get_time_unavailability, Change_Availability
 from django import forms
-from django.contrib.admin.widgets import AdminSplitDateTime, AdminDateWidget
-from mywidget import SelectDateWidget
 from hoopaloo import configuration
-from django.utils.encoding import smart_str
-import smtplib
-import util
-import random
-import sha
-import os
-import re
+from hoopaloo.models import Exercise, Student, Assistant, Test, Submission, Result, Class
+from hoopaloo.util import update_students, isValidStudentID, generate_aleatory_password, isValidEmail, isValidUsername, listToString, send_email, register_action, get_time_unavailability, Change_Availability
+
 
 class ExerciseForm(forms.Form):
 	"""This form represents the registration of new exercise.
