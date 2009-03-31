@@ -3,16 +3,17 @@
 #Hoopaloo - Version 1.0 - 2008/2009
 #Author: Mariana Romao do Nascimento - mariana@dsc.ufcg.edu.br
 
-from django.contrib.auth.models import User
-from django.core.mail import send_mail
-from datetime import date, datetime, timedelta
-from hoopaloo import configuration
-from django.conf import settings
 import smtplib
 import random
 import sha
 import os
 import re
+from datetime import date, datetime, timedelta
+from django.contrib.auth.models import User
+from django.conf import settings
+from django.core.mail import send_mail
+from hoopaloo import configuration
+
 
 
 def generate_aleatory_password():
@@ -354,7 +355,7 @@ def get_students_percent(percent, id_ex):
 
 	return st_percent
 
-def get_students_note_percent(index, id_exercise):
+def get_students_score_percent(index, id_exercise):
 	"""Returns the students that has a specific note (referenced by index)"""
 	
 	from hoopaloo.models import Exercise, Student, Result
@@ -362,15 +363,15 @@ def get_students_note_percent(index, id_exercise):
 	exercise = Exercise.objects.get(pk=id_exercise)
 	st_percent = []
 
-	note = configuration.PERCENT_OF_NOTE[index]
-	note1 = note[1]
-	note2 = note[0]
+	score = configuration.PERCENT_OF_SCORE[index]
+	score1 = note[1]
+	score2 = note[0]
 
 	for s in students:
 		aux = 0
 		try:
 			result = Result.objects.get(id_exercise=exercise.id, id_student=s.id)
-			if (result.note >= float(note1) and result.note <= float(note2)):
+			if (result.note >= float(score1) and result.note <= float(score2)):
 				st_percent.append(s)
 		except:
 			pass
@@ -498,20 +499,7 @@ def get_delivered_exercises(student_id):
 		except:
 			pass
 	return delivered
-	
-	
-def change_contend_test(contend):
-	lines = contend.split('\n')
-	code_result = ''
-	for line in lines:
-		if line != '\tpass\r':
-			code_result += line
-		if line == 'except SyntaxError, err:\r':
-			code_result += configuration.TEST_RECOVER_ERROR1 + '\n'
-		elif line == 'except ImportError, err2:\r':
-			code_result += configuration.TEST_RECOVER_ERROR2 + '\n'
-	return code_result
-	
+		
 def copy_test_files(student):
 	from hoopaloo.models import Test, Exercise
 	exercises = Exercise.objects.all()
@@ -629,23 +617,23 @@ def get_path_to_download(student, submissions):
 	return tuples
 	
 def remove_acentuation(code):
-	word = code.replace("á", "a")
-	word = word.replace("Á", "A")
-	word = word.replace("é", "e")
-	word = word.replace("É", "E")
-	word = word.replace("Í", "I")
-	word = word.replace("í", "i")
-	word = word.replace("Ó", "O")
-	word = word.replace("ó", "o")
-	word = word.replace("ú", "u")
-	word = word.replace("Ú", "U")
-	word = word.replace("Ç", "C")
-	word = word.replace("ç", "c")
-	word = word.replace("õ", "o")
-	word = word.replace("Õ", "O")
-	word = word.replace("Ã", "A")
-	word = word.replace("ã", "a")	
-	word = word.replace("à", "a")	
+	word = code.replace("ï¿½", "a")
+	word = word.replace("ï¿½", "A")
+	word = word.replace("ï¿½", "e")
+	word = word.replace("ï¿½", "E")
+	word = word.replace("ï¿½", "I")
+	word = word.replace("ï¿½", "i")
+	word = word.replace("ï¿½", "O")
+	word = word.replace("ï¿½", "o")
+	word = word.replace("ï¿½", "u")
+	word = word.replace("ï¿½", "U")
+	word = word.replace("ï¿½", "C")
+	word = word.replace("ï¿½", "c")
+	word = word.replace("ï¿½", "o")
+	word = word.replace("ï¿½", "O")
+	word = word.replace("ï¿½", "A")
+	word = word.replace("ï¿½", "a")	
+	word = word.replace("ï¿½", "a")	
 	
 	return word	
 
@@ -675,21 +663,6 @@ def save_test_in_student_folders(test):
 			dest.write(test.code + configuration.TEST_APPEND_STUDENT_FOLDER % aux)
 		dest.close()
 	
-class Line_Code:
-	"""Represents a line of code.
-	This line will be showed in a HTML page and in a HTML page is not possible maintains format"""
-	
-	def __init__(self, line, code):
-		self.line = line
-		self.code = code
-		# code 0 means that there are not \t
-		# code 1 means that the block is beging
-		# code 2 means that the block is ending
-		# code 3 means that the block ending and that there is not more code
-		
-	def __str__(self):
-		return self.line + " " + str(self.code)
-		
 def code(lines):
 	"""Receive a list of lines of code and convert it to Line_Code in order to maintains the format"""
 	

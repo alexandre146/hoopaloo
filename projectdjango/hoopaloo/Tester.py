@@ -3,13 +3,12 @@
 #Hoopaloo - Version 1.0 - 2008/2009
 #Author: Mariana Romao do Nascimento - mariana@dsc.ufcg.edu.br
 
-import datetime
-from hoopaloo.models import Submission, Result, Execution
-from django.conf import settings
-from hoopaloo import configuration 
-from datetime import datetime
-from django.core import *
 import subprocess, os, signal
+from datetime import datetime
+from django.conf import settings
+from django.core import *
+from hoopaloo.models import Submission, Result, Execution
+from hoopaloo import configuration 
 
 class Tester:
 	'''This class realize teh execution of a test to the students' program.
@@ -59,7 +58,7 @@ class Tester:
 			cmd = ['python', test_file_path]
 			self.process = subprocess.Popen(args=cmd)
 			self.process.wait()
-			# against infite loop
+			# against infinite loop
 			
 			self.register_results()
 			
@@ -68,6 +67,7 @@ class Tester:
 			sub.save()
 		
 	def infinite_loop_func(self):
+		"""Function to terminate a execution when it will be infinite loop"""
 		
 		if not os.path.exists(settings.MEDIA_ROOT + '/' + self.student.username + '/' + configuration.RESULT_TEST_FILE):
 			self.infinite_loop = True
@@ -79,10 +79,6 @@ class Tester:
 			os.kill(id_process, signal.SIG_IGN)
 		
 		self.cron_finish = True
-
-		#cmd = ['taskkill', '-f /pid ' + str(id_process)]
-		#p = subprocess.Popen(args=cmd)
-		#p.wait()
 		
 	def register_results(self):
 		'''This method register the result of execution in a temporary file.
