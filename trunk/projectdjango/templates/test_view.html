@@ -1,0 +1,147 @@
+{% extends "base.html" %}
+<head></head>
+{% load i18n %}
+{% block extrahead %}
+<script type="text/javascript" src="/media/js/projectdjango/DHTMLMenuExpanderV2.js"></script>
+<script type="text/javascript" src="/media/js/projectdjango/sample4.js"></script>
+<LINK rel="stylesheet" type="text/css" href="/media/css/projectdjango/horizontal.css">
+<LINK rel="stylesheet" type="text/css" href="/media/css/projectdjango/paragraph.css">
+{% endblock %}
+
+{% block breadcrumbs %}
+
+<div id="menuSystem">
+	<table id="mainTable">
+		<tr>
+			<td>
+				<table>
+					<tr>
+						<th width="100">Users</th>
+					</tr>
+					<tr>
+						<td><a href="../register_student/">Register Students</a></td>
+					</tr>
+					<tr>
+						<td><a href="../register_assistant/">Register Assistants</a></td>
+					</tr>
+					<tr>
+						<td><a href="../assign_students/">Assign Students to Assitants</a></td>
+					</tr>
+					<tr>
+						<td><a href="../users/">Users Details</a></td>
+					</tr>
+					<tr>
+						<td><a href="../actions/">See System Actions</a></td>
+					</tr>
+				</table>
+			</td>
+			<td>
+				<table>
+					<tr>
+						<th width="140">Exercise</th>
+					</tr>
+					<tr>
+						<td><a href="../add_exercise/">New Exercise</a></td>
+					</tr>
+					<tr>
+						<td><a href="../exercises/">List Exercises</a></td>
+					</tr>
+				</table>
+			</td>
+			<td>
+				<table>
+					<tr>
+						<th width="100">Test</th>
+					</tr>
+					<tr>
+						<td><a href="../add_test/">New Test</a></td>
+					</tr>
+					<tr>
+						<td><a href="../tests/">List Tests</a></td>
+					</tr>
+				</table>
+			</td>
+			<td>
+				<table>
+					<tr>
+						<th width="100">Views</th>
+					</tr>
+					{% if is_assistant %}
+					<tr>
+						<td><a href="../assistant_view/">Your Students</a></td>
+					</tr>
+					<tr>
+						<td><a href="../global_assistant_view/">All Students</a></td>
+					</tr>
+					{% else %}
+					<tr>
+						<td><a href="../teacher_view/">Your Students</a></td>
+					</tr>
+					<tr>
+						<td><a href="../all_students/">All Students</a></td>
+					</tr>
+					{% endif %}
+					<tr>
+						<td><a href="../assigns/">Assistants - Students</a></td>
+					</tr>
+				</table>
+			</td>
+			<td>
+				<table>
+					<tr>
+						<th width="100"><a href="../logout/">Logout</a></th>
+					</tr>
+				</table>
+			</td>
+			<td>
+			<table>
+				<tr>
+					<th width="100"><a href="../change_password/">Change Password</a></th>
+				</tr>
+				</table>
+			</td>
+		</tr>
+	</table>
+</div>
+<!-- Menu end -->
+{% endblock %}
+
+{% block title %}Test View{% endblock %}
+
+{% block content %}
+<div id="container">
+	<br></br>
+	<br></br>
+	<br></br>
+	{% block branding %}<h1 id="site-name">{% trans 'Test View' %}</h1>{% endblock %}	
+	<div id="content-main">
+	<br>
+		<div id="content-main">
+			<div><font size="3"><b>Test Name: </b>{{ test.name }}</font></div>
+			<br><div><font size="3"><b>Exercise: </b>{{ exercise.name }}</font></div></br>
+			<br><div>
+				<font size="3"><b>Number of tests: </b>{{ exercise.number_tests }}</font>
+			</div></br>
+			<br><font size="3"><b>Code:</b>
+				<pre>{{code}}</pre>
+			</font></br>
+
+			<form action="../../hoopaloo/change_test/id={{test.id}}" method="GET">
+				<br>
+					<div class="submit-row">
+						<input type="submit" value="{% trans 'Edit this test' %}" />
+					</div>
+				</br>
+			</form>
+			<form action="../../hoopaloo/annul_test/id={{test.id}}/" method="POST">
+				<br>
+					<div class="submit-row">
+						<input type="submit" value="{% trans 'Annul this test' %}" />
+					</div>
+				</br>
+			</form>
+		</div>
+	</br>
+	</div>
+</div>
+{% endblock %}

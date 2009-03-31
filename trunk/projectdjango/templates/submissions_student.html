@@ -1,0 +1,150 @@
+{% extends "base.html" %}
+<head></head>
+{% load i18n %}
+{% block extrahead %}
+<script type="text/javascript" src="/media/js/projectdjango/DHTMLMenuExpanderV2.js"></script>
+<script type="text/javascript" src="/media/js/projectdjango/sample4.js"></script>
+<LINK rel="stylesheet" type="text/css" href="/media/css/projectdjango/horizontal.css"/>
+{% endblock %}
+{% block breadcrumbs %}
+<div id="menuSystem">
+	<table id="mainTable">
+		<tr>
+			<td>
+				<table>
+					<tr>
+						<th width="100">Users</th>
+					</tr>
+					<tr>
+						<td><a href="../register_student/">Register Students</a></td>
+					</tr>
+					<tr>
+						<td><a href="../register_assistant/">Register Assistants</a></td>
+					</tr>
+					<tr>
+						<td><a href="../assign_students/">Assign Students to Assitants</a></td>
+					</tr>
+					<tr>
+						<td><a href="../users/">Users Details</a></td>
+					</tr>
+					<tr>
+						<td><a href="../actions/">See System Actions</a></td>
+					</tr>
+				</table>
+			</td>
+			<td>
+				<table>
+					<tr>
+						<th width="140">Exercise</th>
+					</tr>
+					<tr>
+						<td><a href="../add_exercise/">New Exercise</a></td>
+					</tr>
+					<tr>
+						<td><a href="../exercises/">List Exercises</a></td>
+					</tr>
+				</table>
+			</td>
+			<td>
+				<table>
+					<tr>
+						<th width="100">Test</th>
+					</tr>
+					<tr>
+						<td><a href="../add_test/">New Test</a></td>
+					</tr>
+					<tr>
+						<td><a href="../tests/">List Tests</a></td>
+					</tr>
+				</table>
+			</td>
+			<td>
+				<table>
+					<tr>
+						<th width="100">Views</th>
+					</tr>
+					<tr>
+						<td><a href="../teacher_view/">Your Students</a></td>
+					</tr>
+					<tr>
+						<td><a href="../all_students/">All Students</a></td>
+					</tr>
+					<tr>
+						<td><a href="../assigns/">Assistants - Students</a></td>
+					</tr>
+				</table>
+			</td>
+			<td>
+				<table>
+					<tr>
+						<th width="100"><a href="../logout/">Logout</a></th>
+					</tr>
+				</table>
+			</td>
+			<td>
+				<table>
+					<tr>
+						<th width="100"><a href="../help" target="_blank">Help</a></th>
+					</tr>
+				</table>
+			</td>
+			<td>
+			<table>
+				<tr>
+					<th width="100"><a href="../change_password/">Change Password</a></th>
+				</tr>
+				</table>
+			</td>
+		</tr>
+	</table>
+</div>
+<!-- Menu end -->
+{% endblock %}
+
+{% block title %}Submissions of{{student.username}}{% endblock %}
+
+{% block content %}
+<div id="container">
+	<br></br>
+	<br></br>
+	<br></br>
+	{% block branding %}<h1 id="site-name">{% trans 'Submissions of ' %}{{student.username}}</h1>
+	{% endblock %}	
+
+	<div id="content-main">
+		
+		{% if msg %}
+			<ul class="messagelist"><li>{{ msg }}</li></ul>
+		{% endif %}
+		<div>{{explication}}</div>
+			<br>
+				<br>
+				{% if submissions %}
+					<table id="list">
+						<thead>
+							<tr>
+								<th scope="col"><center><h3>{% trans 'Exercise Name' %}</h3></center></th>
+								<th scope="col"><center><h3>{% trans 'Date' %}</h3></center></th>
+								<th scope="col"><center><h3>{% trans 'File Lenght' %}</h3></center></th>
+								<th scope="col"><center><h3>{% trans 'Download' %}</h3></center></th>
+							</tr>
+						</thead>
+						<tbody>
+							{% for s in submissions %}
+								<tr>
+									<td><center><font size=2><a href="../submission/student{{student.id}}/exercise/id={{s.id_exercise.id}}">{{ s.id_exercise.name }}</a></font></center></td>
+									<td><center><font size=2>{{ s.date|date:"Y/m/d H:i" }}</font></center></td>
+									<td><center><font size=2>{{ s.file_length }} bytes</font></center></td>								
+									<td><center><font size=2><a href="../../submission{{s.id}}/student{{student.id}}/">View Code</font></center></td>
+								</tr>
+							{% endfor %}
+						</tbody>
+					</table>
+					{% endif %}
+				</br>
+			</br>
+	</div>
+<br></br>
+</div>
+{% endblock %}
+

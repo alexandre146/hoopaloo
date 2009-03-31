@@ -1,0 +1,201 @@
+{% extends "base.html" %}
+<head></head>
+{% load i18n %}
+{% block extrahead %}
+<script type="text/javascript" src="/media/js/projectdjango/DHTMLMenuExpanderV2.js"></script>
+<script type="text/javascript" src="/media/js/projectdjango/sample4.js"></script>
+<LINK rel="stylesheet" type="text/css" href="/media/css/projectdjango/horizontal.css">
+<LINK rel="stylesheet" type="text/css" href="../../admin-media/css/dashboard.css">
+{% endblock %}
+
+{% block breadcrumbs %}
+<div id="menuSystem">
+	<table id="mainTable">
+		<tr>
+			<td>
+				<table>
+					<tr>
+						<th width="100">Users</th>
+					</tr>
+					<tr>
+						<td><a href="../register_student/">Register Students</a></td>
+					</tr>
+					<tr>
+						<td><a href="../register_assistant/">Register Assistants</a></td>
+					</tr>
+					<tr>
+						<td><a href="../assign_students/">Assign Students to Assitants</a></td>
+					</tr>
+					<tr>
+						<td><a href="../users/">Users Details</a></td>
+					</tr>
+					{% if not is_assistant %}
+					<tr>
+						<td><a href="../actions/">See System Actions</a></td>
+					</tr>
+					{% endif %}
+				</table>
+			</td>
+			<td>
+				<table>
+					<tr>
+						<th width="140">Exercise</th>
+					</tr>
+					<tr>
+						<td><a href="../add_exercise/">New Exercise</a></td>
+					</tr>
+					<tr>
+						<td><a href="../exercises/">List Exercises</a></td>
+					</tr>
+				</table>
+			</td>
+			<td>
+				<table>
+					<tr>
+						<th width="100">Test</th>
+					</tr>
+					<tr>
+						<td><a href="../add_test/">New Test</a></td>
+					</tr>
+					<tr>
+						<td><a href="../tests/">List Tests</a></td>
+					</tr>
+				</table>
+			</td>
+			<td>
+				<table>
+					<tr>
+						<th width="100">Views</th>
+					</tr>
+					{% if is_assistant %}
+					<tr>
+						<td><a href="../assistant_view/">Your Students</a></td>
+					</tr>
+					<tr>
+						<td><a href="../global_assistant_view/">All Students</a></td>
+					</tr>
+					{% else %}
+					<tr>
+						<td><a href="../teacher_view/">Your Students</a></td>
+					</tr>
+					<tr>
+						<td><a href="../all_students/">All Students</a></td>
+					</tr>
+					{% endif %}
+					<tr>
+						<td><a href="../assigns/">Assistants - Students</a></td>
+					</tr>
+				</table>
+			</td>
+			<td>
+				<table>
+					<tr>
+						<th width="100"><a href="../logout/">Logout</a></th>
+					</tr>
+				</table>
+			</td>
+			<td>
+				<table>
+					<tr>
+						<th width="100"><a href="../help" target="_blank">Help</a></th>
+					</tr>
+				</table>
+			</td>
+			<td>
+			<table>
+				<tr>
+					<th width="100"><a href="../change_password/">Change Password</a></th>
+				</tr>
+				</table>
+			</td>
+		</tr>
+	</table>
+</div>
+<!-- Menu end -->
+{% endblock %}
+
+{% block title %}User Details{% endblock %}
+
+{% block content %}
+<div id="container">
+		<br></br>
+		<br></br>
+		<br></br>
+		{% block branding %}<h1 id="site-name"><font size="4">{% trans 'User Details' %}</font></h1>
+		{% endblock %}
+		
+<div id="content-main">
+	{% if msg %}
+		<ul class="messagelist"><li>{{ msg }}</li></ul>
+	{% endif %}
+	<br></br>
+	{% if students %}
+		<div><h2>Students Details</h2></div>
+		<table id="list">
+		<thead>
+        <tr>
+			<th scope="col"><center><h4>{% trans 'Username' %}</center></h4></th>
+            <th scope="col"><center><h4>{% trans 'First Name' %}</center></h4></th>
+            <th scope="col"><center><h4>{% trans 'Last Name' %}</center></h4></th>
+			<th scope="col"><center><h4>{% trans 'E-mail' %}</center></h4></th>
+			<th scope="col"><center><h4>{% trans 'Last Login' %}</center></h4></th>
+			<th scope="col"><center><h4>{% trans 'Date Joined' %}</center></h4></th>
+			<th scope="col"><center><h4>{% trans 'Delete' %}</center></h4></th>
+        </tr>
+		</thead>
+        <tbody>
+		 {% for s in students %}
+			<tr>
+            <td><font size=2>{{ s.username }}</font></td>
+            <td><center><font size=2>{{ s.user.first_name }}</font></center></td>
+			<td><center><font size=2>{{ s.user.last_name }}</font></center></td>
+			<td><center><font size=2>{{ s.user.email }}</font></center></td>
+			<td><center><font size=2>{{ s.user.last_login|date:"d/m/Y H:i:s" }}</font></center></td>
+			<td><center><font size=2>{{ s.user.date_joined|date:"d/m/Y H:i:s" }}</font></center></td>
+			<form action="../delete_users/id={{s.user.id}}/" method="POST">
+				<td><center><input type="submit" value="{% trans 'Delete' %}" /></center></td>
+			</form>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+	{% else %}
+	<div>There are not students registered.</div>
+	{% endif %}
+	<br></br>
+	{% if assistants %}
+	<div><h2>Assistant Details</h2></div>
+		<table id="list">
+		<thead>
+        <tr>
+			<th scope="col"><center><h4>{% trans 'Username' %}</center></h4></th>
+            <th scope="col"><center><h4>{% trans 'First Name' %}</center></h4></th>
+            <th scope="col"><center><h4>{% trans 'Last Name' %}</center></h4></th>
+			<th scope="col"><center><h4>{% trans 'E-mail' %}</center></h4></th>
+			<th scope="col"><center><h4>{% trans 'Last Login' %}</center></h4></th>
+			<th scope="col"><center><h4>{% trans 'Date Joined' %}</center></h4></th>
+			<th scope="col"><center><h4>{% trans 'Delete' %}</center></h4></th>
+        </tr>
+		</thead>
+        <tbody>
+		 {% for a in assistants %}
+			<tr>
+            <td><font size=2><a href="">{{ a.username }}</a></font></td>
+            <td><center><font size=2>{{ a.user.first_name }}</font></center></td>
+			<td><center><font size=2>{{ a.user.last_name }}</font></center></td>
+			<td><center><font size=2>{{ a.user.email }}</font></center></td>
+			<td><center><font size=2>{{ a.user.last_login|date:"d/m/Y H:i:s" }}</font></center></td>
+			<td><center><font size=2>{{ a.user.date_joined|date:"d/m/Y H:i:s" }}</font></center></td>
+			<form action="../delete_user/id={{a.user.id}}/" method="POST">
+				<td><center><input type="submit" value="{% trans 'Delete' %}" /></center></td>
+			</form>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+	{% else %}
+	<div>There are not assistants registered.</div>
+	{% endif %}
+	</div>
+	</div>
+	{% endblock %}

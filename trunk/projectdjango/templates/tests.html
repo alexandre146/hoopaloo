@@ -1,0 +1,158 @@
+{% extends "base.html" %}
+<head></head>
+{% load i18n %}
+{% block extrahead %}
+<script type="text/javascript" src="/media/js/projectdjango/DHTMLMenuExpanderV2.js"></script>
+<script type="text/javascript" src="/media/js/projectdjango/sample4.js"></script>
+<LINK rel="stylesheet" type="text/css" href="/media/css/projectdjango/horizontal.css">
+{% endblock %}
+{% block stylesheet %}{% load adminmedia %}{% admin_media_prefix %}css/dashboard.css{% endblock %}
+
+{% block breadcrumbs %}
+<div id="menuSystem">
+	<table id="mainTable">
+		<tr>
+			<td>
+				<table>
+					<tr>
+						<th width="100">Users</th>
+					</tr>
+					<tr>
+						<td><a href="../register_student/">Register Students</a></td>
+					</tr>
+					<tr>
+						<td><a href="../register_assistant/">Register Assistants</a></td>
+					</tr>
+					<tr>
+						<td><a href="../assign_students/">Assign Students to Assitants</a></td>
+					</tr>
+					<tr>
+						<td><a href="../users/">Users Details</a></td>
+					</tr>
+					{% if not is_assistant %}
+					<tr>
+						<td><a href="../actions/">See System Actions</a></td>
+					</tr>
+					{% endif %}
+				</table>
+			</td>
+			<td>
+				<table>
+					<tr>
+						<th width="140">Exercise</th>
+					</tr>
+					<tr>
+						<td><a href="../add_exercise/">New Exercise</a></td>
+					</tr>
+					<tr>
+						<td><a href="../exercises/">List Exercises</a></td>
+					</tr>
+				</table>
+			</td>
+			<td>
+				<table>
+					<tr>
+						<th width="100">Test</th>
+					</tr>
+					<tr>
+						<td><a href="../add_test/">New Test</a></td>
+					</tr>
+					<tr>
+						<td><a href="../tests/">List Tests</a></td>
+					</tr>
+				</table>
+			</td>
+			<td>
+				<table>
+					<tr>
+						<th width="100">Views</th>
+					</tr>
+					{% if is_assistant %}
+					<tr>
+						<td><a href="../assistant_view/">Your Students</a></td>
+					</tr>
+					<tr>
+						<td><a href="../global_assistant_view/">All Students</a></td>
+					</tr>
+					{% else %}
+					<tr>
+						<td><a href="../teacher_view/">Your Students</a></td>
+					</tr>
+					<tr>
+						<td><a href="../all_students/">All Students</a></td>
+					</tr>
+					{% endif %}
+					<tr>
+						<td><a href="../assigns/">Assistants - Students</a></td>
+					</tr>
+				</table>
+			</td>
+			<td>
+				<table>
+					<tr>
+						<th width="100"><a href="../logout/">Logout</a></th>
+					</tr>
+				</table>
+			</td>
+			<td>
+				<table>
+					<tr>
+						<th width="100"><a href="../help" target="_blank">Help</a></th>
+					</tr>
+				</table>
+			</td>
+			<td>
+			<table>
+				<tr>
+					<th width="100"><a href="../change_password/">Change Password</a></th>
+				</tr>
+				</table>
+			</td>
+		</tr>
+	</table>
+</div>
+<!-- Menu end -->
+
+{% endblock %}
+
+{% block title %}All Tests{% endblock %}
+
+{% block content %}
+<div id="container">
+		<br></br>
+		<br></br>
+		<br></br>
+		{% block branding %}<h1 id="site-name"><font size="4">{% trans 'All Tests' %}</font></h1>
+		{% endblock %}
+		
+<div id="content-main">
+
+{% if tests %}
+	<table id="list">
+		<thead>
+        <tr>
+            <th scope="col"><center><h4>{% trans 'Test Title' %}</center></h4></th>
+			<th scope="col"><center><h4>{% trans 'Creation Date' %}</center></h4></th>
+			<th scope="col"><center><h4>{% trans 'Owner' %}</center></h4></th>
+			<th scope="col"><center><h4>{% trans 'Exercise' %}</center></h4></th>
+			<th scope="col"><center><h4>{% trans 'Edit this test' %}</center></h4></th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for t in tests %}
+			<tr>
+            <td><font size=2><a href="../../hoopaloo/test_view/id={{t.id}}">{{ t.name }}</a></font></td>
+			<td><font size=2>{{ t.creation_date|date:"d/m/Y H:i:s" }}</font></td>
+			<td><font size=2>{{ t.owner.username }}</font></td>
+			<td><font size=2>{{ t.exercise.name }}</font></td>
+			<td><font size=2><a href="../../hoopaloo/change_test/id={{t.id}}/">Edit it</a></font></td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% else %}
+	<p>"There isn't any test"</p>
+{% endif %}
+	</div>
+</div>
+{% endblock %}

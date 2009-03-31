@@ -1,0 +1,25 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+{% extends "base.html" %}
+{% load i18n %}
+<head>
+</head>
+
+{% block title %}Help - User Details{% endblock %}
+{% block content %}
+
+<div id="content-main">
+<h3><font color="#003333" face="Verdana, Arial, Helvetica, sans-serif">User Details</font></h3>
+<p align="justify">This page shows the user's informations like <strong>username</strong>, <strong>complete
+    name</strong>, <strong>e-mail</strong>,
+    <strong>register date</strong>, date of<strong> last login</strong> and the
+    option of <strong>delete</strong> this user. Access
+  this page by <a href="http://dataccc.gmf.ufcg.edu.br/hoopaloo/users/" target="_blank">http://dataccc.gmf.ufcg.edu.br/hoopaloo/users/</a> or
+  by User &gt; User Details menu option (1).</p>
+<p align="justify">The figure bellow illustrates how informations are presented. There are two
+  tables, firts with students' informations (2) and second with assistants' informations
+  (3).</p>
+<p align="center"><font color="#003333" face="Verdana, Arial, Helvetica, sans-serif"><img src="../../media/img/projectdjango/User_details.jpg" width="1018" height="580"></font></p>
+<p align="left">Only the teacher and the assistants can see the informations
+  of users.</p>
+</div>
+{%endblock%}

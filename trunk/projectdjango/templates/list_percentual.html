@@ -1,0 +1,168 @@
+{% extends "base.html" %}
+<head></head>
+{% load i18n %}
+{% block extrahead %}
+<script type="text/javascript" src="/media/js/projectdjango/DHTMLMenuExpanderV2.js"></script>
+<script type="text/javascript" src="/media/js/projectdjango/sample4.js"></script>
+<LINK rel="stylesheet" type="text/css" href="/media/css/projectdjango/horizontal.css">
+{% endblock %}
+{% block breadcrumbs %}
+<div id="menuSystem">
+	<table id="mainTable">
+		<tr>
+			<td>
+				<table>
+					<tr>
+						<th width="100">Users</th>
+					</tr>
+					<tr>
+						<td><a href="../register_student/">Register Students</a></td>
+					</tr>
+					<tr>
+						<td><a href="../register_assistant/">Register Assistants</a></td>
+					</tr>
+					<tr>
+						<td><a href="../assign_students/">Assign Students to Assitants</a></td>
+					</tr>
+					<tr>
+						<td><a href="../users/">Users Details</a></td>
+					</tr>
+					{% if not is_assistant %}
+					<tr>
+						<td><a href="../actions/">See System Actions</a></td>
+					</tr>
+					{% endif %}
+				</table>
+			</td>
+			<td>
+				<table>
+					<tr>
+						<th width="140">Exercise</th>
+					</tr>
+					<tr>
+						<td><a href="../add_exercise/">New Exercise</a></td>
+					</tr>
+					<tr>
+						<td><a href="../exercises/">List Exercises</a></td>
+					</tr>
+				</table>
+			</td>
+			<td>
+				<table>
+					<tr>
+						<th width="100">Test</th>
+					</tr>
+					<tr>
+						<td><a href="../add_test/">New Test</a></td>
+					</tr>
+					<tr>
+						<td><a href="../tests/">List Tests</a></td>
+					</tr>
+				</table>
+			</td>
+			<td>
+				<table>
+					<tr>
+						<th width="100">Views</th>
+					</tr>
+					{% if is_assistant %}
+					<tr>
+						<td><a href="../assistant_view/">Your Students</a></td>
+					</tr>
+					<tr>
+						<td><a href="../global_assistant_view/">All Students</a></td>
+					</tr>
+					{% else %}
+					<tr>
+						<td><a href="../teacher_view/">Your Students</a></td>
+					</tr>
+					<tr>
+						<td><a href="../all_students/">All Students</a></td>
+					</tr>
+					{% endif %}
+					<tr>
+						<td><a href="../assigns/">Assistants - Students</a></td>
+					</tr>
+				</table>
+			</td>
+			<td>
+				<table>
+					<tr>
+						<th width="100"><a href="../logout/">Logout</a></th>
+					</tr>
+				</table>
+			</td>
+			<td>
+				<table>
+					<tr>
+						<th width="100"><a href="../help" target="_blank">Help</a></th>
+					</tr>
+				</table>
+			</td>
+			<td>
+			<table>
+				<tr>
+					<th width="100"><a href="../change_password/">Change Password</a></th>
+				</tr>
+				</table>
+			</td>
+		</tr>
+	</table>
+</div>
+<!-- Menu end -->
+{% endblock %}
+
+{% block title %}List of Students{% endblock %}
+
+{% block content %}
+<div id="container">
+		<br></br>
+		<br></br>
+		<br></br>
+		{% block branding %}<h1 id="site-name"><font size="4">{% trans 'List of Students' %}</font></h1>
+		{% endblock %}
+	
+<div id="content-main">
+	{% if msg %}
+		<ul class="messagelist"><li>{{ msg }}</li></ul>
+	{% endif %}
+{% if students %}
+	<br>
+	<br>
+	<table id="list">
+		<thead>
+        <tr>
+            <th scope="col"><center><h4>{% trans 'Name' %}</h4></center></th>
+            <th scope="col"><center><h4>{% trans 'Assistant' %}</h4></center></th>
+			<th scope="col"><center><h4>{% trans 'Exercises Delivered' %}</h4></center></th>
+			<th scope="col"><center><h4>{% trans 'Pending Exercises' %}</h4></center></th>
+			<th scope="col"><center><h4>{% trans 'Undelivered Exercises' %}</h4></center></th>
+			<th scope="col"><center><h4>{% trans 'Submission by Exercise' %}</h4></center></th>
+			<th scope="col"><center><h4>{% trans 'Mean' %}</h4></center></th>
+			<th scope="col"><center><h4>{% trans 'Exercises Page' %}</h4></center></th>
+
+        </tr>
+        </thead>
+        <tbody>
+        {% for student in students %}
+		<tr>
+            <td><font size=2><a href="../../hoopaloo/student/id={{student.id}}">{{ student.user.first_name }} {{ student.user.last_name }}</a></font></td>
+            <td><center><font size=2>{{ student.assistant.username }}</a><font size=2></center></td>
+			<td><center><font size=2>{{ student.number_submissions }}</font></center></td>
+			<td><center><font size=2>{{ student.pending_exercises }}</font></center></td>
+			<td><center><font size=2>{{ student.undelivered_exercises }}</font></center></td>
+			<td><center><font size=2>{{ student.submission_by_exercise }}</font></center></td>
+			<td><center><font size=2>{{ student.mean }}</font></center></td>
+			<td><center><font size=2><a href="../../hoopaloo/exercises/id={{student.id}}">Exercises of {{ student.username }}</a></font></center></td>
+			
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+	</br>
+	</br>
+{% endif %}
+	</div>
+</div>
+
+{% endblock %}

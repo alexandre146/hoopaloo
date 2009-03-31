@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+<head></head>
+{% load i18n %}
+{% block extrahead %}
+<LINK rel="stylesheet" type="text/css" href="../../admin-media/css/dashboard.css">
+{% endblock %}
+
+{% block breadcrumbs %}
+{% endblock %}
+
+{% block title %}Are you sure?{% endblock %}
+
+{% block content %}
+<div id="container">
+		<br></br>
+		{% block branding %}<h1 id="site-name"><font size="4">{% trans 'Are you sure?' %}</font></h1>
+		{% endblock %}
+	<div id="content-main">
+		<br></br>
+		{% if error %}
+			<div class="errornote">{{ error }}</div>
+		{% else %}
+				{% if msg %}
+					<ul class="messagelist"><li>{{ msg }}</li></ul>
+				{% else %}
+					<div><b>Are you sure you want to change the availability of "{{exercise.name}}"?</b></div>
+					<br></form><form action="../../change_availability_exercise/id={{exercise.id}}/" method="POST">
+					<td><input type="submit" value="{% trans 'I am sure' %}" /></td>
+					</form></br>
+				{% endif %}
+		{% endif %}
+		<br><a href="../../exercises/">Back to List Exercises</a></br>
+	</div>
+</div>
+{% endblock %}

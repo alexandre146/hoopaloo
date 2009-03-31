@@ -1,0 +1,129 @@
+{% extends "base.html" %}
+<head>
+</head>
+{% load i18n %}
+{% block extrahead %}
+<script type="text/javascript" src="/media/js/projectdjango/DHTMLMenuExpanderV2.js"></script>
+<script type="text/javascript" src="/media/js/projectdjango/sample4.js"></script>
+<LINK rel="stylesheet" type="text/css" href="/media/css/projectdjango/horizontal.css">
+<LINK rel="stylesheet" type="text/css" href="/media/css/projectdjango/paragraph.css">
+{% endblock %}
+
+{% block breadcrumbs %}
+
+<div id="menuSystem">
+	<table id="mainTable">
+		<tr>
+			<td>
+				<table>
+					<tr>
+						<th width="100">Exercises</th>
+					</tr>
+					<tr>
+						<td><a href="../delivered_exercises/">Delivered Exercises</a></td>
+					</tr>
+					<tr>
+						<td><a href="../undelivered_exercises/">Undelivered Exercises</a></td>
+					</tr>
+					<tr>
+						<td><a href="../available_exercises/">Available Exercises</a></td>
+					</tr>
+				</table>
+			</td>
+			<td>
+			<table>
+					<tr>
+						<th width="100">Submissions</th>
+					</tr>
+					<tr>
+						<td><a href="../submission/">Submit</a></td>
+					</tr>
+					<tr>
+						<td><a href="../see_submissions/">See Submissions</a></td>
+					</tr>
+			</table>
+			</td>
+			<td>
+				<table>
+					<tr>
+						<th width="100"><a href="../logout/">Logout</a></th>
+					</tr>
+				</table>
+			</td>
+			<td>
+				<table>
+					<tr>
+						<th width="100"><a href="../help_student" target="_blank">Help</a></th>
+					</tr>
+				</table>
+			</td>
+			<td>
+			<table>
+				<tr>
+					<th width="100"><a href="../change_password/">Change Password</a></th>
+				</tr>
+				</table>
+			</td>
+		</tr>
+	</table>
+</div>
+<!-- Menu end -->
+{% endblock %}
+
+{% block title %}Submission{% endblock %}
+
+{% block content %}
+<div id="container">
+	<br></br>
+	<br></br>
+		{% block branding %}<h1 id="site-name"><font size="4">{% trans 'Submission' %}</font></h1>
+		{% endblock %}
+<div id="content-main">
+	{% if msg %}
+		{% for m in msg %}
+			<ul class="messagelist"><li>{{ m }}</li></ul>
+		{% endfor %}
+	{% endif %}
+	{% if error %}
+		{% for e in error %}
+			<div class="errornote">{{ e }}</div>
+		{% endfor %}
+	{% endif %}
+<div>{{explication}}</div>
+<br></br>
+<br></br>
+<div class="module">
+	<form action="/hoopaloo/submission/" enctype="multipart/form-data" method="POST">
+		<table>{{ form }}</table> 
+		<input type="submit" value="Send" />
+	</form>
+</div>
+<br></br>
+<div>
+{% if submissions %}
+	<h1 id="site-name"><font size="4">{% trans 'Your Submissions' %}</font></h1>
+	<table id="list">
+		<thead>
+			<tr>
+				<th scope="col"><center><h3>{% trans 'Exercise Name' %}</h3></center></th>
+				<th scope="col"><center><h3>{% trans 'Date' %}</h3></center></th>
+				<th scope="col"><center><h3>{% trans 'File Lenght' %}</h3></center></th>
+				<th scope="col"><center><h3>{% trans 'Download' %}</h3></center></th>
+			</tr>
+		</thead>
+		<tbody>
+			{% for s in submissions %}
+				<tr>
+					<td><center><font size=2><a href="../submission/student{{student.id}}/exercise/id={{s.id_exercise.id}}">{{ s.id_exercise.name }}</a></font></center></td>
+					<td><center><font size=2>{{ s.date|date:"Y/m/d H:i" }}</font></center></td>
+					<td><center><font size=2>{{ s.file_length }} bytes</font></center></td>								
+							<td><center><font size=2><a href="../submission{{s.id}}/student{{student.id}}/">View Code</font></center></td>
+				</tr>
+			{% endfor %}
+		</tbody>
+	</table>
+					{% endif %}
+</div>
+</div>
+</div>
+{% endblock %}
