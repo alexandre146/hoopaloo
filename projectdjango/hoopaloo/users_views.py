@@ -130,8 +130,6 @@ def assign_students(request):
 	"""Assign students to assistants."""
 	
 	if request.user.is_authenticated():
-		for p in request.user.get_all_permissions():
-			print p
 		if request.user.has_perm("hoopaloo.assign_student"):
 			if request.method == 'POST':
 				form = AssignStudentsForm(request.POST)

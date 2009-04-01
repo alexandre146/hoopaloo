@@ -136,8 +136,11 @@
 				<pre>{{code}}</pre>
 			</font></br>
 			
-			<div><font size=3><a href="../../../../hoopaloo/test_view/id={{test.id}}" target="_blank"> See Code of the Test</a></font></div>
-			
+			{% if test %}
+				<div><font size=3><a href="../../../../hoopaloo/test_view/id={{test.id}}" target="_blank"> See Code of the Test</a></font></div>
+			{% else %}
+				<div>There are not test for this exercise</div>
+			{% endif %}
 			<br><form action="/hoopaloo/submission/student{{student.id}}/exercise/id={{exercise.id}}/" method="POST">
 				<div class="form-row">
 					<label for="comments">{% trans 'Comments:' %}</label><textarea name="comments" rows="8" cols="50" >{{result.comments}}</textarea>
