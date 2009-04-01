@@ -29,7 +29,6 @@ urlpatterns = patterns('',
 	(r'^hoopaloo/users/$', 'projectdjango.hoopaloo.users_views.users'),
 	(r'^hoopaloo/assign_students/$', 'projectdjango.hoopaloo.users_views.assign_students'),
 	(r'^hoopaloo/assigns/$', 'projectdjango.hoopaloo.users_views.assigns'),
-	(r'^hoopaloo/delete_assign/id=(?P<student_id>\d+)/$', 'projectdjango.hoopaloo.users_views.delete_assign'),
 	
 	# GENERAL VIEWS
 	(r'^hoopaloo/actions/$', 'projectdjango.hoopaloo.views.actions'),

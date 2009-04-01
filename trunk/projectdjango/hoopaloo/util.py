@@ -410,7 +410,9 @@ def get_available_exercises(user):
 			undelivered.append(ex)
 	return undelivered	
 		
-def delete_association(stdent_id):
+def delete_association(student_id):
+	from hoopaloo.models import Student, Assistant
+	
 	student = Student.objects.get(pk=student_id)
 	assistant = Assistant.objects.get(pk=student.assistant.id)
 	student.assistant = Assistant.objects.get(username='-')
@@ -617,24 +619,29 @@ def get_path_to_download(student, submissions):
 	return tuples
 	
 def remove_acentuation(code):
-	word = code.replace("�", "a")
-	word = word.replace("�", "A")
-	word = word.replace("�", "e")
-	word = word.replace("�", "E")
-	word = word.replace("�", "I")
-	word = word.replace("�", "i")
-	word = word.replace("�", "O")
-	word = word.replace("�", "o")
-	word = word.replace("�", "u")
-	word = word.replace("�", "U")
-	word = word.replace("�", "C")
-	word = word.replace("�", "c")
-	word = word.replace("�", "o")
-	word = word.replace("�", "O")
-	word = word.replace("�", "A")
-	word = word.replace("�", "a")	
-	word = word.replace("�", "a")	
+	f = open('/home/mariana/www/Debug.txt', 'wb')
+	f.write(code)
 	
+	word = code.replace("á", "a")
+	word = word.replace("Á", "A")
+	word = word.replace("é", "e")
+	word = word.replace("É", "E")
+	word = word.replace("Í", "I")
+	word = word.replace("í", "i")
+	word = word.replace("Ó", "O")
+	word = word.replace("ó", "o")
+	word = word.replace("ú", "u")
+	word = word.replace("Ú", "U")
+	word = word.replace("Ç", "C")
+	word = word.replace("ç", "c")
+	word = word.replace("õ", "o")
+	word = word.replace("Õ", "O")
+	word = word.replace("Ã", "A")
+	word = word.replace("ã", "a")	
+	word = word.replace("à", "a")	
+	
+	f.write(word)
+	f.close()
 	return word	
 
 def save_test_in_student_folders(test):

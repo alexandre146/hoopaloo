@@ -114,8 +114,9 @@ def view_exercise(request, submission_id, exercise_id, student_id=None):
 				# The File was not executed
 				pass
 			arq = open(sub.solution_file.name)
-			cde = arq.read()
-			lines = cde.count('\n') + 3
+			aux = arq.read()
+			cde = util.remove_acentuation(aux)
+			lines = aux.count('\n') + 3
 			arq.close()
 			t = None
 			try:

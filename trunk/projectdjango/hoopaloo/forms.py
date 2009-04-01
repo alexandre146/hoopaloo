@@ -310,11 +310,8 @@ class AssignStudentsForm(forms.Form):
 		
 		for a in assigns:
 			line = a.split()
-			try:
-				assistant = line[0]
-				students = line[1:]
-			except:
-				   pass
+			assistant = line[0]
+			students = line[1:]
 			str_students = []
 			errors = []
 			
