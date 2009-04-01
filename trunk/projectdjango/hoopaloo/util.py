@@ -687,16 +687,17 @@ def code(lines):
 class Table_Delivered:
 	"""Contains all necessary informations to the table of delivered exercises"""
 	
-	def __init__(self, exercise, num_submissions, date, tests, solved, errors, note, percentage):
+	def __init__(self, exercise, submission, num_submissions, solved, errors, score, percentage):
 		self.exercise = exercise
+		self.submission = submission
 		self.number_submissions = num_submissions
-		self.last_submission_date = date
-		self.number_tests = tests
+		self.last_submission_date = submission.date
+		self.number_tests = exercise.number_tests
 		self.was_solved = solved
 		self.num_errors = errors
-		self.note = note
+		self.score = score
 		self.class_percentage = percentage
-		if tests != 0:
-			self.your_right = ((tests - errors)/float(tests))*100
+		if self.number_tests != 0:
+			self.your_right = ((self.number_tests - errors)/float(self.number_tests))*100
 		else:
 			self.your_right = 0

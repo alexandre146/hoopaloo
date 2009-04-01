@@ -98,19 +98,24 @@ def student_exercises(request, student_id):
 		if request.user.has_perm(".see_results"):
 			if request.method == 'GET':
 				student = Student.objects.get(pk=student_id)
-				results = Result.objects.filter(id_student=student_id).order_by('id_exercise').reverse()
 				informations = []
-				for r in results:
-					ex = Exercise.objects.get(pk=r.id_exercise.id)
-					submited = Submission.objects.filter(id_student=student_id, id_exercise=ex.id)
-					if r.veredict == 'Pass':
-						solved = True
-					else:
-						solved = False
-					date = submited.order_by("date")[len(submited)-1].date
-					percentage = util.calculate_correct_percentage(ex)
-					d = util.Table_Delivered(ex, r.num_submissions, date, ex.number_tests, solved, r.errors_number, r.note, percentage)
-					informations.append(d)
+				exercises = Exercise.objects.all()
+				for ex in exercises:
+					submissions = Submission.objects.filter(id_student=student_id, id_exercise=ex.id).order_by('date').reverse()				
+					for s in submissions:
+						result = Result.objects.filter(id_student=student_id, id_exercise=ex.id)
+						if result and (r.veredict == 'Pass'):
+							solved = True
+							errors = r.errors_number
+							score = r.score
+						else:
+							solved = False
+							errors = 0
+							score = 0.0
+							date = s.date
+							percentage = util.calculate_correct_percentage(ex)
+							d = util.Table_Delivered(ex, s, submissions.count(), solved, errors, score, percentage)
+							informations.append(d)
 				return render_to_response("exercises_student.html", {'informations':informations, 'student':student, 'is_assistant': util.is_assistant(request.user),}, context_instance=RequestContext(request))
 		else:
 			error = configuration.RESULT_SEE_NOT_PERMISSION

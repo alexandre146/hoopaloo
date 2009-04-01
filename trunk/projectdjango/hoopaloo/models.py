@@ -123,7 +123,7 @@ class Student(models.Model):
 	unsolved_exercises = models.IntegerField() # number of exercises that the student delivered but  they were not correct
 	pending_exercises = models.IntegerField() # number of exercises that the student delivered but they are activity
 	mean = models.FloatField() # Mean of notes
-	undelivered_exercises = models.IntegerField() # number of exercises that the student don´t delivered
+	undelivered_exercises = models.IntegerField() # number of exercises that the student donï¿½t delivered
 	submission_by_exercise = models.FloatField() # rate of submission divided by the number of exercises
 	realized_login = models.BooleanField()
 	
@@ -225,42 +225,6 @@ class Result(models.Model):
 # SIGNALS	
 from django.db.models.signals import post_save, pre_delete, pre_save
 
-def submission_student(sender, instance, signal, *args, **kwargs):
-	"""This signal is invoked always that a new submission is saved in database."""
-	
-	if instance.was_executed == False:	
-
-		#file = instance.solution_file
-		student = Student.objects.get(username=instance.id_student.username)
-		id_exercise = instance.id_exercise
-		
-		# testing if this exercise has registered test
-		if Test.objects.filter(exercise=id_exercise).count() != 0:
-			test = Test.objects.get(exercise=id_exercise)
-			
-			from hoopaloo.Tester import Tester
-			# executing the test 
-			tester = Tester(student, test, id_exercise)
-			tester.execute_test()
-		
-		# this exercise have not registered test
-		else:
-			from hoopaloo.util import send_email
-			# Msg to the student
-			msg = configuration.SUBMISSION_WITHOUT_TEST_EMAIL_TO_STUDENT % student.username
-			subject = "Notification"
-			send_email(student.user.email, subject, msg)
-			
-			# Msg to the teacher
-			if not id_exercise.send_email_teacher:
-				msg = configuration.SUBMISSION_WITHOUT_TEST_EMAIL_TO_TEACHER % (Exercise.objects.get(pk=id_exercise.id).name)
-				subject = "Notification"
-				c = Class.objects.get(pk=student.student_class.id)
-				teacher = User.objects.get(id=c.teacher.id)
-				send_email(teacher.email, subject, msg)
-				id_exercise.send_email_teacher = True
-				id_exercise.save()
-			
 def execution_saved(sender, instance, signal, *args, **kwargs):
 	"""This signal is called always an execution is saved in database. It recovers the informations
 	of execution and creates a result."""
@@ -378,30 +342,33 @@ def pre_save_exercise(sender, instance, signal, *args, **kwargs):
 	
 def post_save_exercise(sender, instance, signal, *args, **kwargs):
 	
-	name_test = instance.name.replace(".", "_")
-	test = Test().create_test(instance.owner, instance, configuration.TEST_COMPLEMENT % (name_test, name_test))
-	
 	try:
-		# creating backup file
-		test_file = open(settings.MEDIA_ROOT + '/tests/' + test.path, 'rb')
-		backup_file = open(settings.MEDIA_ROOT + '/tests/' + configuration.BACKUP_TEST_NAME + '_' + exercise.name + '.py', 'wb')
-		backup_file.write(test_file.read())
-		backup_file.close()
-		test_file.close()
-		os.remove(settings.MEDIA_ROOT + '/tests/' + t.path)
+		# if this exercise exists and only is being updated
+		test = Test.objects.get(exercise=instance.id)
 	except:
-		pass
+		name_test = instance.name.replace(".", "_")
+		test = Test().create_test(instance.owner, instance, configuration.TEST_COMPLEMENT % (name_test, name_test))
 		
-	path_tests = settings.MEDIA_ROOT + '/tests/' + test.path
-	dest = open(path_tests, 'wb')
-	dest.write(test.code + configuration.TEST_APPEND)
-	dest.close()
-		
-	util.save_test_in_student_folders(test)
-	test.save()	
+		try:
+			# creating backup file
+			test_file = open(settings.MEDIA_ROOT + '/tests/' + test.path, 'rb')
+			backup_file = open(settings.MEDIA_ROOT + '/tests/' + configuration.BACKUP_TEST_NAME + '_' + exercise.name + '.py', 'wb')
+			backup_file.write(test_file.read())
+			backup_file.close()
+			test_file.close()
+			os.remove(settings.MEDIA_ROOT + '/tests/' + t.path)
+		except:
+			pass
+			
+		path_tests = settings.MEDIA_ROOT + '/tests/' + test.path
+		dest = open(path_tests, 'wb')
+		dest.write(test.code + configuration.TEST_APPEND)
+		dest.close()
+			
+		util.save_test_in_student_folders(test)
+		test.save()	
 		
 # The connection between the signals and the functions
-#post_save.connect(submission_student, sender=Submission, dispatch_uid='post_save.submission_student')
 post_save.connect(execution_saved, sender=Execution, dispatch_uid='post_save.execution_saved')
 post_save.connect(create_or_update_test, sender=Test, dispatch_uid='post_save.create_or_update_test')
 pre_save.connect(pre_save_exercise, sender=Exercise, dispatch_uid='pre_save.pre_save_exercise')
