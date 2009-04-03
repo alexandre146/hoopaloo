@@ -310,6 +310,9 @@ class AssignStudentsForm(forms.Form):
 		
 		for a in assigns:
 			line = a.split()
+			f = open('/home/mariana/www/Debug.txt', 'wb')
+			f.write('line ' + str(line))
+			f.write('a ' + a)
 			assistant = line[0]
 			students = line[1:]
 			str_students = []

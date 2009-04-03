@@ -160,6 +160,9 @@ class Submission(models.Model):
 	date = models.DateTimeField() # date in which the submission was realized
 	file_length = models.IntegerField()
 	was_executed = models.BooleanField() # true if the program was executed by tests
+	veredict = models.CharField(max_length=30) # pass or fail
+	score = models.FloatField(blank=True)
+	comments = models.CharField(max_length=1000, blank=True)
 	
 	def create_submission(self, user, file, exercise, length):
 		submission = Submission()
@@ -224,7 +227,7 @@ class Result(models.Model):
 	
 # SIGNALS	
 from django.db.models.signals import post_save, pre_delete, pre_save
-
+			
 def execution_saved(sender, instance, signal, *args, **kwargs):
 	"""This signal is called always an execution is saved in database. It recovers the informations
 	of execution and creates a result."""

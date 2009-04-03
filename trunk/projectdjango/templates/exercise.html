@@ -128,7 +128,6 @@
 
 	</div>
 	</br>
-	{% if students %}
 		{% if results %}
 	
 	<div><h1>Exercise Results</h1></div>
@@ -142,27 +141,21 @@
 				<th scope="col"><center><h4>{% trans 'Passes Number' %}</h4></center></th>
 				<th scope="col"><center><h4>{% trans 'Number of Tests' %}</h4></center></th>
 				<th scope="col"><center><h4>{% trans 'Result' %}</h4></center></th>
-				<th scope="col"><center><h4>{% trans 'Note' %}</h4></center></th>
+				<th scope="col"><center><h4>{% trans 'Score' %}</h4></center></th>
 			</tr>
         </thead>
 		<tbody>
-				{% for student in students %}
-					{% for r in results %}
-						{% ifequal r.id_student.id student.id %}
-							{% ifequal r.id_exercise.id exercise.id %}
-								<tr>
-								<td><font size=2><a href="">{{ student.user.first_name }} {{ student.user.last_name }}</a></font></td>
-								<td><center><font size=2>{{ student.assistant.username }}<font size=2></center></td>
-								<td><center><font size=2>{{ r.num_submissions }}</font></center></td>
-								<td><center><font size=2>{{ r.errors_number }}</font></center></td>
-								<td><center><font size=2>{{ r.pass_number }}</font></center></td>
-								<td><center><font size=2>{{ exercise.number_tests }}</font></center></td>
-								<td><center><font size=2>{{ r.veredict }}</font></center></td>
-								<td><center><font size=2>{% ifequal r.note None %}{% else %} {{ r.note }}{% endifequal %}</font></center></td>
-								</tr>
-							{% endifequal %}
-						{% endifequal %}
-					{% endfor %}
+				{% for result in results %}
+					<tr>
+					<td><font size=2>{{ result.student_name }} {{ student.user.last_name }}</font></td>
+					<td><center><font size=2>{{ result.student_assistant }}<font size=2></center></td>
+					<td><center><font size=2>{{ result.number_submissions }}</font></center></td>
+					<td><center><font size=2>{{ result.errors_number }}</font></center></td>
+					<td><center><font size=2>{{ result.pass_number }}</font></center></td>
+					<td><center><font size=2>{{ exercise.number_tests }}</font></center></td>
+					<td><center><font size=2>{% ifequal result.veredict None %}{% else %}{{ result.veredict }} {% endifequal %}</font></center></td>
+					<td><center><font size=2>{% ifequal result.score None %}{% else %} {{ result.score }}{% endifequal %}</font></center></td>
+					</tr>
 				{% endfor %}
         </tbody>
 	 </table>
@@ -171,7 +164,6 @@
 		<li><font size=3><a href="../percentual/id={{exercise.id}}">See Exercise Percentual</a></font></li>
 		<li><font size=3><a href="../score_percentual/id={{exercise.id}}">See Score Percentual</a></font></li>
 	</ul></div>
-	{% endif %}
 	{% endif %}
 	 
 </div>

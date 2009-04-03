@@ -130,6 +130,8 @@ def assign_students(request):
 	"""Assign students to assistants."""
 	
 	if request.user.is_authenticated():
+		for p in request.user.get_all_permissions():
+			print p
 		if request.user.has_perm("hoopaloo.assign_student"):
 			if request.method == 'POST':
 				form = AssignStudentsForm(request.POST)
@@ -164,3 +166,20 @@ def assigns(request):
 		form = LoginForm()
 		return render_to_response("login.html", {'form' : form}, context_instance=RequestContext(request))
 			
+def delete_assign(request, student_id):
+	"""Delete the assign between assitant and stdent."""
+	
+	if request.user.is_authenticated():
+		if request.user.has_perm("hoopaloo.delete_association"):
+			util.delete_association(student_id)
+			util.register_action(request.user, configuration.LOG_DELETE_ASSOCIATION % (student.username, assistant.username))
+			students = Student.objects.all()
+			assistants = Assistant.objects.all()
+			return render_to_response('assigns.html', {'students':students, 'assistants':assistants, 'is_assistant': util.is_assistant(request.user),}, context_instance=RequestContext(request))
+		else:
+			error = confguration.DELETE_ASSOCIATION_NOT_PERMISSION
+			return render_to_response("error_page.html", {'error' : error,}, context_instance=RequestContext(request))
+	else:
+		form = LoginForm()
+		return render_to_response("login.html", {'form' : form}, context_instance=RequestContext(request))
+

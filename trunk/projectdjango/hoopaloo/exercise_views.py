@@ -57,12 +57,22 @@ def exercise(request, exercise_id):
 	"""Shows details of exercise with id passed as parameter."""
 	
 	if request.user.is_authenticated():
-		if request.user.has_perm("hoopaloo.see_exercise"):
+		if request.user.has_perm(".see_exercise"):
 			if request.method == 'GET':
+				informations = []
 				exercise = Exercise.objects.get(pk=exercise_id)
 				students = Student.objects.all()
-				results = Result.objects.all()
-				return render_to_response("exercise.html", {'exercise': exercise, 'students' : students, 'results' : results, 'is_assistant': util.is_assistant(request.user),}, context_instance=RequestContext(request))
+				for st in students:
+					num_submissions = Submission.objects.filter(id_student=st.id, id_exercise=exercise.id).count()
+					if num_submissions > 0:
+						submission = Submission.objects.filter(id_student=st.id, id_exercise=exercise.id).order_by('date').reverse()[0]
+						try:
+							execution = Execution.objects.filter(id_submission=submission.id).order_by('date').reverse()[0]
+						except:
+							execution = None
+						results = util.Student_Results(st, exercise, num_submissions, submission, execution)
+						informations.append(results)
+				return render_to_response("exercise.html", {'exercise': exercise, 'results' : informations, 'is_assistant': util.is_assistant(request.user),}, context_instance=RequestContext(request))
 			return render_to_response("error_login.html", {}, context_instance=RequestContext(request))
 		else:
 			error = configuration.EXERCISE_SEE_NOT_PERMISSION
