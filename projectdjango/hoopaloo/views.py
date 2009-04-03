@@ -99,23 +99,30 @@ def student_exercises(request, student_id):
 			if request.method == 'GET':
 				student = Student.objects.get(pk=student_id)
 				informations = []
+				submission = None
 				exercises = Exercise.objects.all()
 				for ex in exercises:
-					submissions = Submission.objects.filter(id_student=student_id, id_exercise=ex.id).order_by('date').reverse()				
-					for s in submissions:
-						result = Result.objects.filter(id_student=student_id, id_exercise=ex.id)
-						if result and (r.veredict == 'Pass'):
-							solved = True
-							errors = r.errors_number
-							score = r.score
-						else:
-							solved = False
-							errors = 0
-							score = 0.0
-							date = s.date
-							percentage = util.calculate_correct_percentage(ex)
-							d = util.Table_Delivered(ex, s, submissions.count(), solved, errors, score, percentage)
-							informations.append(d)
+					submissions = Submission.objects.filter(id_student=student_id, id_exercise=ex.id)					
+					try:
+						submission = submissions.order_by('date').reverse()[0]
+						result = Result.objects.get(id_student=student_id, id_exercise=ex.id)
+					except:
+						result = None
+					
+					if result and (result.veredict == 'Pass'):
+						solved = True
+						errors = result.errors_number
+						score = result.score
+					else:
+						solved = False
+						errors = 0
+						score = 0.0
+					
+					if submission:	
+						date = submission.date
+						percentage = util.calculate_correct_percentage(ex)
+						d = util.Table_Delivered(ex, submission, submissions.count(), solved, errors, score, percentage)
+						informations.append(d)
 				return render_to_response("exercises_student.html", {'informations':informations, 'student':student, 'is_assistant': util.is_assistant(request.user),}, context_instance=RequestContext(request))
 		else:
 			error = configuration.RESULT_SEE_NOT_PERMISSION

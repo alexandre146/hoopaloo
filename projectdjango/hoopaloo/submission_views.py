@@ -53,12 +53,22 @@ def submission(request):
 		
 def view_code(request, submission_id, student_id):
 	if request.user.is_authenticated():
-		profile = request.user.get_profile()
-		if request.user.has_perm(".see_submission") and (long(profile.id) == long(student_id)):
-			submission = Submission.objects.get(pk=submission_id, id_student=student_id)
-			file = open(submission.solution_file.name, 'rb')
-			codelines = util.remove_acentuation(file.read())
-			return render_to_response("submission_code.html", {'codelines':codelines, }, context_instance=RequestContext(request))
+		try:
+			profile = request.user.get_profile()
+		except:
+			pass
+		if request.user.has_perm(".see_submission"):
+			
+			if request.user.is_superuser or isinstance(profile, Assistant) or (long(profile.id) == long(student_id)):
+				submission = Submission.objects.get(pk=submission_id, id_student=student_id)
+				file = open(submission.solution_file.name, 'rb')
+				codelines = util.remove_acentuation(file.read())			
+				response = HttpResponse(codelines)
+				response["Content-Type"] = "text/x-python"
+				return response
+			else:
+				error = configuration.SUBMISSION_SEE_NOT_PERMISSION
+				return render_to_response("error_page.html", {'error' : error}, context_instance=RequestContext(request))				
 		else:
 			error = configuration.SUBMISSION_SEE_NOT_PERMISSION
 			return render_to_response("error_page.html", {'error' : error}, context_instance=RequestContext(request))
@@ -73,18 +83,6 @@ def see_submissions(request):
 			submissions = Submission.objects.filter(id_student=student.id).order_by('date').reverse()
 			explication = configuration.REALIZED_SUBMISSIONS
 			return render_to_response("student_initial_page.html", { 'student':student, 'submissions':submissions, 'explication':explication,}, context_instance=RequestContext(request))
-		else:
-			error = configuration.SUBMISSION_SEE_NOT_PERMISSION
-			return render_to_response("error_page.html", {'error' : error}, context_instance=RequestContext(request))
-	else:
-		form = LoginForm()
-		return render_to_response("login.html", {'form' : form}, context_instance=RequestContext(request))
-	
-	
-def submissions_student(request):
-	if request.user.is_authenticated():
-		if request.user.has_perm(".see_submission"):
-			pass
 		else:
 			error = configuration.SUBMISSION_SEE_NOT_PERMISSION
 			return render_to_response("error_page.html", {'error' : error}, context_instance=RequestContext(request))
@@ -127,23 +125,24 @@ def view_exercise(request, submission_id, exercise_id, student_id=None):
 			if request.method == 'GET':
 				if (request.user.is_superuser or isinstance(profile, Assistant)):
 					student = Student.objects.get(pk=student_id)
-					return render_to_response("submission_view_t.html", {'exercise' : exercise, 'result':result, 'code':cde, 'student':student, 'test': t, 'lines':lines, 'execution':execution, 'is_assistant': util.is_assistant(request.user),}, context_instance=RequestContext(request))
+					return render_to_response("submission_view_t.html", {'exercise' : exercise, 'result':result, 'code':cde, 'student':student, 'test': t, 'lines':lines, 'submission': sub, 'execution':execution, 'is_assistant': util.is_assistant(request.user),}, context_instance=RequestContext(request))
 				
 				elif isinstance(profile, Student):
 					# security against students that want to see the friend's code
 					if long(profile.id) == long(student_id):
-						return render_to_response("submission_view_s.html", {'exercise' : exercise, 'result':result, 'code':cde, 'lines':lines, }, context_instance=RequestContext(request))
+						return render_to_response("submission_view_s.html", {'exercise' : exercise, 'code':cde, 'execution': execution, 'submission': sub, 'lines':lines, }, context_instance=RequestContext(request))
 					else:
 						error = configuration.SUBMISSION_SEE_NOT_PERMISSION
 						return render_to_response("error_page.html", {'error' : error}, context_instance=RequestContext(request))
+			else:
+				has_error, error = util.add_score_and_comments(request.POST['comments'], request.POST['score'], exercise, sub)
+				util.register_action(request.user, configuration.LOG_EDIT_SUBMISSION % (sub.id, student.username))
+				
+				if not has_error:
+					msg = 'Comments/score are addedd sucessfully.'
+					return render_to_response("submission_view_t.html", {'msg': msg, 'exercise' : exercise, 'result':result, 'student':student, 'submission': sub, 'code':cde, 'execution':execution, 'is_assistant': util.is_assistant(request.user),}, context_instance=RequestContext(request))
 				else:
-					has_error, error = util.add_score_and_comments(request.POST['comments'], request.POST['score'], exercise, s)
-					util.register_action(request.user, configuration.LOG_EDIT_SUBMISSION % (s.id, student.username))
-					
-					if not has_error:
-						return render_to_response("submission_view_t.html", {'exercise' : exercise, 'result':result, 'code':cde, 'is_assistant': util.is_assistant(request.user),}, context_instance=RequestContext(request))
-					else:
-						return render_to_response("submission_view_t.html", {'exercise' : exercise, 'result':result, 'code':cde, error: error, }, context_instance=RequestContext(request))
+					return render_to_response("submission_view_t.html", {'exercise' : exercise, 'result':result, 'student':student, 'submission': sub, 'code':cde, 'execution':execution, 'error': error, 'is_assistant': util.is_assistant(request.user)}, context_instance=RequestContext(request))
 		else:
 			error = configuration.SUBMISSION_SEE_NOT_PERMISSION
 			return render_to_response("error_page.html", {'error' : error}, context_instance=RequestContext(request))

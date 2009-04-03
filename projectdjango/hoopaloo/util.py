@@ -8,6 +8,7 @@ import random
 import sha
 import os
 import re
+from unicodedata import normalize
 from datetime import date, datetime, timedelta
 from django.contrib.auth.models import User
 from django.conf import settings
@@ -313,10 +314,10 @@ def mean(results):
 	sum = 0
 	count = 0
 	for r in results:
-		if r.note != None:
-			sum += r.note
+		if r.score != None:
+			sum += r.score
 			count +=1
-	if len(results) != 0:
+	if len(results) != 0 and count != 0:
 		mean = sum/count
 	return mean
 	
@@ -328,11 +329,11 @@ def calculate_mean_student(student):
 	results = Result.objects.filter(id_student=student.id)
 	return mean(results)
 	
-def calculate_mean(exercise):
+def calculate_mean(exercise, student):
 	"""Calculates the mean of notes of an exercise"""
 	
-	from hoopaloo.models import Result
-	results = Result.objects.filter(id_exercise=exercise.id)
+	from hoopaloo.models import Submission
+	results = Submission.objects.filter(id_exercise=exercise.id, id_student=student.id)
 	return mean(results)
 	
 def get_students_percent(percent, id_ex):
@@ -418,31 +419,33 @@ def delete_association(student_id):
 	student.assistant = Assistant.objects.get(username='-')
 	student.save()
 	
-def add_note_and_comments(comments, note, exercise, submission):
-	from hoopaloo.models import Result, Student
-	result = Result.objects.get(id_exercise=exercise.id,id_student=submission.id_student.id)
-	result.comments = comments
+def add_score_and_comments(comments, score, exercise, submission):
+	from hoopaloo.models import Student
 	has_error = False
 	error = ''
-	try:
-		n = int(note)
-	except:
+	if comments != "":
+		submission.comments = comments
+	if score != "":
 		try:
-			n = float(note)
+			n = int(score)
 		except:
-			error = configuration.ADD_NOTE_ERROR
+			try:
+				n = float(score)
+			except:
+				error = configuration.ADD_NOTE_ERROR
+				has_error = True
+	
+		if n > 10 or n < 0:
+			error = configuration.ADD_NOTE_ERROR_2
 			has_error = True
-
-	if n > 10 or n < 0:
-		error = configuration.ADD_NOTE_ERROR_2
-	else:
-		result.note = n
-		result.save()
-		exercise.mean_notes = calculate_mean(exercise)
-		exercise.save()
-		student = Student.objects.get(pk=submission.id_student.id)
-		student.mean = calculate_mean_student(student)
-		student.save()
+		else:
+			submission.score = n
+	submission.save()
+	exercise.mean_notes = calculate_mean(exercise, submission.id_student)
+	exercise.save()
+	student = Student.objects.get(pk=submission.id_student.id)
+	student.mean = calculate_mean_student(student)
+	student.save()
 	return has_error, error
 		
 def students_solved(exercise):
@@ -619,30 +622,8 @@ def get_path_to_download(student, submissions):
 	return tuples
 	
 def remove_acentuation(code):
-	f = open('/home/mariana/www/Debug.txt', 'wb')
-	f.write(code)
 	
-	word = code.replace("á", "a")
-	word = word.replace("Á", "A")
-	word = word.replace("é", "e")
-	word = word.replace("É", "E")
-	word = word.replace("Í", "I")
-	word = word.replace("í", "i")
-	word = word.replace("Ó", "O")
-	word = word.replace("ó", "o")
-	word = word.replace("ú", "u")
-	word = word.replace("Ú", "U")
-	word = word.replace("Ç", "C")
-	word = word.replace("ç", "c")
-	word = word.replace("õ", "o")
-	word = word.replace("Õ", "O")
-	word = word.replace("Ã", "A")
-	word = word.replace("ã", "a")	
-	word = word.replace("à", "a")	
-	
-	f.write(word)
-	f.close()
-	return word	
+	return normalize('NFKD', code.decode('iso-8859-7')).encode('ASCII', 'ignore')
 
 def save_test_in_student_folders(test):
 	from hoopaloo.models import Student
@@ -708,3 +689,21 @@ class Table_Delivered:
 			self.your_right = ((self.number_tests - errors)/float(self.number_tests))*100
 		else:
 			self.your_right = 0
+			
+class Student_Results:
+	def __init__(self, student, exercise, num_submissions, submission, execution):
+		self.student_name = student.username
+		self.student_assistant = student.assistant.username
+		self.number_submissions = num_submissions
+		if not execution:
+			self.errors_number = 0
+			self.pass_number = 0
+		else:
+			self.errors_number = execution.errors_number
+			self.pass_number = execution.pass_number
+		self.number_tests = exercise.number_tests
+		self.veredict = submission.veredict
+		if submission.score:
+			self.score = submission.score
+		else:
+			self.score = None

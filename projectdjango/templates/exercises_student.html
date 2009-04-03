@@ -131,8 +131,9 @@
 								<th scope="col"><center><h3>{% trans 'Date of Last Submission' %}</h3></center></th>
 								<th scope="col"><center><h3>{% trans 'Number of Tests Registered' %}</h3></center></th>
 								<th scope="col"><center><h3>{% trans 'Number of Errors' %}</h3></center></th>
-								<th scope="col"><center><h3>{% trans 'Note' %}</h3></center></th>
-								<th scope="col"><center><h3>{% trans '% of right of the class' %}</h3></center></th>
+								<th scope="col"><center><h3>{% trans 'Score' %}</h3></center></th>
+								<!--<th scope="col"><center><h3>{% trans '% of right of the class' %}</h3></center></th>-->
+								<th scope="col"><center><h3>{% trans 'Download' %}</h3></center></th>
 							</tr>
 						</thead>
 						<tbody>
@@ -144,7 +145,8 @@
 									<td><center><font size=2>{{ info.number_tests }}</font></center></td>
 									<td><center><font size=2>{{ info.num_errors }}</font></center></td>
 									<td><center><font size=2>{% if info.note %}{{ info.note }}{% else %}-{% endif %}</font></center></td>
-									<td><center><font size=2>{{ info.class_percentage }}</font></center></td>
+									<!-- <td><center><font size=2>{{ info.class_percentage }}</font></center></td> -->
+									<td><center><font size=2><a href="../../submission{{info.submission.id}}/student{{student.id}}/">Code</font></center></td>
 								</tr>
 							{% endfor %}
 						</tbody>
