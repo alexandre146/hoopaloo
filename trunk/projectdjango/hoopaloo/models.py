@@ -2,17 +2,17 @@
 
 #Hoopaloo - Version 1.0 - 2008/2009
 #Author: Mariana Romao do Nascimento - mariana@dsc.ufcg.edu.br
-
+import datetime
+from datetime import timedelta
+import os
 from django.core.files.storage import default_storage
 from django.core.files.base import ContentFile
 from django.contrib.auth.models import User
 from django.db import models
 from django.conf import settings
 from hoopaloo import configuration
-from datetime import timedelta
 import util
-import datetime
-import os
+import queries
 
 class Actions_log(models.Model):
 	"""This model storages a log of actions of users."""
@@ -72,7 +72,6 @@ class Exercise(models.Model):
 	mean_notes = models.FloatField() # Mean of notes of the students
 	send_email_teacher = models.BooleanField() # If an email was sended to the teacher because this exercise. This will be necessary when a teacher registered an exercise and not register a test. Then, an email will be sended to the teacher in order to say that a student submit a solution, but are not tests
 	
-	
 	def create_exercise(self, name, description, owner, available, date=None):
 		from hoopaloo.util import get_time_unavailability, get_next_friday, Change_Availability
 		
@@ -102,8 +101,7 @@ class Exercise(models.Model):
 				cron = Change_Availability(exercise.name, t)
 				cron.init_cont()
 			except:
-				from hoopaloo.util import DateException
-				raise DateException, 'The date is invalid'
+				return None
 		
 		return exercise
 		
@@ -132,11 +130,11 @@ class Student(models.Model):
 		st.user = user
 		st.username = username
 		st.studentID = studentID
-		st.student_class = Class.objects.get(name=_class)
+		st.student_class = queries.get_class_from_name(_class)
 		st.number_submissions = 0
 		st.solved_exercises = 0
 		st.unsolved_exercises = 0
-		st.pending_exercises = Exercise.objects.filter(available=True).count()
+		st.pending_exercises = queries.get_number_available_exercises()
 		st.undelivered_exercises = 0
 		st.submission_by_exercise = 0
 		st.mean = 0.0
@@ -173,6 +171,9 @@ class Submission(models.Model):
 		submission.date = datetime.datetime.now()
 		submission.was_executed = False
 		return submission
+	
+	def __unicode__(self):
+		return self.id_student.username + ' - ' + self.id_exercise.name
 		
 class Test(models.Model):
 	"""Test is a test case registered by teacher or assistants to be executed at the students' solutions."""
@@ -183,10 +184,36 @@ class Test(models.Model):
 	creation_date = models.DateTimeField('Creation Date')
 	owner = models.ForeignKey(User)
 	exercise = models.ForeignKey(Exercise) # the exercise related to this test
-
+	locked = models.BooleanField()
+	
 	def create_test(self, owner, exercise, code):
 		new_test = Test()
 		new_test.name = 'Teste_' + exercise.name
+		new_test.code = code
+		new_test.creation_date = datetime.datetime.now()
+		new_test.owner = owner
+		new_test.exercise = exercise
+		new_test.path = new_test.name + '.py'
+		new_test.locked = False
+		
+		return new_test
+		
+	def __unicode__(self):
+		return self.name
+		
+class UnderTest(models.Model):
+	"""Represents a test under test, i.e., a test under edition by teachers or assistants."""
+	
+	name = models.CharField(max_length=200) # The name of test
+	path = models.CharField(max_length=200) # The name of test file (has the extension .py)
+	code = models.TextField() # The code as it was registered, the original code without system appends
+	creation_date = models.DateTimeField('Creation Date')
+	owner = models.ForeignKey(User)
+	exercise = models.ForeignKey(Exercise) # the exercise related to this test
+
+	def create_test(self, owner, exercise, code):
+		new_test = Test()
+		new_test.name = 'UnderTest_' + exercise.name
 		new_test.code = code
 		new_test.creation_date = datetime.datetime.now()
 		new_test.owner = owner
@@ -197,7 +224,7 @@ class Test(models.Model):
 		
 	def __unicode__(self):
 		return self.name
-
+		
 class Execution(models.Model):
 	"""An Execution is the result of the execution of a test upon an exercise."""
 	
@@ -212,19 +239,6 @@ class Execution(models.Model):
 	was_success = models.BooleanField() # If the execution has sucess or not
 	loop = models.BooleanField() # If the program entered in inifinite loop
 	
-class Result(models.Model):
-	"""Result represents the result of execution of a test upon an exercise."""
-	
-	id_student = models.ForeignKey(Student)
-	id_exercise = models.ForeignKey(Exercise)
-	errors_number = models.IntegerField()
-	pass_number = models.IntegerField()
-	num_submissions = models.IntegerField()
-	veredict = models.CharField(max_length=30) # pass or fail
-	errors_to_student = models.CharField(max_length=2000)
-	note = models.FloatField(blank=True)
-	comments = models.CharField(max_length=3000, blank=True)
-	
 # SIGNALS	
 from django.db.models.signals import post_save, pre_delete, pre_save
 			
@@ -233,35 +247,23 @@ def execution_saved(sender, instance, signal, *args, **kwargs):
 	of execution and creates a result."""
 	
 	id_st = instance.id_student.id
-	student = Student.objects.get(pk=id_st)
-	submission = Submission.objects.get(pk=instance.id_submission.id)
-	id_ex = Exercise.objects.get(pk=submission.id_exercise.id)
+	student = queries.get_student(id_st)
+	submission = queries.get_submission(instance.id_submission.id)
+	id_ex = queries.get_exercise(submission.id_exercise.id)
 	errors_number = instance.errors_number
 	pass_number = instance.pass_number
-	num_submissions = Submission.objects.filter(id_exercise=submission.id_exercise, id_student=id_st).count()
+	num_submissions = queries.get_number_student_submissions(submission.id_exercise, id_st)
 	if (errors_number == 0) and (not instance.loop):
 		veredict = 'Pass'
 	else:
 		veredict = 'Fail'
-	
-	if Result.objects.filter(id_student=instance.id_student, id_exercise=id_ex).count() != 0:
-		previous_result = Result.objects.get(id_student=instance.id_student, id_exercise=id_ex).delete()
-	
-	result = Result()
-	result.id_student = instance.id_student
-	result.id_exercise = id_ex
-	result.errors_number = errors_number
-	result.pass_number = pass_number
-	result.num_submissions = num_submissions
-	result.veredict = veredict
-	result.errors_to_student = instance.errors_to_student
-	result.save()
+	#TODO ACHO QUE EH AQUI O PROFESSOR VAI SER AVISADO DO RESULTADO DE SUBMISSÔES
 	
 def create_or_update_test(sender, instance, signal, *args, **kwargs):
 	"""This function is called when a test is modified or is created. It execute the students programs."""
 	
 	from hoopaloo.util import notify_students
-	students = Student.objects.all()
+	students = queries.get_all_students()
 	exercise = instance.exercise
 	test = instance
 	from hoopaloo.Tester import Tester
@@ -270,39 +272,47 @@ def create_or_update_test(sender, instance, signal, *args, **kwargs):
 		tester = Tester(s, test, exercise) 
 		tester.execute_test()
 		
-	#nao notificar ninguem por enquanto
+	#TODO nao notificar ninguem por enquanto
 	#notify_students(students, test, id_exercise)
 
 def pre_delete_exercise(sender, instance, signal, *args, **kwargs):
 	"""This function is invoked when an exercise is deleted. 
 	It removes the files associated to this exercise and update some student informations."""
 	
-	test = Test.objects.get(exercise=instance.id)
+	test = queries.get_consolidated_test(instance.id)
 	os.remove(settings.MEDIA_ROOT + '/tests/' + test.path)
 	try:
 		os.remove(settings.MEDIA_ROOT + '/tests/' + configuration.BACKUP_TEST_NAME + '_'+ instance.name + '.py')
 	except:
 		pass
-	students = Student.objects.all()
+	students = queries.get_all_students()
 	for s in students:
 		os.remove(settings.MEDIA_ROOT + '/' + s.username + '/' + instance.name + '/' + test.path)
 		if instance.available == True:		
-			s.pending_exercises -= 1
+			number = queries.get_number_available_exercises()
+			if number > 0:
+				s.pending_exercises = number - 1
 		else:
 			try:
-				result = Result.objects.get(id_exercise=instance.id)
+				submission = queries.get_last_submission(instance.id, s.id)
 				# if the student solved this exercise then decrement solved exercises
-				if result.veredict == 'Pass' and instance.available == False:
-					s.solved_exercises -= 1
+				if submission.veredict == 'Pass' and instance.available == False:
+					number = queries.get_number_solved_exercises()
+					if number > 0:
+						s.solved_exercises = number - 1
 				# if the student not solved this exercise then decrement unsolved exercises
-				if result.veredict == 'Fail' and instance.available == False:
-					s.unsolved_exercises -= 1
+				if submission.veredict == 'Fail' and instance.available == False:
+					number = queries.get_number_unsolved_exercises()
+					if number > 0:
+						s.unsolved_exercises =  - 1
 			except:
 				# the student not submit a solution for this exercise
-				s.undelivered_exercises -= 1
+				number = queries.get_undelivered_exercises()
+				if number > 0:
+					s.undelivered_exercises = number - 1
 		
-		num_submissions = Submission.objects.filter(id_student=s.id).count() - Submission.objects.filter(id_exercise=instance.id).count()
-		num_exercises = Exercise.objects.all().count() - 1
+		num_submissions = queries.get_number_total_student_submissions(s.id) - queries.get_number_student_submissions(instance.id, s.id)
+		num_exercises = queries.get_number_exercises() - 1
 		s.submission_by_exercise = num_submissions/num_exercises
 		s.save()
 		
@@ -312,14 +322,21 @@ def pre_delete_student(sender, instance, signal, *args, **kwargs):
 	exercise settings."""
 	
 	# Updating settings of exercises
-	results = Result.objects.filter(id_student=instance.id)
-	for r in results:
-		exercise = Exercise.objects.get(pk=r.id_exercise.id)
-		if r.veredict == 'Pass':
-			exercise.number_students_that_solved -= 1
-		exercise_results = Result.objects.filter(id_exercise=exercise.id).exclude(note=None)
-		exercise.mean_notes = util.mean(exercise_results)
-		exercise.save()
+	exercise_results = []
+	exercises = Exercise.objects.all()
+	for ex in exercises:
+		try:
+			submission = queries.get_last_submission(ex.id, instance.id)
+			if s.veredict == 'Pass':
+				number = queries.number_students_that_solved()
+				if number > 0:
+					ex.number_students_that_solved =  number - 1
+			
+			#TODO COLOCAR ESSA ATUALIZAÇÂO DE EXERCICIO EM OUTRO LUGAR. AQUI NAO DAH CERTO
+			exercise.mean_notes = util.mean(exercise_results)
+			exercise.save()
+		except:
+			pass
 	
 	# Deleting files and folders of student
 	for root, dirs, files in os.walk(settings.MEDIA_ROOT + '/' + instance.username, topdown=False):
@@ -335,23 +352,22 @@ def pre_save_exercise(sender, instance, signal, *args, **kwargs):
 	"""This functions is invoked before an exercise to be saved. It add one more exercise pending to students if this exercise is available."""
 	
 	try:
-		Exercise.objects.get(pk=instance.id)
+		queries.get_exercise(instance.id)
 	except:
 		if instance.available:
-			students = Student.objects.all()
+			students = queries.get_all_students()
 			for s in students:
-				s.pending_exercises = s.pending_exercises + 1
+				s.pending_exercises = queries.get_number_available_exercises() + 1
 				s.save()		
 	
 def post_save_exercise(sender, instance, signal, *args, **kwargs):
 	
 	try:
 		# if this exercise exists and only is being updated
-		test = Test.objects.get(exercise=instance.id)
+		test = queries.get_consolidate_test(instance.id)
 	except:
 		name_test = instance.name.replace(".", "_")
-		test = Test().create_test(instance.owner, instance, configuration.TEST_COMPLEMENT % (name_test, name_test))
-		
+		test = Test().create_test(instance.owner, instance, configuration.TEST_DEFAULT_CODE % name_test)
 		try:
 			# creating backup file
 			test_file = open(settings.MEDIA_ROOT + '/tests/' + test.path, 'rb')

@@ -5,10 +5,13 @@
 
 from django.conf import settings
 
-TEST_COMPLEMENT = "import unittest \nfrom unittest import TestResult \n\n\nclass %s (unittest.TestCase): \n\n\tdef setUp(self):\n\t\t pass\n\n\n\tdef tearDown(self):\n\t\tpass\n\n\nif __name__== '__main__':\n\tsuite = unittest.TestLoader().loadTestsFromTestCase(%s)"
+TEST_DEFAULT_CODE = "import unittest \nfrom unittest import TestResult \n\n\nclass %s (unittest.TestCase): \n\n\tdef setUp(self):\n\t\t pass\n\n\n\tdef tearDown(self):\n\t\tpass"
 
-TEST_APPEND = "\n\tr = TestResult()\n\tsuite.run(r)\n\tresult_file = open('result.txt', 'wb')\n\tresult_file.write(str(len(r.errors)))\n\tresult_file.write('\\n')\n\tresult_file.write(str(len(r.failures)))\n\tresult_file.write('\\n')\n\tresult_file.write(str(r.testsRun))\n\tresult_file.write('\\n')\n\tresult_file.write(str(r.wasSuccessful()))\n\tresult_file.write('\\n')\n\tfor e in r.errors:\n\t\tresult_file.write(e[1])\n\tfor f in r.failures:\n\t\tresult_file.write(f[1])\n\tresult_file.close()"
-TEST_APPEND_STUDENT_FOLDER = "\n\tr = TestResult()\n\tsuite.run(r)\n\tresult_file = open(%s + 'result.txt', 'wb')\n\tresult_file.write(str(len(r.errors)))\n\tresult_file.write('\\n')\n\tresult_file.write(str(len(r.failures)))\n\tresult_file.write('\\n')\n\tresult_file.write(str(r.testsRun))\n\tresult_file.write('\\n')\n\tresult_file.write(str(r.wasSuccessful()))\n\tresult_file.write('\\n')\n\tfor e in r.errors:\n\t\tresult_file.write(e[1])\n\tfor f in r.failures:\n\t\tresult_file.write(f[1])\n\tresult_file.close()"
+UNDER_TEST_COMPLEMENT = "if __name__== '__main__':\n\tloader = unittest.TestLoader()\n\tloader.testMethodPrefix = 'undertest'\n\tsuite = loader.loadTestsFromTestCase(%s)\n\tr = TestResult()\n\tsuite.run(r)\n\tresult_file = open('result.txt', 'wb')\n\tresult_file.write(str(len(r.errors)))\n\tresult_file.write('\\n')\n\tresult_file.write(str(len(r.failures)))\n\tresult_file.write('\\n')\n\tresult_file.write(str(r.testsRun))\n\tresult_file.write('\\n')\n\tresult_file.write(str(r.wasSuccessful()))\n\tresult_file.write('\\n')\n\tfor e in r.errors:\n\t\tresult_file.write(e[1])\n\tfor f in r.failures:\n\t\tresult_file.write(f[1])\n\tresult_file.close()"
+
+TEST_APPEND = "if __name__== '__main__':\n\tloader = unittest.TestLoader()\n\tsuite = loader.loadTestsFromTestCase(%s)\n\tr = TestResult()\n\tsuite.run(r)\n\tresult_file = open('result.txt', 'wb')\n\tresult_file.write(str(len(r.errors)))\n\tresult_file.write('\\n')\n\tresult_file.write(str(len(r.failures)))\n\tresult_file.write('\\n')\n\tresult_file.write(str(r.testsRun))\n\tresult_file.write('\\n')\n\tresult_file.write(str(r.wasSuccessful()))\n\tresult_file.write('\\n')\n\tfor e in r.errors:\n\t\tresult_file.write(e[1])\n\tfor f in r.failures:\n\t\tresult_file.write(f[1])\n\tresult_file.close()"
+
+TEST_APPEND_STUDENT_FOLDER = "if __name__== '__main__':\n\tloader = unittest.TestLoader()\n\tsuite = loader.loadTestsFromTestCase(%s)\n\tr = TestResult()\n\tsuite.run(r)\n\tresult_file = open(%s + 'result.txt', 'wb')\n\tresult_file.write(str(len(r.errors)))\n\tresult_file.write('\\n')\n\tresult_file.write(str(len(r.failures)))\n\tresult_file.write('\\n')\n\tresult_file.write(str(r.testsRun))\n\tresult_file.write('\\n')\n\tresult_file.write(str(r.wasSuccessful()))\n\tresult_file.write('\\n')\n\tfor e in r.errors:\n\t\tresult_file.write(e[1])\n\tfor f in r.failures:\n\t\tresult_file.write(f[1])\n\tresult_file.close()"
 
 
 INFINITE_LOOP_MSG = "The program entered in infinite loop."
@@ -50,7 +53,7 @@ ASSIGN_SUCESS = 'The assign students to assistant(s) was done sucessfully.'
 ASSIGN_ERROR = 'You have not permission to assign students to assistants.'
 REVIEW_ASSIGN = 'Review the assigns students to assistant(s) bellow. See usernames with attention.'
 
-EXERCISE_ADD_SUCESS = 'The exercise was added sucessfully. If you want add some test cases to this exercise click on link "Test > New Tests".'
+EXERCISE_ADD_SUCESS = 'The exercise was added sucessfully. If you want edit the default test to this exercise click on link "Exercises > List Tests" and edit it.'
 EXERCISE_ADD_ERROR = 'Some error exists in your form.'
 EXERCISE_ADD_ERROR_DATE = 'Review the date.'
 EXERCISE_EXISTS = 'An exercise with the same name already exists.'
@@ -74,10 +77,14 @@ EXECUTION_SUCESS = 'The program of student %s passed in all tests of exercise %s
 SUBMISSION_MSG = 'Do the upload of your program and select given exercise.'
 SUBMISSION_ERROR = 'You must choose an exercise.'
 
+ADD_COMMENT_SCORE_SUCESS = 'Comments/score are addedd sucessfully.'
+
+
 TEST_UPDATE_SUCESS = 'The test was updated sucessfully and it will be executed automatically to all students.'
 TEST_ADD_SUCESSFULLY = 'The test was added sucessfully.'
 TEST_EXISTS = 'A test with the same name already exists.'
 TEST_ADD_ERROR = 'Some error exists in your form.'
+UNDER_TEST_ADD_SUCESSFULLY = 'The test under test was added sucessfullty. Choose the student submissions to execute.'
 
 ASSISTANT_ADD_SUCESS = 'The assistants was added sucessfully.'
 ASSISTANT_ADD_ERROR = 'The assistants bellow are not registered. Review usernames and emails for them.'

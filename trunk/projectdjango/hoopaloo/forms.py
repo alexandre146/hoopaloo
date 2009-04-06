@@ -21,10 +21,10 @@ from django.core.mail import send_mail
 from django.utils import encoding
 from django.conf import settings
 from django import forms
-from hoopaloo import configuration
-from hoopaloo.models import Exercise, Student, Assistant, Test, Submission, Result, Class
+import configuration
+from hoopaloo.models import Exercise, Student, Assistant, Test, Submission, Class
 from hoopaloo.util import update_students, isValidStudentID, generate_aleatory_password, isValidEmail, isValidUsername, listToString, send_email, register_action, get_time_unavailability, Change_Availability
-
+import queries
 
 class ExerciseForm(forms.Form):
 	"""This form represents the registration of new exercise.
@@ -55,14 +55,16 @@ class ExerciseForm(forms.Form):
 			ex_date = None
 		
 		try:
-			e = Exercise.objects.get(name=name_ex)
+			e = queries.get_exercise_from_name(name_ex)
 			return False
 		except:
 			pass
 			
 			new_exercise = Exercise().create_exercise(name_ex, description, owner_id, available, ex_date)
-			new_exercise.save()
-			
+			if new_exercise:
+				new_exercise.save()
+			else:
+				return None
 		register_action(user, configuration.LOG_ADD_EXERCISE % name_ex)
 		return True
 				
@@ -104,52 +106,44 @@ class SubmissionForm(forms.Form):
 	
 	#Fields of submission
 	file = forms.FileField()
-	exercise = forms.ModelChoiceField(queryset=Exercise.objects.filter(available=True).order_by('name'))
+	exercise = forms.ModelChoiceField(queryset=queries.get_available_exercises_ordered_by_name())
 	
 	def save(self, request):
 		"""Save the new submission"""
-		user_st = Student.objects.get(user=request.user)
-		e = request.POST['exercise']
-		id_exercise = Exercise.objects.get(pk=e)
+		user_st = queries.get_student_from_user_id(request.user)
+		ex_id = request.POST['exercise']
+		exercise = queries.get_exercise(ex_id)
 		
 		# verify if exists other submissions of same student for this same exercise
 		# if exists then the file must be copied to other folder
-		self.verify_previous_submission(user_st, id_exercise)
+		self.verify_previous_submission(user_st, exercise)
 		# saving the uploaded file 
 		filename = self.handle_uploads(request)
 		
 		file_size = request.FILES['file'].size
 		
-		submission = Submission().create_submission(user_st, filename, id_exercise, file_size)
+		submission = Submission().create_submission(user_st, filename, exercise, file_size)
 		submission.save()
 		
-		number_ex = float(Exercise.objects.all().count())
+		number_ex = float(queries.get_number_exercises())
 		#doing updtade in student
 		student = user_st
 		student.number_submissions += 1
 		student.submission_by_exercise = student.number_submissions/number_ex
 		student.save()
 		
-		register_action(request.user, configuration.LOG_SUBMISSION % Exercise.objects.get(pk=e).name)
-		result = self.last_submission_result(id_exercise.id, student.id)
+		register_action(request.user, configuration.LOG_SUBMISSION % exercise.name)
+		sub = queries.get_last_submission(exercise.id, student.id)
 		
-		if result:
+		if sub:
 			# if the student pass in all tests the teacjer must be informed
-			if result.veredict == "Pass":
-				c = Class.objects.get(pk=student.student_class.id)
-				teacher = User.objects.get(id=c.teacher.id)
+			if sub.veredict == "Pass":
+				c = queries.get_class(student.student_class.id)
+				teacher = queries.get_user(c.teacher.id)
 				subject = 'Execution Results'
 				msg = configuration.EXECUTION_SUCESS % (student.username, id_exercise.name, student.id, id_exercise.id)
 				send_email(teacher.email, subject, msg)
-		return result
-		
-	def last_submission_result(self, id_exercise, id_st):
-		"""Returns the result of the submission realized by student."""
-		
-		if Result.objects.filter(id_student=id_st, id_exercise=id_exercise).count() != 0:
-			result = Result.objects.get(id_student=id_st, id_exercise=id_exercise)
-			return result
-		return None	
+		return sub	
 	
 	def verify_previous_submission(self, student, exercise):
 		"""verify if exists other submissions of same student for this same exercise.
@@ -159,10 +153,10 @@ class SubmissionForm(forms.Form):
 		exercise_dir = '/' + student.username + '/' + exercise.name
 		full_path = settings.MEDIA_ROOT + exercise_dir + '/Old_Versions/' 
 		
-		number = Submission.objects.filter(id_student=student.id, id_exercise=exercise.id).count()
+		number = queries.get_number_student_submissions(exercise.id, student.id)
 		if number > 0:
-			submissions = Submission.objects.filter(id_student=student.id, id_exercise=exercise.id).order_by('date')
-			sub = submissions[len(submissions)-1]
+			submissions = queries.get_ordered_submissions(exercise.id, student.id)
+			sub = submissions[0]
 			file = sub.solution_file._name
 			old_path = open(file)
 			
@@ -190,7 +184,7 @@ class SubmissionForm(forms.Form):
 		if 'file' in request.FILES:
 			upload = request.FILES['file']
 			id_ex = request.POST['exercise']
-			exercise_name = Exercise.objects.get(pk=id_ex).name
+			exercise_name = queries.get_exercise(id_ex).name
 			
 			upload_dir = '/' + request.user.username + '/' + exercise_name + '/'
 			upload_full_path = settings.MEDIA_ROOT + upload_dir
@@ -211,61 +205,15 @@ class SubmissionForm(forms.Form):
 		model = Submission
 		exclude = ('solution_file',)
 		
-class TestForm(forms.Form):
-	"""Form to add a new test for an exercise."""
+class ChoiceSubmissionsForm(forms.Form):
 	
-	# Fields
-	name = forms.CharField(max_length=50)
-	test_initial = configuration.TEST_COMPLEMENT
-	contend = forms.Field(widget=forms.Textarea({'cols': '80', 'rows': '40'}), required=True, initial=test_initial)
-	exercise = forms.ModelChoiceField(queryset=Exercise.objects.all())
+	def __init__(self, exercise_id, *args, **kwargs):
+		super(ChoiceSubmissionsForm, self).__init__(*args, **kwargs)
+		self.submissions = forms.ModelMultipleChoiceField(query=queries.get_exercise_submissions(exercise_id), widget=forms.CheckboxSelectMultiple)
+		
+	def save(self):
+		pass
 	
-	def save(self, new_data, user):
-		"""Save the test in database."""
-
-		ex = new_data['exercise']
-		contend = new_data['contend']
-		code = contend
-		
-		exercise = Exercise.objects.get(pk=ex)
-		test = Test().create_test(user, exercise, code)
-		self.create_and_save_files(test, contend)
-		
-		register_action(user, configuration.LOG_ADD_TEST % test.name)
-		test.save()
-		return True
-		
-	def create_and_save_files(self, test, contend):
-		"""Create a file test with the code informed in the form."""
-		
-		exercise = Exercise.objects.get(pk=test.exercise.id)
-		try:
-			t = Test.objects.get(exercise=exercise.id)
-			
-			# creating backup file
-			test_file = open(settings.MEDIA_ROOT + '/tests/' + t.path, 'rb')
-			backup_file = open(settings.MEDIA_ROOT + '/tests/' + configuration.BACKUP_TEST_NAME + '_' + exercise.name + '.py', 'wb')
-			backup_file.write(test_file.read())
-			backup_file.close()
-			test_file.close()
-			os.remove(settings.MEDIA_ROOT + '/tests/' + t.path)
-			
-			# avoid duplicate tests to same exercise
-			t.delete()
-		except:
-			pass
-			
-		path_tests = settings.MEDIA_ROOT + '/tests/' + test.path
-		# removing some test with same name
-		try:
-			os.remove(path_tests)
-		except:
-			pass
-		dest = open(path_tests, 'wb')
-		dest.write(contend + configuration.TEST_APPEND)
-		dest.close()
-		util.save_test_in_student_folders(test)
-		
 class LoginForm(forms.Form):
 	"""Form to login operation"""
 	
@@ -320,8 +268,8 @@ class AssignStudentsForm(forms.Form):
 			
 			for s in students:
 				try:
-					st = Student.objects.get(username=s)
-					st.assistant = Assistant.objects.get(username=assistant)
+					st = queries.get_student_from_username(s)
+					st.assistant = queries.get_assistant_from_username(assistant)
 					st.save()
 				except:
 					errors.append(str(a))
