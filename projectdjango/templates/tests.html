@@ -116,7 +116,9 @@
 		{% endblock %}
 		
 <div id="content-main">
-
+{% if msg %}
+	<ul class="messagelist"><li>{{ msg }}</li></ul>
+{% endif %}
 {% if tests %}
 	<table id="list">
 		<thead>
@@ -125,6 +127,7 @@
 			<th scope="col"><center><h4>{% trans 'Creation Date' %}</center></h4></th>
 			<th scope="col"><center><h4>{% trans 'Owner' %}</center></h4></th>
 			<th scope="col"><center><h4>{% trans 'Exercise' %}</center></h4></th>
+			<th scope="col"><center><h4>{% trans 'Status' %}</center></h4></th>
 			<th scope="col"><center><h4>{% trans 'Edit this test' %}</center></h4></th>
         </tr>
         </thead>
@@ -135,7 +138,8 @@
 			<td><font size=2>{{ t.creation_date|date:"d/m/Y H:i:s" }}</font></td>
 			<td><font size=2>{{ t.owner.username }}</font></td>
 			<td><font size=2>{{ t.exercise.name }}</font></td>
-			<td><font size=2><a href="../../hoopaloo/change_test/id={{t.id}}/">Edit it</a></font></td>
+			<td><font size=2>{% if t.locked %} Locked {% else %} Unlocked {% endif %}</font></td>
+			<td><font size=2>{% if t.locked %} - {% else %} <a href="../../hoopaloo/change_test/id={{t.id}}/">Edit it</a> {% endif %}</font></td>
         </tr>
         {% endfor %}
         </tbody>

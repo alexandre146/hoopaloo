@@ -7,8 +7,9 @@ import subprocess, os, signal
 from datetime import datetime
 from django.conf import settings
 from django.core import *
-from hoopaloo.models import Submission, Result, Execution
-from hoopaloo import configuration 
+from hoopaloo.models import Submission, Execution
+import configuration 
+import queries
 
 class Tester:
 	'''This class realize teh execution of a test to the students' program.
@@ -44,7 +45,7 @@ class Tester:
 		test_file__name = self.test.path
 		student_username = self.student.username
 		# Verifies if the student realize some submission to this exercise
-		num_submissions = Submission.objects.filter(id_student=self.student.id, id_exercise=self.exercise).count()
+		num_submissions = queries.get_number_student_submissions(self.exercise, self.student.id)
 		if num_submissions > 0:
 			# the path of test in students' folder
 		
@@ -62,7 +63,7 @@ class Tester:
 			
 			self.register_results()
 			
-			sub = Submission.objects.filter(id_student=self.student.id, id_exercise=self.exercise).order_by('date').reverse()[0]
+			sub = queries.get_last_submission(self.exercise, self.student.id)
 			sub.was_executed = True
 			sub.save()
 		
@@ -122,8 +123,7 @@ class Tester:
 		# Storing the execution of a test
 		execution = Execution()
 		
-		s = Submission.objects.filter(id_student=self.student.id, id_exercise=self.exercise.id).order_by('date')
-		sb = s.reverse()[0]
+		sb = queries.get_last_submission(self.exercise.id, self.student.id)
 		
 		execution.id_submission = sb
 		execution.id_student = self.student

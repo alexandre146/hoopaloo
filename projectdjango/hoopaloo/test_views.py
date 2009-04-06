@@ -9,10 +9,11 @@ from django.contrib.auth.models import User
 from django.template import RequestContext
 from django.http import HttpResponse
 from django.conf import settings
-from projectdjango.hoopaloo.models import Student, Exercise, Result, Test
-from projectdjango.hoopaloo.forms import TestForm
+from hoopaloo.models import Student, Exercise, Test, UnderTest
+from hoopaloo.forms import ChoiceSubmissionsForm, LoginForm
 import util
-from hoopaloo import configuration
+import queries
+import configuration
 
 
 # ----------------------------------- OPERATIONS WITH TEST (ADD, DELETE, CHANGE) -------------------------------------- #		
@@ -39,8 +40,7 @@ def add_test(request):
 					return render_to_response("add_test.html", {'form' : form, 'error':error, 'is_assistant': util.is_assistant(request.user),}, context_instance=RequestContext(request))
 			else:
 				form = TestForm()
-				other_tests = Test.objects.all()
-				return render_to_response('add_test.html', {'form': form, 'other_tests':other_tests, 'is_assistant': util.is_assistant(request.user),}, context_instance=RequestContext(request))
+				return render_to_response('add_test.html', {'form': form, 'is_assistant': util.is_assistant(request.user),}, context_instance=RequestContext(request))
 		else:
 			error = configuration.TESTS_ADD_NOT_PERMISSION
 			return render_to_response("error_page.html", {'error' : error}, context_instance=RequestContext(request))
@@ -53,7 +53,7 @@ def change_test(request, test_id):
 	
 	if request.user.is_authenticated():
 		if request.user.has_perm("hoopaloo.change_test"):
-			t = Test.objects.get(pk=test_id)
+			t = queries.get_test(test_id)
 			if request.method == 'POST':
 				util.change_test(t, request.POST['contend'])
 				t.code = contend
@@ -72,16 +72,40 @@ def change_test(request, test_id):
 	else:	
 		form = LoginForm()
 		return render_to_response("login.html", {'form' : form}, context_instance=RequestContext(request))
-
+	
+def under_test(request, test_id):
+	if request.user.is_authenticated():
+		if request.user.has_perm("hoopaloo.change_test"):
+			original_test = queries.get_test(test_id)
+			exercise = queries.get_exercise(original_test.exercise.id)
+			under_test = UnderTest().create_test(request.user, exercise, request.POST['contend'])
+			util.save_under_test_file(under_test)
+			under_test.save()
+			original_test.locked = True
+			original_test.save()
+			
+			form = ChoiceSubmissionsForm(exercise.id)
+			msg = configuration.UNDER_TEST_ADD_SUCESSFULLY
+			return render_to_response("choice_submissions.html", {'form' : form, 'exercise':exercise, 'msg': msg, 'is_assistant': util.is_assistant(request.user),}, context_instance=RequestContext(request))
+		else:
+			error = configuration.TEST_UPDATE_NOT_PERMISSION
+			return render_to_response("error_page.html", {'error' : error}, context_instance=RequestContext(request))
+	else:	
+		form = LoginForm()
+		return render_to_response("login.html", {'form' : form}, context_instance=RequestContext(request))
+	
+def choice_submissions(request, exercise_id):
+	pass
+	
 def test_view(request, test_id):
 	"""View that shows test details."""
 	
 	if request.user.is_authenticated():
 		if request.user.has_perm("hoopaloo.see_tests"):
 			if request.method == 'GET':
-				test = Test.objects.get(pk=test_id)
+				test = queries.get_test(test_id)
 				lines = test.code
-				exercise = Exercise.objects.get(pk=test.exercise.id)
+				exercise = queries.get_exercise(test.exercise.id)
 				return render_to_response("test_view.html", {'exercise': exercise, 'test':test, 'code': lines, 'is_assistant': util.is_assistant(request.user),}, context_instance=RequestContext(request))
 		else:
 			error = configuration.TEST_SEE_NOT_PERMISSION
@@ -97,9 +121,9 @@ def annul_test(request, test_id):
 	if request.user.is_authenticated():
 		if request.user.has_perm("hoopaloo.invalidate_tests"):
 			if request.method == 'POST':
-				test = Test.objects.get(pk=test_id)
+				test = queries.get_test(test_id)
 				path = test.path
-				exercise = Exercise.objects.get(pk=test.exercise.id)
+				exercise = queries.get_exercise(test.exercise.id)
 				file = open(settings.MEDIA_ROOT + '/tests/' + configuration.BACKUP_TEST_NAME + '_' + exercise.name + '.py', 'rb')
 				os.remove(settings.MEDIA_ROOT + '/tests/' + path)
 				
@@ -107,7 +131,7 @@ def annul_test(request, test_id):
 				recovered_file.write(file.read())
 				recovered_file.close()
 				
-				students = Student.objects.all()
+				students = queries.get_all_students()
 				for s in students:
 					usr = s.username
 					path_student = settings.MEDIA_ROOT + '/' + usr + '/' + path
@@ -132,7 +156,7 @@ def tests(request):
 	
 	if request.user.is_authenticated():
 		if request.method == 'GET':
-			tests = Test.objects.all()
+			tests = queries.get_all_tests()
 			return render_to_response("tests.html", {'tests' : tests, 'is_assistant': util.is_assistant(request.user),}, context_instance=RequestContext(request))
 	else:	
 		form = LoginForm()

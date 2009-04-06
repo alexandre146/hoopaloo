@@ -8,10 +8,11 @@ from django.contrib.auth.models import User
 from django.template import RequestContext
 from django.http import HttpResponse
 from django.conf import settings
-from projectdjango.hoopaloo.models import Student, Exercise, Submission, Result, Test, Assistant, Actions_log, Execution, Class
-from projectdjango.hoopaloo.forms import LoginForm
+from hoopaloo.models import Student, Exercise, Submission, Test, Assistant, Actions_log, Execution, Class
+from hoopaloo.forms import LoginForm
 import util
-from hoopaloo import configuration
+import queries
+import configuration
 	
 		
 # ----------------------------------------- VIEWS OF STUDENTS, ASSISTANTS AND TEACHER --------------------------------------- #
@@ -21,14 +22,13 @@ def teacher_view(request):
 	if request.user.is_authenticated():
 		if request.user.is_superuser:
 			if request.method == 'GET':
-				classes = Class.objects.filter(teacher=request.user.id)
+				classes = queries.get_classes(request.user)
 				s = []
 				for c in classes:
-					students = Student.objects.filter(student_class=c.id).order_by('username')
+					students = queries.get_ordered_class_student(c.id)
 					for st in students:
 						s.append(st)
-				
-				num_exercises = len(Exercise.objects.all())
+				num_exercises = queries.get_number_exercises()
 				return render_to_response("teacher_view.html", {'students':s, 'num_exercises':num_exercises,}, context_instance=RequestContext(request))
 		else:
 			error = configuration.TEACHER_VIEW_NOT_PERMISSION
@@ -43,8 +43,8 @@ def exercise_percentual(request, exercise_id):
 	if request.user.is_authenticated():
 		if request.user.has_perm("hoopaloo.see_exercise"):
 			if request.method == 'GET':
-				exercise = Exercise.objects.get(pk=exercise_id)
-				students = Student.objects.all()
+				exercise = queries.get_exercise(exercise_id)
+				students = queries.get_all_students()
 				percentual = configuration.PERCENT_OF_TESTS
 				st_percent = util.calculate_percentual(percentual, exercise.number_tests, students, exercise)
 				return render_to_response("exercise_percentual.html", {'st_percent':st_percent, 'is_assistant': util.is_assistant(request.user), 'exercise': exercise, }, context_instance=RequestContext(request))
@@ -62,7 +62,7 @@ def assistant_view(request):
 		profile = request.user.get_profile()
 		if isinstance(profile, Assistant):
 			if request.method == 'GET':
-				students = Student.objects.filter(assistant=profile.id).order_by('username')
+				students = queries.get_ordered_assistant_students()
 				user = request.user
 				return render_to_response("assistant_view.html", {'students':students, 'user':user,}, context_instance=RequestContext(request))
 		else:
@@ -72,13 +72,14 @@ def assistant_view(request):
 		form = LoginForm()
 		return render_to_response("login.html", {'form' : form}, context_instance=RequestContext(request))
 		
+#TODO: AJEITRA ESSE METODO
 def score_percentual(request, exercise_id):
 	"""Shows the percentuals of students that receive the score between X and Y."""
 	
 	if request.user.is_authenticated():
 		if request.user.has_perm("hoopaloo.see_exercise"):
 			if request.method == 'GET':
-				exercise = Exercise.objects.get(pk=exercise_id)
+				exercise = queries.get_exercise(exercise_id)
 				results = Result.objects.all()
 				note_percentual = configuration.PERCENT_OF_NOTE
 				note_percent = util.calculate_note_percentual(note_percentual, results, exercise)
@@ -89,40 +90,15 @@ def score_percentual(request, exercise_id):
 	else:
 		form = LoginForm()
 		return render_to_response("login.html", {'form' : form}, context_instance=RequestContext(request))
-	
-				
+		
 def student_exercises(request, student_id):
 	"""Shows all exercises of studen represented by student_id."""
 	
 	if request.user.is_authenticated():
 		if request.user.has_perm(".see_results"):
 			if request.method == 'GET':
-				student = Student.objects.get(pk=student_id)
-				informations = []
-				submission = None
-				exercises = Exercise.objects.all()
-				for ex in exercises:
-					submissions = Submission.objects.filter(id_student=student_id, id_exercise=ex.id)					
-					try:
-						submission = submissions.order_by('date').reverse()[0]
-						result = Result.objects.get(id_student=student_id, id_exercise=ex.id)
-					except:
-						result = None
-					
-					if result and (result.veredict == 'Pass'):
-						solved = True
-						errors = result.errors_number
-						score = result.score
-					else:
-						solved = False
-						errors = 0
-						score = 0.0
-					
-					if submission:	
-						date = submission.date
-						percentage = util.calculate_correct_percentage(ex)
-						d = util.Table_Delivered(ex, submission, submissions.count(), solved, errors, score, percentage)
-						informations.append(d)
+				student = queries.get_student(student_id)
+				informations = util.student_exercises(student_id)
 				return render_to_response("exercises_student.html", {'informations':informations, 'student':student, 'is_assistant': util.is_assistant(request.user),}, context_instance=RequestContext(request))
 		else:
 			error = configuration.RESULT_SEE_NOT_PERMISSION
@@ -137,7 +113,7 @@ def delivered_exercises_student(request, student_id):
 	if request.user.is_authenticated():
 		if request.method == 'GET':
 			delivered = util.get_delivered_exercises(student_id)
-			student = Student.objects.get(pk=student_id)
+			student = queries.get_student(student_id)
 			explication = configuration.DELIVERED_EXERCISES_MSG
 			return render_to_response("delivered_exercises_student.html", {'delivered' : delivered, 'explication': explication, 'student':student, 'is_assistant': util.is_assistant(request.user),}, context_instance=RequestContext(request))
 	else:
@@ -169,9 +145,8 @@ def all_students(request):
 	if request.user.is_authenticated():
 		if request.user.is_superuser:
 			if request.method == 'GET':
-				students = Student.objects.all().order_by('username')
-				num_exercises = len(Exercise.objects.all())
-				return render_to_response("teacher_view.html", {'students':students, 'num_exercises':num_exercises,}, context_instance=RequestContext(request))
+				students = queries.get_all_students_ordered()
+				return render_to_response("teacher_view.html", {'students':students,}, context_instance=RequestContext(request))
 		else:
 			error = configuration.TEACHER_VIEW_NOT_PERMISSION
 			return render_to_response("error_page.html", {'error' : error}, context_instance=RequestContext(request))
@@ -185,7 +160,7 @@ def global_assistant_view(request):
 	if request.user.is_authenticated():
 		if isinstance(request.user.get_profile(), Assistant):
 			if request.method == 'GET':
-				students = Student.objects.all().order_by('username')
+				students = queries.get_all_students_ordered()
 				user = request.user
 				return render_to_response("assistant_view.html", {'students':students, 'user':user,}, context_instance=RequestContext(request))
 		else:
@@ -200,7 +175,7 @@ def available_exercises(request):
 	
 	if request.user.is_authenticated():
 		if request.method == 'GET':
-			available = Exercise.objects.filter(available=True).order_by('date_finish')
+			available = queries.get_ordered_available_exercises()
 			student = request.user.get_profile()
 			explication = configuration.AVAILABLE_EXERCISES_MSG
 			return render_to_response("student_view.html", {'undelivered' : available, 'explication' : explication, 'student':student, }, context_instance=RequestContext(request))
@@ -226,13 +201,12 @@ def undelivered_exercises(request):
 	
 	if request.user.is_authenticated():
 		if request.method == 'GET':
-			exercises = Exercise.objects.filter(available=False).order_by('date_finish')
+			exercises = queries.get_ordered_unavailable_exercises()
 			student = request.user.get_profile()
 			undelivered = []
 			for ex in exercises:
-				try:
-					submissions = Submission.objects.get(id_student=student.id, id_exercise=ex.id)
-				except:
+				submissions = queries.get_number_student_submissions(ex.id, student.id)
+				if submissions == 0:
 					undelivered.append(ex)
 			explication = configuration.UNDELIVERED_EXERCISES_MSG
 			return render_to_response("student_view.html", {'undelivered' : undelivered, 'explication':explication, 'student':student, }, context_instance=RequestContext(request))
@@ -247,7 +221,7 @@ def actions(request):
 	if request.user.is_authenticated():
 		if request.user.has_perm("hoopaloo.see_actions"):
 			# last 100 actions
-			actions = Actions_log.objects.all().order_by('date').reverse()[:100]
+			actions = queries.get_last_100_actions()
 			return render_to_response("actions.html", {'actions':actions, }, context_instance=RequestContext(request))
 		else:
 			error = configuration.SEE_ACTIONS_NOT_PERMISSION

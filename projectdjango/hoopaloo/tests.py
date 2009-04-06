@@ -5,7 +5,7 @@ from django.utils import simplejson as json
 from datetime import date
 from django.conf import settings
 from django.contrib.auth.models import User
-from hoopaloo.models import Exercise, Student, Assistant, Submission, Exercise, Result, Execution, Test
+from hoopaloo.models import Exercise, Student, Assistant, Submission, Exercise, Execution, Test
 from hoopaloo import forms
 from hoopaloo.util import generate_aleatory_password, isValidUsername, isValidEmail, isValidStudentID
 
@@ -47,7 +47,7 @@ class MyTestCase(TestCase):
 		print 'register_assistant_test'
 
 		
-	# ver isso, como ajeitar a criacao das tabelas para que de certo isso
+	#TODO  ver isso, como ajeitar a criacao das tabelas para que de certo isso
 	def test_register_student(self):
 		u = User.objects.create_user('assistant2', 'assistant@assistant.com', 'assistant_password')
 		u.first_name = 'Assistant'

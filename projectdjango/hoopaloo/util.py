@@ -13,12 +13,12 @@ from datetime import date, datetime, timedelta
 from django.contrib.auth.models import User
 from django.conf import settings
 from django.core.mail import send_mail
-from hoopaloo import configuration
-
+import configuration
+import queries
 
 
 def generate_aleatory_password():
-	"""Generates a new password aleatorily"""
+	"""Generates a new password randomly"""
 	
 	import string
 	from random import choice
@@ -71,7 +71,7 @@ def isValidUsername(field_data):
 	An username is valid when there are not an equal username in database."""
 	
 	try:
-		User.objects.get(username=field_data)
+		queries.get_user_from_username(field_data)
 		return False
 	except User.DoesNotExist:
 		return True
@@ -109,23 +109,22 @@ def make_message_student(result):
 	If the result is PASS the message shows the number of tests.
 	If the result is FAIL the message shows the number of tests, the number of errors and right and the messages of errors"""
 	from hoopaloo.models import Execution, Submission
-	
-	
+
 	msgs = []
 	
-	# APAGAR DEPOIS
+	#TODO APAGAR DEPOIS
 	msg = 'Your program was updated sucessfully. Check your code submission in table bellow.'	
 	msgs.append(msg)
 	return True, msgs
 	#
-	
+	#TODO ESSA PARTE DO METODO VAI PARA OUTRO LUGAR
 	if result == None:
 		msg = configuration.EXECUTION_AFTER
 		msgs.append(msg)
 		return None, msgs
 	else:
-		submission = Submission.objects.filter(id_student=result.id_student.id, id_exercise=result.id_exercise.id).order_by('date').reverse()[0]
-		execution = Execution.objects.filter(id_student=result.id_student.id, id_submission=submission.id).order_by('date').reverse()[0]
+		submission = queries.get_last_submission(result.id_exercise.id, result.id_student.id)
+		execution = queries.get_last_execution(submission.id)
 		if result.veredict == "Pass":
 			msg = configuration.EXECUTION_PASS % (result.pass_number)
 			msgs.append(msg)
@@ -147,14 +146,15 @@ def make_message_student(result):
 def notify_students(students, test, id_ex):
 	"""Notify the students about the result of execution tests."""
 	
-	from hoopaloo.models import Submission, Result
+	from hoopaloo.models import Submission
 	test_creation_date = test.creation_date
 	for s in students:
-		if len(Submission.objects.filter(id_student=s.id, id_exercise=id_ex).order_by('date')) != 0:
-			last_submission = Submission.objects.filter(id_student=s.id, id_exercise=id_ex).order_by('date')[0]
+		submissions = queries.get_number_student_submissions(id_ex, s.id)
+		if submissions.count() != 0:
+			last_submission = queries.get_last_submission(id_ex, s.id)
 			if last_submission.date <= test_creation_date:
-				result = Result.objects.get(id_student=s.id, id_exercise=id_ex)
-				veredict, message = make_message_student(result)
+				#TODO LEMBRAR DE MUDAR ESSE METODO MAKE_MESSAGE
+				veredict, message = make_message_student(last_submission)
 				
 				subject = "Notification"
 				send_email(s.user.email, subject, message)
@@ -166,25 +166,22 @@ def register_action(user, action):
 	log = Actions_log().create_action(user, action, datetime.now())
 	log.save()
 	
-	
 def update_students(exercise):
 	"""Updates some informations of student like number of solved exercises and number of unsolved exercises.
 	This method is invoked when an exercise change your availability."""
-	
-	from hoopaloo.models import Student, Result
-	students = Student.objects.all()
+
+	students = queries.get_all_students()
 	for s in students:
 		try:
-			result = Result.objects.get(id_exercise = exercise.id, id_student=s.id)
-			if result.veredict == 'Pass':
-				s.solved_exercises = s.solved_exercises + 1
+			submission = queries.get_last_submission(exercise.id, s.id)
+			if submission.veredict == 'Pass':
+				s.solved_exercises = queries.get_number_solved_exercises(s.id) + 1
 			else:
-				s.unsolved_exercises = s.unsolved_exercises + 1
+				s.unsolved_exercises = queries.get_number_unsolved_exercises(s.id) + 1
 		except:
-			s.undelivered_exercises = s.undelivered_exercises + 1
-		s.pending_exercises = s.pending_exercises - 1
+			s.undelivered_exercises = queries.get_number_undelivered_exercises(s.id) + 1
+		s.pending_exercises = queries.get_number_available_exercises() - 1
 		s.save()
-	
 	
 class DateException(Exception):
 	def __init__(self, value):
@@ -248,7 +245,7 @@ class Change_Availability():
 	def change_availability(self):
 		"""Change the availability of an exerciese."""
 		from hoopaloo.models import Exercise
-		exercise = Exercise.objects.get(name=self.exercise_name)
+		exercise = queries.get_exercise_from_name(self.exercise_name)
 		exercise.available = False
 		exercise.save()
 	
@@ -266,7 +263,6 @@ class MyTuple:
 		self.y = y
 		self.z = z
 	
-		
 def calculate_percentual(percentual_list, number_tests, students, exercise):
 	"""Returns a list in which each element has a percentual.
 	This percentual is a percent of test right. For example: 20% of class passed in 40% of tests."""
@@ -277,8 +273,8 @@ def calculate_percentual(percentual_list, number_tests, students, exercise):
 		num = 0
 		for s in students:
 			try:
-				result = Result.objects.get(id_exercise=exercise.id, id_student=s.id)
-				aux = (result.pass_number * 100) / exercise.number_tests
+				last_submission = queries.get_last_submission(exercise.id, s.id)
+				aux = (last_submission.pass_number * 100) / exercise.number_tests
 				if aux == p:
 					num += 1
 			except:
@@ -321,33 +317,42 @@ def mean(results):
 		mean = sum/count
 	return mean
 	
-	
 def calculate_mean_student(student):
 	"""Calculates the mean of note of a student"""
-	
-	from hoopaloo.models import Result
-	results = Result.objects.filter(id_student=student.id)
+	exercises = queries.get_unavailable_exercises()
+	results = []
+	for ex in exercises:
+		try:
+			last_submission = queries.get_last_submission(ex.id, student.id)
+			results.append(last_submission)
+		except:
+			pass
 	return mean(results)
-	
-def calculate_mean(exercise, student):
+
+def calculate_mean(exercise):
 	"""Calculates the mean of notes of an exercise"""
 	
-	from hoopaloo.models import Submission
-	results = Submission.objects.filter(id_exercise=exercise.id, id_student=student.id)
+	students = queries.get_all_students()
+	results = []
+	for st in students:
+		try:
+			last_submission = queries.get_last_submission(exercise.id, st.id)
+			results.append(last_submission)
+		except:
+			pass
 	return mean(results)
-	
+			
 def get_students_percent(percent, id_ex):
 	"""Returns the students that passed in percentual (percent) of right tests"""
 	
-	from hoopaloo.models import Exercise, Student, Result
-	students = Student.objects.all()
-	exercise = Exercise.objects.get(pk=id_ex)
+	students = queries.get_all_students()
+	exercise = queries.get_exercise(id_ex)
 	st_percent = []
 	for s in students:
 		aux = 0
 		try:
-			result = Result.objects.get(id_exercise=id_ex, id_student=s.id)
-			aux = (result.pass_number * 100) / exercise.number_tests
+			last_submission = queries.get_last_submission(id_ex, s.id)
+			aux = (last_submission.pass_number * 100) / exercise.number_tests
 			if aux == int(percent):
 				st_percent.append(s)
 		except:
@@ -360,8 +365,8 @@ def get_students_score_percent(index, id_exercise):
 	"""Returns the students that has a specific note (referenced by index)"""
 	
 	from hoopaloo.models import Exercise, Student, Result
-	students = Student.objects.all()
-	exercise = Exercise.objects.get(pk=id_exercise)
+	students = queries.get_all_students()
+	exercise = queries.get_exercise(id_exercise)
 	st_percent = []
 
 	score = configuration.PERCENT_OF_SCORE[index]
@@ -371,8 +376,8 @@ def get_students_score_percent(index, id_exercise):
 	for s in students:
 		aux = 0
 		try:
-			result = Result.objects.get(id_exercise=exercise.id, id_student=s.id)
-			if (result.note >= float(score1) and result.note <= float(score2)):
+			last_submission = queries.get_last_submission(exercise.id, s.id)
+			if (last_submission.note >= float(score1) and last_submission.note <= float(score2)):
 				st_percent.append(s)
 		except:
 			pass
@@ -381,13 +386,12 @@ def get_students_score_percent(index, id_exercise):
 def calculate_correct_percentage(exercise):
 	"""Calculate the percentage of right tests of all students to an specific exercise"""
 	
-	from hoopaloo.models import Student, Result
-	students = Student.objects.all()
+	students = queries.get_all_students()
 	percent = 0 
 	for s in students:
 		try:
-			result = Result.objects.get(id_exercise=exercise.id, id_student=s.id)
-			if result.veredict == 'Pass':
+			last_submission = queries.get_last_submission(exercise.id, s.id)
+			if last_submission.veredict == 'Pass':
 				percent +=1 
 		except:
 			pass
@@ -399,28 +403,25 @@ def is_assistant(user):
 	return True
 	
 def get_available_exercises(user):
-	from hoopaloo.models import Exercise
-	available = Exercise.objects.filter(available=True)
+	available = queries.get_available_exercises()
 	student = user.get_profile()
 	undelivered = []
 	for ex in available:
-		try:
-			# tem um erro aqui e nao sei qual eh, nao pega a submissao, mesmo que ela exista
-			submited = Submission.objects.get(id_student=student.id, id_exercise=ex.id)
-		except:
+		submited = queries.get_number_student_submissions(ex.id, student.id)
+		if submited == 0:
 			undelivered.append(ex)
 	return undelivered	
 		
+#TODO ESTE METODO TAH ERRADO
 def delete_association(student_id):
-	from hoopaloo.models import Student, Assistant
 	
-	student = Student.objects.get(pk=student_id)
-	assistant = Assistant.objects.get(pk=student.assistant.id)
-	student.assistant = Assistant.objects.get(username='-')
+	student = queries.get_student(student_id)
+	assistant = queries.get_assistant(student.assistant.id)
+	student.assistant = queries.get_assistant_from_name('-')
 	student.save()
 	
 def add_score_and_comments(comments, score, exercise, submission):
-	from hoopaloo.models import Student
+	
 	has_error = False
 	error = ''
 	if comments != "":
@@ -441,35 +442,24 @@ def add_score_and_comments(comments, score, exercise, submission):
 		else:
 			submission.score = n
 	submission.save()
-	exercise.mean_notes = calculate_mean(exercise, submission.id_student)
+	exercise.mean_notes = calculate_mean(exercise)
 	exercise.save()
-	student = Student.objects.get(pk=submission.id_student.id)
+	student = queries.get_student(submission.id_student.id)
 	student.mean = calculate_mean_student(student)
 	student.save()
 	return has_error, error
-		
-def students_solved(exercise):
-	from hoopaloo.models import Result
-	
-	count = 0
-	results = Result.objects.filter(id_exercise=exercise.id)
-	for r in results:
-		if r.veredict == 'Pass':
-			count += 1
-	return count
 	
 def update_availability(id_exercise):
-	from hoopaloo.models import Exercise, Student
 	
-	ex = Exercise.objects.get(pk=id_exercise)
+	ex = queries.get_exercise(id_exercise)
 	if ex.available == True:
 		available = False
 		update_students(ex)
-		ex.number_students_that_solved = students_solved(ex)
+		ex.number_students_that_solved = queries.number_students_that_solved(ex)
 	else:
 		available = True
 		ex.date_availability = datetime.today()
-		students = Student.objects.all()
+		students = queries.get_all_students()
 		for s in students:
 			s.pending_exercises = s.pending_exercises + 1
 			s.save()
@@ -487,31 +477,30 @@ def update_availability(id_exercise):
 
 def get_delivered_exercises(student_id):
 	from hoopaloo.models import Exercise
-	available = Exercise.objects.filter(available=True).order_by('date_finish').reverse()
+	available = queries.get_reverse_ordered_available_exercises()
 	delivered = []
 	for ex in available:
 		try:
-			submited = Submission.objects.filter(id_student=student_id, id_exercise=ex.id).order_by('date').reverse()
-			result = Result.objects.get(id_exercise = ex.id, id_student=student_id)
-			if result.veredict == 'Pass':
+			submited = queries.get_last_submission(ex.id, student_id)
+			execution = queries.get_last_execution(submited.id)
+			if submited.veredict == 'Pass':
 				solved = True
 			else:
 				solved = False
-			date = submited[0].date
 			percentage = calculate_correct_percentage(ex)
-			d = Table_Delivered(ex, result.num_submissions, date, ex.number_tests, solved, result.errors_number, result.note, percentage)
+			d = Table_Delivered(ex, result.num_submissions, submited.date, ex.number_tests, solved, execution.errors_number, submited.score, percentage)
 			delivered.append(d)
 		except:
 			pass
 	return delivered
 		
 def copy_test_files(student):
-	from hoopaloo.models import Test, Exercise
-	exercises = Exercise.objects.all()
+	
+	exercises = queries.get_all_exercises()
 	for e in exercises:
 		path_student = settings.MEDIA_ROOT + '/' + student.username + '/' 
 		try:
-			test = Test.objects.get(exercise=e.id)
+			test = queries.get_consolidate_test(e.id)
 			student_test = open(path_student + test.path, 'wb')
 			file_test = open(settings.MEDIA_ROOT + '/tests/' + test.path, 'rb')
 			lines = file_test.readlines()
@@ -528,12 +517,11 @@ def copy_test_files(student):
 def copy_test_files(student):
 	"""Copy all test files in the student folder"""
 	
-	from hoopaloo.models import Test, Exercise
-	exercises = Exercise.objects.all()
+	exercises = queries.get_all_exercises()
 	for e in exercises:
 		path_student = settings.MEDIA_ROOT + '/' + student.username + '/' 
 		try:
-			test = Test.objects.get(exercise=e.id)
+			test = queries.get_consolidate_test(e.id)
 			student_test = open(path_student + test.path, 'wb')
 			file_test = open(settings.MEDIA_ROOT + '/tests/' + test.path, 'rb')
 			lines = file_test.readlines()
@@ -557,9 +545,8 @@ def copy_test_files(student):
 
 		
 def change_test(test, contend):
-	from hoopaloo.models import Student, Exercise
 	
-	exercise = Exercise.objects.get(pk=test.exercise.id)
+	exercise = queries.get_exercise(test.exercise.id)
 	
 	# exists a copy of test file is in '/tests/'
 	old_file_path = settings.MEDIA_ROOT + '/tests/' + test.path
@@ -582,7 +569,7 @@ def change_test(test, contend):
 	dest.write(contend + configuration.TEST_APPEND)
 	dest.close()
 			
-	students = Student.objects.all()
+	students = queries.get_all_students()
 	# in this loop, delete the old test files that were in students' folders
 	for s in students:
 		usr = s.username
@@ -602,7 +589,16 @@ def change_test(test, contend):
 			dest.write(contend + configuration.TEST_APPEND_STUDENT_FOLDER % path_student)
 		dest.close()
 		
+def save_under_test_file(test):
+	exercise = queries.get_exercise(test.exercise.id)
+		
+	# save the new conted of test
+	path_tests = settings.MEDIA_ROOT + '/under_tests/' + test.path
+	dest = open(path_tests, 'wb')
 	
+	dest.write(test.code + '\n\n\n' + configuration.UNDER_TEST_COMPLEMENT)
+	dest.close()
+			
 def create_datetime(d):
 
 	pieces = d.split(" ")
@@ -613,30 +609,22 @@ def create_datetime(d):
 	
 	return datetime(int(year), int(month), int(day), int(hour), int(minutes))
 	
-	
-def get_path_to_download(student, submissions):
-	tuples =[]
-	for s in submissions:
-		path_download = student.username + '/' + s.solution_file.name.split('/')[-1]
-		tuples.append(MyTuple(s,path_download))
-	return tuples
-	
 def remove_acentuation(code):
-	
 	return normalize('NFKD', code.decode('iso-8859-7')).encode('ASCII', 'ignore')
 
 def save_test_in_student_folders(test):
-	from hoopaloo.models import Student
 	
-	students = Student.objects.all()
+	students = queries.get_all_students()
 	exercise = test.exercise
+	
 	
 	for s in students:
 		usr = s.username
 		path = settings.MEDIA_ROOT + '/' + usr + '/' + exercise.name + '/'
-		test_full_path =  path +test.path
+		test_full_path =  path + test.path
 		if not os.path.exists(path):
 			os.makedirs(path)
+		
 		try:
 			os.remove(path + t.path)
 		except:
@@ -648,7 +636,7 @@ def save_test_in_student_folders(test):
 			aux2 = number*(path,)
 			dest.write((test.code % aux2) + (configuration.TEST_APPEND_STUDENT_FOLDER % aux))
 		else:
-			dest.write(test.code + configuration.TEST_APPEND_STUDENT_FOLDER % aux)
+			dest.write(test.code + configuration.TEST_APPEND_STUDENT_FOLDER % (test.name, aux))
 		dest.close()
 	
 def code(lines):
@@ -707,3 +695,34 @@ class Student_Results:
 			self.score = submission.score
 		else:
 			self.score = None
+			
+def student_exercises(student_id):
+	informations = []
+	solved = False
+	score = 0.0
+	errors = 0
+	
+	student = queries.get_student(student_id)
+	exercises = queries.get_all_exercises()
+	
+	for ex in exercises:
+		submission = None
+		submissions = queries.get_submissions(ex.id, student_id)					
+		try:
+			submission = submissions.order_by('date').reverse()[0]
+			execution = queries.get_last_execution(submission.id)
+		except:
+			pass
+		
+		if submission and (submission.veredict == 'Pass'):
+			solved = True
+			if execution:
+				errors = execution.errors_number
+			score = submission.score
+		
+		if submission:	
+			date = submission.date
+			percentage = calculate_correct_percentage(ex)
+			d = Table_Delivered(ex, submission, submissions.count(), solved, errors, score, percentage)
+			informations.append(d)
+	return informations

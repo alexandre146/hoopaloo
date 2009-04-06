@@ -12,7 +12,8 @@ from django.http import HttpResponse
 from django.contrib import auth
 from django.conf import settings
 import util
-from hoopaloo import configuration
+import queries
+import configuration
 
 # ----------------------  OPERATIONS WITH USERS (ADD STUDENT< ASSISTANT, DELETE STUDENT, ASSISTANT, SEE USER INFORMATIONS) ---------------------------- #
 
@@ -80,8 +81,8 @@ def users(request):
 	
 	if request.user.is_authenticated():
 		if request.user.has_perm("hoopaloo.see_users"):
-			students = Student.objects.all().order_by('username')
-			assistants = Assistant.objects.all().order_by('username')
+			students = queries.get_all_students_ordered()
+			assistants = queries.get_all_assistants_ordered()
 				
 			return render_to_response("users.html", {'students' : students, 'assistants': assistants, 'is_assistant': util.is_assistant(request.user), }, context_instance=RequestContext(request))
 		else:
@@ -96,7 +97,7 @@ def delete_users(request, user_id):
 	
 	if request.user.is_authenticated():
 		if request.user.has_perm("hoopaloo.delete_user"):
-			user = User.objects.get(pk=user_id)
+			user = queries.get_user(user_id)
 			return render_to_response("delete_user.html", {'user':user,}, context_instance=RequestContext(request))
 		else:
 			error = confguration.DELETE_USERS_NOT_PERMISSION
@@ -113,7 +114,7 @@ def delete_user(request, user_id):
 			return render_to_response("delete_user.html", {'method':request.method,},  context_instance=RequestContext(request))
 		else:
 			# deleting the user
-			user = User.objects.get(pk=user_id)
+			user = queries.get_user(user_id)
 			profile = user.get_profile()
 			profile.delete()
 			user.delete()
@@ -130,8 +131,6 @@ def assign_students(request):
 	"""Assign students to assistants."""
 	
 	if request.user.is_authenticated():
-		for p in request.user.get_all_permissions():
-			print p
 		if request.user.has_perm("hoopaloo.assign_student"):
 			if request.method == 'POST':
 				form = AssignStudentsForm(request.POST)
@@ -159,8 +158,8 @@ def assigns(request):
 	
 	if request.user.is_authenticated():
 		if request.method == 'GET':
-			students = Student.objects.all()
-			assistants = Assistant.objects.all()
+			students = queries.get_all_students()
+			assistants = queries.get_all_assistants()
 			return render_to_response('assigns.html', {'students':students, 'assistants':assistants, 'is_assistant': util.is_assistant(request.user),}, context_instance=RequestContext(request))
 	else:
 		form = LoginForm()
@@ -173,8 +172,8 @@ def delete_assign(request, student_id):
 		if request.user.has_perm("hoopaloo.delete_association"):
 			util.delete_association(student_id)
 			util.register_action(request.user, configuration.LOG_DELETE_ASSOCIATION % (student.username, assistant.username))
-			students = Student.objects.all()
-			assistants = Assistant.objects.all()
+			students = queries.get_all_students()
+			assistants = queries.get_all_assistants()
 			return render_to_response('assigns.html', {'students':students, 'assistants':assistants, 'is_assistant': util.is_assistant(request.user),}, context_instance=RequestContext(request))
 		else:
 			error = confguration.DELETE_ASSOCIATION_NOT_PERMISSION

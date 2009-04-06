@@ -10,7 +10,8 @@ from django.http import HttpResponse
 from django.contrib import auth
 from projectdjango.hoopaloo.models import Student, Submission, Assistant, Class
 from projectdjango.hoopaloo.forms import LoginForm, ForgotPasswordForm, ChangePasswordForm
-from hoopaloo import configuration
+import configuration
+import queries
 import util
 
 # This view makes the login of an user and redirect him/her to student's view or teacher's view or assistant view
@@ -36,26 +37,26 @@ def login(request):
 				util.register_action(user, configuration.LOG_LOGIN)
 				# Redirect to a specific page
 				if user.is_superuser:
-					classes = Class.objects.filter(teacher=user.id)
+					classes = queries.get_classes(user.id)
 					s = []
 					for c in classes:
-						students = Student.objects.filter(student_class=c.id)
+						students = queries.get_class_students(c.id)
 						for st in students:
 							s.append(st)
 					return render_to_response("teacher_view.html", {'students': s, 'user': user,  }, context_instance=RequestContext(request))
 				else:
 					if util.first_access(user) == False:
 						try:
-							# trying recover a student profile
-							profile = Assistant.objects.get(user=request.user.id)
-						except:
 							# trying recover a assistant profile
-							profile = Student.objects.get(user=request.user.id)
+							profile = queries.get_assistant_from_user_id(request.user.id)
+						except:
+							# trying recover a student profile
+							profile = queries.get_student_from_user_id(request.user.id)
 						if isinstance(profile, Assistant):
-							students = Student.objects.filter(assistant=profile.id)
+							students = queries.get_assistant_students(profile.id)
 							return render_to_response("assistant_view.html", {'students': students, 'user': user, }, context_instance=RequestContext(request))
 						else:
-							submissions = Submission.objects.filter(id_student=profile.id).order_by('date').reverse()
+							submissions = queries.get_ordered_student_submissions(profile.id)
 							explication = configuration.REALIZED_SUBMISSIONS
 							return render_to_response("student_initial_page.html", { 'student':profile, 'submissions':submissions, 'explication':explication,}, context_instance=RequestContext(request))
 					else:
@@ -77,10 +78,10 @@ def login(request):
 		else:
 			profile = user.get_profile()
 			if isinstance(profile, Assistant):
-				students = Student.objects.filter(assistant=profile.id)
+				students = queries.get_assistant_students(profile.id)
 				return render_to_response("assistant_view.html", {'students': students, 'user': user, 'msg':msg,}, context_instance=RequestContext(request))
 			elif isinstance(profile, Student):
-				submissions = Submission.objects.filter(id_student=profile.id).order_by('date').reverse()
+				submissions = queries.get_ordered_student_submissions(profile.id)
 				explication = configuration.REALIZED_SUBMISSIONS
 				return render_to_response("student_initial_page.html", { 'student':profile, 'submissions':submissions, 'explication':explication,}, context_instance=RequestContext(request))
 					
@@ -159,7 +160,7 @@ def forgot_password(request):
 		if form.is_valid():
 			e = request.POST['email']
 			try:
-				user = User.objects.filter(email=e)[0]
+				user = get_user_from_email(e)
 				# generate the new password and send to email
 				util.send_new_password(e, user)
 				form = LoginForm()

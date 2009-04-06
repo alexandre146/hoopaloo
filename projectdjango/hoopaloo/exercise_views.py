@@ -9,10 +9,11 @@ from django.contrib.auth.models import User
 from django.template import RequestContext
 from django.http import HttpResponse
 from django.conf import settings
-from projectdjango.hoopaloo.models import Student, Exercise, Submission, Result, Test, Assistant, Execution
+from projectdjango.hoopaloo.models import Student, Exercise, Submission, Test, Assistant, Execution
 from projectdjango.hoopaloo.forms import ExerciseForm, LoginForm
 import util
-from hoopaloo import configuration
+import queries
+import configuration
 
 # ----------------------------- OPERATIONS WITH EXERCISE (ADD, DELETE, SEE, CHANGE) ---------------------------------------------#
 
@@ -25,7 +26,6 @@ def add_exercise(request):
 				form = ExerciseForm(request.POST) 
 				if form.is_valid():
 					result = form.save(request.POST, request.user)
-					print 'RESULT', result
 					if result == True:
 						msg = configuration.EXERCISE_ADD_SUCESS
 						form = ExerciseForm()
@@ -43,6 +43,7 @@ def add_exercise(request):
 					return render_to_response("add_exercise.html", {'form' : form, 'error':error, 'is_assistant': util.is_assistant(request.user),}, context_instance=RequestContext(request))
 			else:
 				form = ExerciseForm()
+				#TODO VER COMO FAZER PARA QUE ESSA DATA APARECA NA HORA DO CADASTRO
 				day = util.get_next_friday(datetime.today())
 				friday = str(day.year) + "-" + str(day.month) + "-" + str(day.day) + " " + str(day.hour) + ":" + str(day.minute)
 				return render_to_response('add_exercise.html', {'form' : form, 'friday': friday, 'is_assistant': util.is_assistant(request.user),}, context_instance=RequestContext(request))
@@ -60,14 +61,14 @@ def exercise(request, exercise_id):
 		if request.user.has_perm(".see_exercise"):
 			if request.method == 'GET':
 				informations = []
-				exercise = Exercise.objects.get(pk=exercise_id)
-				students = Student.objects.all()
+				exercise = queries.get_exercise(exercise_id)
+				students = queries.get_all_students()
 				for st in students:
-					num_submissions = Submission.objects.filter(id_student=st.id, id_exercise=exercise.id).count()
+					num_submissions = queries.get_number_student_submissions(st.id, exercise.id)
 					if num_submissions > 0:
-						submission = Submission.objects.filter(id_student=st.id, id_exercise=exercise.id).order_by('date').reverse()[0]
+						submission = queries.get_last_submission(st.id, exercise.id)
 						try:
-							execution = Execution.objects.filter(id_submission=submission.id).order_by('date').reverse()[0]
+							execution = queries,get_last_execution(submission.id)
 						except:
 							execution = None
 						results = util.Student_Results(st, exercise, num_submissions, submission, execution)
@@ -86,7 +87,7 @@ def change_exercise(request, exercise_id):
 	
 	if request.user.is_authenticated():
 		if request.user.has_perm("hoopaloo.change_exercise"):
-			e = Exercise.objects.get(pk=exercise_id)
+			e = queries.get_exercise(exercise_id)
 			form = ExerciseForm(request)
 			if request.method == 'POST':
 				update = form.update(request.POST, e, request.user)
@@ -111,7 +112,7 @@ def exercises(request, id_exercise=None):
 	
 	if request.user.is_authenticated():
 		if request.user.has_perm("hoopaloo.change_exercise"):
-			exercises = Exercise.objects.all().order_by("date_finish").reverse()
+			exercises = queries.get_all_exercises_ordered()
 			return render_to_response("exercises.html", {'exercises' : exercises, 'is_assistant': util.is_assistant(request.user),}, context_instance=RequestContext(request))
 		else:
 			error = confguration.EXERCISE_UPDATE_NOT_PERMISSION
@@ -125,7 +126,7 @@ def availability_exercise(request, id_exercise):
 	
 	if request.user.is_authenticated():
 		if request.user.has_perm("hoopaloo.change_exercise"):
-			exercise = Exercise.objects.get(pk=id_exercise)
+			exercise = queries.get_exercise(id_exercise)
 			return render_to_response("change_availability_exercise.html", {'exercise':exercise, 'is_assistant': util.is_assistant(request.user),}, context_instance=RequestContext(request))
 		else:
 			error = confguration.EXERCISE_UPDATE_NOT_PERMISSION
@@ -157,7 +158,7 @@ def delete_exercises(request, exercise_id):
 	
 	if request.user.is_authenticated():
 		if request.user.has_perm("hoopaloo.delete_exercise"):
-			exercise = Exercise.objects.get(pk=exercise_id)
+			exercise = queries.get_exercise(exercise_id)
 			return render_to_response("delete_exercise.html", {'exercise':exercise, 'is_assistant': util.is_assistant(request.user),}, context_instance=RequestContext(request))
 		else:
 			error = confguration.DELETE_USERS_NOT_PERMISSION
@@ -173,7 +174,7 @@ def delete_exercise(request, exercise_id):
 		if request.method == 'GET':
 			return render_to_response("delete_exercise.html", {'method':request.method,},  context_instance=RequestContext(request))
 		else:
-			exercise = Exercise.objects.get(pk=exercise_id)
+			exercise = queries.get_exercise(exercise_id)
 			exercise.delete()
 			msg = configuration.EXERCISE_DELETED
 			util.register_action(request.user, configuration.LOG_DELETE_EXERCISE % exercise.name) 

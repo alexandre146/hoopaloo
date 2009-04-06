@@ -112,16 +112,6 @@
 <div id="container">
 		<br></br>
 		<br></br>
-		<div class="errornote">Atention! Register a test with different name from the names bellow:</div>
-		{% if other_tests %}
-			<ul>
-			{% for t in other_tests %}
-				<li>{{t.name}}</li>
-			{% endfor %}
-			</ul>
-		{% else %}
-		<div>There are not any registered test.</div>
-		{% endif %}
 		<br></br>
 		{% block branding %}<h1 id="site-name"><font size="4">{% trans 'Register Test' %}</font></h1>
 		{% endblock %}
