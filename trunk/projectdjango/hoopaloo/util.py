@@ -495,26 +495,6 @@ def get_delivered_exercises(student_id):
 	return delivered
 		
 def copy_test_files(student):
-	
-	exercises = queries.get_all_exercises()
-	for e in exercises:
-		path_student = settings.MEDIA_ROOT + '/' + student.username + '/' 
-		try:
-			test = queries.get_consolidate_test(e.id)
-			student_test = open(path_student + test.path, 'wb')
-			file_test = open(settings.MEDIA_ROOT + '/tests/' + test.path, 'rb')
-			lines = file_test.readlines()
-			contend = ''
-			for l in lines:
-				contend += l
-			student_test.write(contend + configuration.TEST_APPEND_STUDENT_FOLDER % path_student)
-			student_test.close()
-			file_test.close()
-		except:
-			# have not test for this exercise
-			pass
-		
-def copy_test_files(student):
 	"""Copy all test files in the student folder"""
 	
 	exercises = queries.get_all_exercises()
@@ -591,7 +571,6 @@ def change_test(test, contend):
 		
 def save_under_test_file(test):
 	exercise = queries.get_exercise(test.exercise.id)
-		
 	# save the new conted of test
 	path_tests = settings.MEDIA_ROOT + '/under_tests/' + test.path
 	dest = open(path_tests, 'wb')
@@ -600,9 +579,9 @@ def save_under_test_file(test):
 	if test.code.__contains__("from pexpect import *"):
 		number = test.code.count('%')
 		aux2 = number*(path_tests,)
-		dest.write((test.code % aux2) + (configuration.UNDER_TEST_COMPLEMENT % aux))
+		dest.write((test.code % aux2) + (configuration.UNDER_TEST_COMPLEMENT % aux, aux))
 	else:
-		dest.write(test.code + '\n\n\n' + configuration.UNDER_TEST_COMPLEMENT % (test.name))
+		dest.write(test.code + '\n\n\n' + configuration.UNDER_TEST_COMPLEMENT % (test.name, "'" + settings.MEDIA_ROOT + '/under_tests/' + "'"))
 	dest.close()
 	
 			
@@ -711,6 +690,7 @@ class Student_Results:
 			
 class Temp_Results:
 	def __init__(self, student, submission, num_errors, num_failures, num_tests, log_errors):
+		print 'entrou no tem results'
 		self.student = student
 		self.submissin = submission
 		self.num_errors = num_errors

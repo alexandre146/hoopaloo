@@ -72,10 +72,9 @@ class Tester:
 		
 	def execute_under_test(self):
 		 test_file_name = self.test.path
-		 student_username = self.student.username
 		 test_file_path = settings.MEDIA_ROOT + '/under_tests/' + test_file_name
-		 
 		 #copying temporarly the student file to folder 'under_tests'
+		 
 		 original_file_path = self.submission.solution_file.name
 		 copy_file_path = settings.MEDIA_ROOT + '/under_tests/' + self.exercise.name + '.py'
 		 util.copy_file(original_file_path, copy_file_path)
@@ -85,7 +84,7 @@ class Tester:
 		 self.process.wait()
 		 
 		 #Removing the student file of folder 'under_tests'
-		 os.remove(copy_file_path)
+		 #os.remove(copy_file_path)
 		 
 		 return self.register_temp_results()
 		 
@@ -127,7 +126,7 @@ class Tester:
 			except:
 				return
 			
-		return Temp_Results(self.student, self.submission, num_errors, num_failures, num_tests, log_errors)
+		return util.Temp_Results(self.student, self.submission, num_errors, num_failures, num_tests, log_errors)
 			 
 	def infinite_loop_func(self):
 		"""Function to terminate a execution when it will be infinite loop"""

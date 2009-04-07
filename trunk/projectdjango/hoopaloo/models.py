@@ -262,16 +262,17 @@ def execution_saved(sender, instance, signal, *args, **kwargs):
 def create_or_update_test(sender, instance, signal, *args, **kwargs):
 	"""This function is called when a test is modified or is created. It execute the students programs."""
 	
-	from hoopaloo.util import notify_students
-	students = queries.get_all_students()
-	exercise = instance.exercise
-	test = instance
-	from hoopaloo.Tester import Tester
-		
-	for s in students:
-		tester = Tester(s, test, exercise) 
-		tester.execute_test()
-		
+	if not instance.locked:
+		from hoopaloo.util import notify_students
+		students = queries.get_all_students()
+		exercise = instance.exercise
+		test = instance
+		from hoopaloo.Tester import Tester
+			
+		for s in students:
+			tester = Tester(s, test, exercise) 
+			tester.execute_test()
+			
 	#TODO nao notificar ninguem por enquanto
 	#notify_students(students, test, id_exercise)
 
