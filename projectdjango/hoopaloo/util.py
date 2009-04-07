@@ -596,8 +596,15 @@ def save_under_test_file(test):
 	path_tests = settings.MEDIA_ROOT + '/under_tests/' + test.path
 	dest = open(path_tests, 'wb')
 	
-	dest.write(test.code + '\n\n\n' + configuration.UNDER_TEST_COMPLEMENT)
+	aux = "'" + path_tests + "'"
+	if test.code.__contains__("from pexpect import *"):
+		number = test.code.count('%')
+		aux2 = number*(path_tests,)
+		dest.write((test.code % aux2) + (configuration.UNDER_TEST_COMPLEMENT % aux))
+	else:
+		dest.write(test.code + '\n\n\n' + configuration.UNDER_TEST_COMPLEMENT % (test.name))
 	dest.close()
+	
 			
 def create_datetime(d):
 
@@ -612,11 +619,17 @@ def create_datetime(d):
 def remove_acentuation(code):
 	return normalize('NFKD', code.decode('iso-8859-7')).encode('ASCII', 'ignore')
 
+def copy_file(souce, destination):
+	source_file = open(souce, 'rb')
+	destination_file = open(destination, 'wb')
+	destination_file.write(source_file.read())
+	destination_file.close()
+	source_file.close()
+	
 def save_test_in_student_folders(test):
 	
 	students = queries.get_all_students()
 	exercise = test.exercise
-	
 	
 	for s in students:
 		usr = s.username
@@ -696,6 +709,17 @@ class Student_Results:
 		else:
 			self.score = None
 			
+class Temp_Results:
+	def __init__(self, student, submission, num_errors, num_failures, num_tests, log_errors):
+		self.student = student
+		self.submissin = submission
+		self.num_errors = num_errors
+		self.num_pass = num_tests - (num_errors + num_failures)
+		self.num_failures = num_failures
+		self.num_tests = num_tests
+		self.log_errors = log_errors
+		
+		
 def student_exercises(student_id):
 	informations = []
 	solved = False

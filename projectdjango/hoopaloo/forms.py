@@ -205,15 +205,6 @@ class SubmissionForm(forms.Form):
 		model = Submission
 		exclude = ('solution_file',)
 		
-class ChoiceSubmissionsForm(forms.Form):
-	
-	def __init__(self, exercise_id, *args, **kwargs):
-		super(ChoiceSubmissionsForm, self).__init__(*args, **kwargs)
-		self.submissions = forms.ModelMultipleChoiceField(query=queries.get_exercise_submissions(exercise_id), widget=forms.CheckboxSelectMultiple)
-		
-	def save(self):
-		pass
-	
 class LoginForm(forms.Form):
 	"""Form to login operation"""
 	

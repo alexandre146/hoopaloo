@@ -10,10 +10,11 @@ from django.template import RequestContext
 from django.http import HttpResponse
 from django.conf import settings
 from hoopaloo.models import Student, Exercise, Test, UnderTest
-from hoopaloo.forms import ChoiceSubmissionsForm, LoginForm
+from hoopaloo.forms import LoginForm
 import util
 import queries
 import configuration
+from Tester import Tester
 
 
 # ----------------------------------- OPERATIONS WITH TEST (ADD, DELETE, CHANGE) -------------------------------------- #		
@@ -78,15 +79,15 @@ def under_test(request, test_id):
 		if request.user.has_perm("hoopaloo.change_test"):
 			original_test = queries.get_test(test_id)
 			exercise = queries.get_exercise(original_test.exercise.id)
-			under_test = UnderTest().create_test(request.user, exercise, request.POST['contend'])
+			code = request.POST['contend'].replace('Test_', 'UnderTest_')
+			under_test = UnderTest().create_test(request.user, exercise, code)
 			util.save_under_test_file(under_test)
 			under_test.save()
 			original_test.locked = True
 			original_test.save()
-			
-			form = ChoiceSubmissionsForm(exercise.id)
+			options = queries.get_exercise_submissions(exercise.id)
 			msg = configuration.UNDER_TEST_ADD_SUCESSFULLY
-			return render_to_response("choice_submissions.html", {'form' : form, 'exercise':exercise, 'msg': msg, 'is_assistant': util.is_assistant(request.user),}, context_instance=RequestContext(request))
+			return render_to_response("choose_submissions.html", {'options' : options, 'exercise':exercise, 'msg': msg, 'is_assistant': util.is_assistant(request.user),}, context_instance=RequestContext(request))
 		else:
 			error = configuration.TEST_UPDATE_NOT_PERMISSION
 			return render_to_response("error_page.html", {'error' : error}, context_instance=RequestContext(request))
@@ -94,9 +95,29 @@ def under_test(request, test_id):
 		form = LoginForm()
 		return render_to_response("login.html", {'form' : form}, context_instance=RequestContext(request))
 	
-def choice_submissions(request, exercise_id):
-	pass
-	
+def choose_submissions(request, exercise_id):
+	if request.method == 'POST':
+		options = queries.get_exercise_submissions(exercise_id)
+		executions_results = []
+		for op in options:
+			if 'submission' + str(op.id) in request.POST:
+				exercise = queries.get_exercise(exercise_id)
+				student = queries.get_student(op.id_student.id)
+				test = queries.get_under_test(exercise_id)
+				
+				tester = Tester(student, test, exercise, op)
+				result = tester.execute_under_test()
+				executions_results.append(result)
+				
+				print result.student.username
+				print result.num_errors
+				print result.num_failures
+				print result.num_pass
+				print result.log_errors
+				print '================='
+				
+		return render_to_response("temp_results.html", {'executions_results':executions_results, }, context_instance=RequestContext(request))	
+				
 def test_view(request, test_id):
 	"""View that shows test details."""
 	

@@ -212,7 +212,7 @@ class UnderTest(models.Model):
 	exercise = models.ForeignKey(Exercise) # the exercise related to this test
 
 	def create_test(self, owner, exercise, code):
-		new_test = Test()
+		new_test = UnderTest()
 		new_test.name = 'UnderTest_' + exercise.name
 		new_test.code = code
 		new_test.creation_date = datetime.datetime.now()
@@ -366,15 +366,11 @@ def post_save_exercise(sender, instance, signal, *args, **kwargs):
 		# if this exercise exists and only is being updated
 		test = queries.get_consolidate_test(instance.id)
 	except:
-		name_test = instance.name.replace(".", "_")
+		name_test = 'Test_' + instance.name.replace(".", "_")
 		test = Test().create_test(instance.owner, instance, configuration.TEST_DEFAULT_CODE % name_test)
 		try:
 			# creating backup file
-			test_file = open(settings.MEDIA_ROOT + '/tests/' + test.path, 'rb')
-			backup_file = open(settings.MEDIA_ROOT + '/tests/' + configuration.BACKUP_TEST_NAME + '_' + exercise.name + '.py', 'wb')
-			backup_file.write(test_file.read())
-			backup_file.close()
-			test_file.close()
+			util.copy_file(settings.MEDIA_ROOT + '/tests/' + test.path, settings.MEDIA_ROOT + '/tests/' + configuration.BACKUP_TEST_NAME + '_' + exercise.name + '.py')
 			os.remove(settings.MEDIA_ROOT + '/tests/' + t.path)
 		except:
 			pass
