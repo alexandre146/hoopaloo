@@ -2,7 +2,7 @@ import unittest
 from unittest import TestResult 
 
 
-class UnderTest_lalal (unittest.TestCase): 
+class lalal (unittest.TestCase): 
 
 	def setUp(self):
 		 pass

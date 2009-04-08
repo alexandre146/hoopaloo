@@ -262,9 +262,9 @@ def get_all_tests():
 	from hoopaloo.models import Test
 	return Test.objects.all()
 
-def get_under_test(id_exercise):
+def get_under_test(exercise_id):
 	from hoopaloo.models import UnderTest
-	return UnderTest.objects.get(exercise=id_exercise)
+	return UnderTest.objects.get(exercise=exercise_id)
 	
 #CLASSES
 def get_classes(user):

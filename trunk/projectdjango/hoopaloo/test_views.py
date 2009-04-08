@@ -18,36 +18,6 @@ from Tester import Tester
 
 
 # ----------------------------------- OPERATIONS WITH TEST (ADD, DELETE, CHANGE) -------------------------------------- #		
-def add_test(request):
-	"""Register a new test."""
-	
-	if request.user.is_authenticated():
-		if request.user.has_perm("hoopaloo.add_test"):
-			if request.method == 'POST':
-				form = TestForm(request.POST)
-				if form.is_valid():
-					result = form.save(request.POST, request.user)
-					if result == True:
-						form = TestForm()
-						msg = configuration.TEST_ADD_SUCESSFULLY
-						return render_to_response("add_test.html", {'form' : form, 'msg' : msg, 'is_assistant': util.is_assistant(request.user),}, context_instance=RequestContext(request))
-					else:
-						form = TestForm()
-						error = configuration.TEST_EXISTS
-						return render_to_response("add_test.html.html", {'form' : form, 'error' : error, 'is_assistant': util.is_assistant(request.user),}, context_instance=RequestContext(request))
-				else:
-					error = configuration.TEST_ADD_ERROR
-					form = TestForm()
-					return render_to_response("add_test.html", {'form' : form, 'error':error, 'is_assistant': util.is_assistant(request.user),}, context_instance=RequestContext(request))
-			else:
-				form = TestForm()
-				return render_to_response('add_test.html', {'form': form, 'is_assistant': util.is_assistant(request.user),}, context_instance=RequestContext(request))
-		else:
-			error = configuration.TESTS_ADD_NOT_PERMISSION
-			return render_to_response("error_page.html", {'error' : error}, context_instance=RequestContext(request))
-	else:
-		form = LoginForm()
-		return render_to_response("login.html", {'form' : form}, context_instance=RequestContext(request))
 	
 def change_test(request, test_id):
 	"""Change the contend of test represented by test_id."""
@@ -55,18 +25,8 @@ def change_test(request, test_id):
 	if request.user.is_authenticated():
 		if request.user.has_perm("hoopaloo.change_test"):
 			t = queries.get_test(test_id)
-			if request.method == 'POST':
-				util.change_test(t, request.POST['contend'])
-				t.code = contend
-				t.save()
-				msg = configuration.TEST_UPDATE_SUCESS
-				util.register_action(request.user, configuration.LOG_EDIT_TEST % t.name)
-				exs = Exercise.objects.all()
-				return render_to_response("update_test.html", {'msg': msg, 'test':t, 'exercises': exs, 'contend':contend, 'is_assistant': util.is_assistant(request.user),}, context_instance=RequestContext(request))
-			else:
-				contend = t.code
-				exs = Exercise.objects.all()
-				return render_to_response("update_test.html", {'test': t, 'exercises': exs, 'contend':contend, 'is_assistant': util.is_assistant(request.user),}, context_instance=RequestContext(request))
+			contend = t.code
+			return render_to_response("update_test.html", {'test': t, 'contend':contend, 'is_assistant': util.is_assistant(request.user),}, context_instance=RequestContext(request))
 		else:
 			error = configuration.TEST_UPDATE_NOT_PERMISSION
 			return render_to_response("error_page.html", {'error' : error}, context_instance=RequestContext(request))
@@ -109,15 +69,25 @@ def choose_submissions(request, exercise_id):
 				result = tester.execute_under_test()
 				executions_results.append(result)
 				
-				print result.student.username
-				print result.num_errors
-				print result.num_failures
-				print result.num_pass
-				print result.log_errors
-				print '================='
-				
-		return render_to_response("temp_results.html", {'executions_results':executions_results, }, context_instance=RequestContext(request))	
-				
+		return render_to_response("temp_results.html", {'executions_results':executions_results, 'exercise': exercise}, context_instance=RequestContext(request))	
+
+#TODO FOI AQUI Q EU PAREIIIII
+def consolidate_test(request, exercise_id):
+	if request.method == 'POST':
+		exercise = queries.get_exercise(exercise_id)
+		original_test = queries.get_consolidated_test(exercise_id)
+		under_test = queries.get_under_test(exercise_id)
+		
+		path_under_test = settings.MEDIA_ROOT + '/under_tests/' + under_test.path
+		path_test = settings.MEDIA_ROOT + '/tests/' + original_test.path
+		os.remove(path_test)
+		
+		new_test_code = under_test.code.replace('undertest_', 'test_')
+		new_test = open(path_test, 'wb')
+		new_test.write(under_test.code + TEST_APPEND % under_test.name)
+		util.save_test_in_student_folders(under_test)
+		
+	
 def test_view(request, test_id):
 	"""View that shows test details."""
 	
