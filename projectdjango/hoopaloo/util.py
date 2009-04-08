@@ -690,9 +690,8 @@ class Student_Results:
 			
 class Temp_Results:
 	def __init__(self, student, submission, num_errors, num_failures, num_tests, log_errors):
-		print 'entrou no tem results'
 		self.student = student
-		self.submissin = submission
+		self.submission = submission
 		self.num_errors = num_errors
 		self.num_pass = num_tests - (num_errors + num_failures)
 		self.num_failures = num_failures

@@ -99,16 +99,16 @@ class Tester:
 		try:
 			result_file = open(settings.MEDIA_ROOT + '/under_tests/' + configuration.RESULT_TEST_FILE)
 			results = result_file.readlines()
-		
+			
 			num_errors = int(results[0])
 			num_failures = int(results[1])
 			num_tests = int(results[2])
 			was_success = bool(results[3])
 			log_errors = results[4:]
-		
+			
 			msg_to_student = self.get_message_to_student(log_errors)
 			result_file.close()
-			os.remove(settings.MEDIA_ROOT + '/' + self.student.username + '/' + configuration.RESULT_TEST_FILE)
+			os.remove(settings.MEDIA_ROOT + '/under_tests/' + configuration.RESULT_TEST_FILE)
 		
 		except:
 			try:

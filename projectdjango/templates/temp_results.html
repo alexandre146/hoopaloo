@@ -110,13 +110,15 @@
 	<ul class="messagelist"><li>{{ msg }}</li></ul>
 {% endif %}
 {% for execution in executions_results %}
-		<h1>Execution Result to {{execution.student.username}}</h1><br>
+		<h1>Execution Result to {{execution.student.username}} - SubmissionID {{execution.submission.id}}</h1><br>
 		Number of tests: {{execution.num_tests}}<br>
 		Number of errors: {{execution.num_errors}}<br>
 		Number of failures: {{execution.num_failures}}<br>
 		Number of passed tests: {{execution.num_pass}}<br>
-		Messages: {{execution.log_errors}}<br>
+		{% if execution.log_errors %}Messages: {{execution.log_errors}}{% endif %}<br>
 {% endfor %}
-
+<form action="/hoopaloo/choose_submissions/id={{exercise.id}}/" method='POST'>
+	<input type="submit" value="{% trans 'Run Test' %}" />
+</form>
 </div>
 {% endblock %}
