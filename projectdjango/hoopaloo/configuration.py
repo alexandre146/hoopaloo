@@ -24,7 +24,6 @@ PASSWORD_EMAIL = 'Welcome to Hoopaloo,\n\nYou are registered in the system and y
 FORGOT_PASSWORD_EMAIL = 'Hello %s,\nYou requested a new password. This password is %s and you must change it when access Hoopaloo system at the next time.\n\nThanks, Hoopaloo.'
 
 SUBMISSION_WITHOUT_TEST_EMAIL_TO_STUDENT = "%s,\nYour program was submited sucessfully, but at the moment there are not tests registered.\nWhen tests will be added, your program will be executed and the results sent to you by email.\n\nDo not reply this message, it is generated automatically.\n\nThanks,\nHoopaloo"
-
 SUBMISSION_WITHOUT_TEST_EMAIL_TO_TEACHER = "Teacher,\nThere are submissions to the exercise %s, but you do not register any test.\n\nDo not reply this message, it is generated automatically.\n\nThanks,\nHoopaloo."
 
 RESULT_TEST_FILE = 'result.txt'
@@ -76,9 +75,9 @@ EXECUTION_SUCESS = 'The program of student %s passed in all tests of exercise %s
 
 SUBMISSION_MSG = 'Do the upload of your program and select given exercise.'
 SUBMISSION_ERROR = 'You must choose an exercise.'
+SUBMISION_SUCESS = 'Your program was updated sucessfully. Check your code submission in table bellow.'
 
 ADD_COMMENT_SCORE_SUCESS = 'Comments/score are addedd sucessfully.'
-
 
 TEST_UPDATE_SUCESS = 'The test was updated sucessfully and it will be executed automatically to all students.'
 TEST_ADD_SUCESSFULLY = 'The test was added sucessfully.'

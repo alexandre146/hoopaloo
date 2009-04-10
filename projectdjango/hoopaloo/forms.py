@@ -133,17 +133,7 @@ class SubmissionForm(forms.Form):
 		student.save()
 		
 		register_action(request.user, configuration.LOG_SUBMISSION % exercise.name)
-		sub = queries.get_last_submission(exercise.id, student.id)
-		
-		if sub:
-			# if the student pass in all tests the teacjer must be informed
-			if sub.veredict == "Pass":
-				c = queries.get_class(student.student_class.id)
-				teacher = queries.get_user(c.teacher.id)
-				subject = 'Execution Results'
-				msg = configuration.EXECUTION_SUCESS % (student.username, id_exercise.name, student.id, id_exercise.id)
-				send_email(teacher.email, subject, msg)
-		return sub	
+			
 	
 	def verify_previous_submission(self, student, exercise):
 		"""verify if exists other submissions of same student for this same exercise.

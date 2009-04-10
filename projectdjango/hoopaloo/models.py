@@ -85,10 +85,6 @@ class Exercise(models.Model):
 	
 		if date:
 			exercise.date_finish = date 
-		'''else:
-			today = datetime.datetime.now()
-			# if the teacher not specify a date of unavailability the default is the next friday
-			exercise.date_finish = util.get_next_friday(today)'''
 		
 		exercise.number_tests = 0
 		exercise.number_students_that_solved = 0
@@ -249,10 +245,8 @@ def execution_saved(sender, instance, signal, *args, **kwargs):
 	id_st = instance.id_student.id
 	student = queries.get_student(id_st)
 	submission = queries.get_submission(instance.id_submission.id)
-	id_ex = queries.get_exercise(submission.id_exercise.id)
-	errors_number = instance.errors_number
-	pass_number = instance.pass_number
-	num_submissions = queries.get_number_student_submissions(submission.id_exercise, id_st)
+	exercise = queries.get_exercise(submission.id_exercise.id)
+
 	if (errors_number == 0) and (not instance.loop):
 		veredict = 'Pass'
 	else:
@@ -262,8 +256,17 @@ def execution_saved(sender, instance, signal, *args, **kwargs):
 	submission.was_executed = True
 	submission.save()
 	
-	#TODO ACHO QUE EH AQUI O PROFESSOR VAI SER AVISADO DO RESULTADO DE SUBMISSÔES
-	
+	#notifying the teacher	
+	# if the student pass in all tests the teacjer must be informed
+	if submission.veredict == "Pass":
+		c = queries.get_class(student.student_class.id)
+		teacher = queries.get_user(c.teacher.id)
+		subject = 'Execution Results'
+		msg = configuration.EXECUTION_SUCESS % (student.username, exercise.name, student.id, exercise.id)
+		send_email(teacher.email, subject, msg)
+	#notify students
+	students = queries.get_students_that_submit(exercise.id)
+	notify_students(students, exercise.id)
 	
 def create_or_update_test(sender, instance, signal, *args, **kwargs):
 	"""This function is called when a test is modified or is created. It execute the students programs."""
@@ -279,8 +282,6 @@ def create_or_update_test(sender, instance, signal, *args, **kwargs):
 			tester = Tester(s, test, exercise) 
 			tester.execute_test()
 			
-	#TODO nao notificar ninguem por enquanto
-	#notify_students(students, test, id_exercise)
 
 def pre_delete_exercise(sender, instance, signal, *args, **kwargs):
 	"""This function is invoked when an exercise is deleted. 
@@ -334,13 +335,13 @@ def pre_delete_student(sender, instance, signal, *args, **kwargs):
 	for ex in exercises:
 		try:
 			submission = queries.get_last_submission(ex.id, instance.id)
-			if s.veredict == 'Pass':
-				number = queries.number_students_that_solved()
+			if submission.veredict == 'Pass':
+				number = queries.number_students_that_solved(ex.id)
 				if number > 0:
 					ex.number_students_that_solved =  number - 1
 			
-			#TODO COLOCAR ESSA ATUALIZAÇÂO DE EXERCICIO EM OUTRO LUGAR. AQUI NAO DAH CERTO
-			exercise.mean_notes = util.mean(exercise_results)
+			submissions = queries.get_students_that_submit(ex.id)
+			exercise.mean_notes = util.mean(submissions)
 			exercise.save()
 		except:
 			pass

@@ -220,7 +220,17 @@ def number_students_that_solved(exercise_id):
 	"""Return the number of students that solved an exercise."""
 	return get_students_that_solved(exercise_id).count()
 	
-
+def get_students_that_submit(exercise_id):
+	students = get_all_students()
+	result = []
+	for st in students:
+		try:
+			last_submission = get_last_submission(exercise_id, st.id)
+			result.append(st)
+		except:
+			pass
+	return students
+		
 # ASSISTANTS
 def get_all_assistants():
 	"""Return all assistants."""
@@ -299,6 +309,7 @@ def get_ordered_executions(submisison_id):
 def get_last_execution(submission_id):
 	"""Return the last execution of a submission."""
 	return get_ordered_executions(submission_id)[0]
+	
 	
 # ACTIONS LOG
 def get_last_100_actions():

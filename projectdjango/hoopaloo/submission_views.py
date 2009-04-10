@@ -29,12 +29,9 @@ def submission(request):
 				if form.is_valid():
 					result = form.save(request)
 					form = SubmissionForm()
-					r, msg = util.make_message_student(result)
+					msg = configuration.SUBMISION_SUCESS	
 					submissions = queries.get_student_submissions(student.id)
-					if r:
-						return render_to_response("submission.html", {'form' : form, 'msg' : msg, 'submissions':submissions, 'student': student,}, context_instance=RequestContext(request))
-					else:
-						return render_to_response("submission.html", {'form' : form, 'error' : msg, 'explication':explication, 'submissions':submissions, 'student': student, }, context_instance=RequestContext(request))
+					return render_to_response("submission.html", {'form' : form, 'msg' : msg, 'submissions':submissions, 'student': student,}, context_instance=RequestContext(request))
 				else:
 					form = SubmissionForm() 
 					error = []
@@ -106,8 +103,7 @@ def view_exercise(request, submission_id, exercise_id, student_id=None):
 			result = None
 			execution = None
 			try:
-				#TODO DUVIDA AQUI... EH A ULTIMA EXECUCAO???
-				execution = Execution.objects.get(id_submission=sub.id, id_student=student.id)
+				execution = queries.get_last_execution(sub.id)
 			except:
 				# The File was not executed
 				pass
