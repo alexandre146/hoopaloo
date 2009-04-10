@@ -18,20 +18,20 @@
 						<th width="100">Users</th>
 					</tr>
 					<tr>
-						<td><a href="../register_student/">Register Students</a></td>
+						<td><a href="../../register_student/">Register Students</a></td>
 					</tr>
 					<tr>
-						<td><a href="../register_assistant/">Register Assistants</a></td>
+						<td><a href="../../register_assistant/">Register Assistants</a></td>
 					</tr>
 					<tr>
-						<td><a href="../assign_students/">Assign Students to Assitants</a></td>
+						<td><a href="../../assign_students/">Assign Students to Assitants</a></td>
 					</tr>
 					<tr>
-						<td><a href="../users/">Users Details</a></td>
+						<td><a href="../../users/">Users Details</a></td>
 					</tr>
 					{% if not is_assistant %}
 					<tr>
-						<td><a href="../actions/">See System Actions</a></td>
+						<td><a href="../../actions/">See System Actions</a></td>
 					</tr>
 					{% endif %}
 				</table>
@@ -42,13 +42,13 @@
 						<th width="140">Exercise</th>
 					</tr>
 					<tr>
-						<td><a href="../add_exercise/">New Exercise</a></td>
+						<td><a href="../../add_exercise/">New Exercise</a></td>
 					</tr>
 					<tr>
-						<td><a href="../exercises/">List Exercises</a></td>
+						<td><a href="../../exercises/">List Exercises</a></td>
 					</tr>
 					<tr>
-						<td><a href="../tests/">List Tests</a></td>
+						<td><a href="../../tests/">List Tests</a></td>
 					</tr>
 				</table>
 			</td>
@@ -59,42 +59,42 @@
 					</tr>
 					{% if is_assistant %}
 					<tr>
-						<td><a href="../assistant_view/">Your Students</a></td>
+						<td><a href="../../assistant_view/">Your Students</a></td>
 					</tr>
 					<tr>
-						<td><a href="../global_assistant_view/">All Students</a></td>
+						<td><a href="../../global_assistant_view/">All Students</a></td>
 					</tr>
 					{% else %}
 					<tr>
-						<td><a href="../teacher_view/">Your Students</a></td>
+						<td><a href="../../teacher_view/">Your Students</a></td>
 					</tr>
 					<tr>
-						<td><a href="../all_students/">All Students</a></td>
+						<td><a href="../../all_students/">All Students</a></td>
 					</tr>
 					{% endif %}
 					<tr>
-						<td><a href="../assigns/">Assistants - Students</a></td>
+						<td><a href="../../assigns/">Assistants - Students</a></td>
 					</tr>
 				</table>
 			</td>
 			<td>
 				<table>
 					<tr>
-						<th width="100"><a href="../logout/">Logout</a></th>
+						<th width="100"><a href="../../logout/">Logout</a></th>
 					</tr>
 				</table>
 			</td>
 			<td>
 				<table>
 					<tr>
-						<th width="100"><a href="../help" target="_blank">Help</a></th>
+						<th width="100"><a href="../../help" target="_blank">Help</a></th>
 					</tr>
 				</table>
 			</td>
 			<td>
 			<table>
 				<tr>
-					<th width="100"><a href="../change_password/">Change Password</a></th>
+					<th width="100"><a href="../../change_password/">Change Password</a></th>
 				</tr>
 				</table>
 			</td>
@@ -104,21 +104,32 @@
 <!-- Menu end -->
 {% endblock %}
 
+{% block title %}Temporary Results{% endblock %}
 {% block content %}
+<div id="container">
+		<br>
+		<br>
+		<br>
+		{% block branding %}<h1 id="site-name"><font size="4">{% trans 'Temporary Results' %}</font></h1>
+		{% endblock %}
+
 <div id="content-main">
 {% if msg %}
 	<ul class="messagelist"><li>{{ msg }}</li></ul>
 {% endif %}
 {% for execution in executions_results %}
-		<h1>Execution Result to {{execution.student.username}} - SubmissionID {{execution.submission.id}}</h1><br>
-		Number of tests: {{execution.num_tests}}<br>
-		Number of errors: {{execution.num_errors}}<br>
-		Number of failures: {{execution.num_failures}}<br>
-		Number of passed tests: {{execution.num_pass}}<br>
-		{% if execution.log_errors %}Messages: {{execution.log_errors}}{% endif %}<br>
+		<h2>Execution Result to {{execution.student.username}} - SubmissionID {{execution.submission.id}}</h2>
+		<strong>Number of tests:</strong> {{execution.num_tests}}<br>
+		<strong>Number of errors:</strong> {{execution.num_errors}}<br>
+		<strong>Number of failures:</strong> {{execution.num_failures}}<br>
+		<strong>Number of passed tests:</strong> {{execution.num_pass}}<br>
+		{% if execution.log_errors %}<strong>Messages:</strong> <br>{% for error in execution.log_errors %}{{error}}<br>{% endfor %}{% endif %}<br>
 {% endfor %}
-<form action="/hoopaloo/choose_submissions/id={{exercise.id}}/" method='POST'>
-	<input type="submit" value="{% trans 'Run Test' %}" />
+<form action="/hoopaloo/consolidate_test/id={{exercise.id}}/" method='POST'>
+	<input type="submit" value="{% trans 'Consolidate Test' %}" />
+</form>
+<form action="/hoopaloo/cancel_undertest/id={{exercise.id}}/" method='POST'>
+	<input type="submit" value="{% trans 'Cancel' %}" />
 </form>
 </div>
 {% endblock %}

@@ -134,12 +134,12 @@
         <tbody>
         {% for t in tests %}
 			<tr>
-            <td><font size=2><a href="../../hoopaloo/test_view/id={{t.id}}">{{ t.name }}</a></font></td>
-			<td><font size=2>{{ t.creation_date|date:"d/m/Y H:i:s" }}</font></td>
-			<td><font size=2>{{ t.owner.username }}</font></td>
-			<td><font size=2>{{ t.exercise.name }}</font></td>
-			<td><font size=2>{% if t.locked %} Locked {% else %} Unlocked {% endif %}</font></td>
-			<td><font size=2>{% if t.locked %} - {% else %} <a href="../../hoopaloo/change_test/id={{t.id}}/">Edit it</a> {% endif %}</font></td>
+            <td><font size=2><center><a href="../../hoopaloo/test_view/id={{t.id}}">{{ t.name }}</a></center></font></td>
+			<td><font size=2><center>{{ t.creation_date|date:"d/m/Y H:i:s" }}</center></font></td>
+			<td><font size=2><center>{{ t.owner.username }}</center></font></td>
+			<td><font size=2><center>{{ t.exercise.name }}</center></font></td>
+			<td><font size=2><center>{% if t.locked %} Locked {% else %} Unlocked {% endif %}</center></font></td>
+			<td><font size=2><center>{% if t.locked %} - {% else %} <a href="../../hoopaloo/change_test/id={{t.id}}/">Edit it</a> {% endif %}</center></font></td>
         </tr>
         {% endfor %}
         </tbody>

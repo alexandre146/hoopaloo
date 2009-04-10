@@ -257,7 +257,13 @@ def execution_saved(sender, instance, signal, *args, **kwargs):
 		veredict = 'Pass'
 	else:
 		veredict = 'Fail'
+	
+	submission.veredict = veredict
+	submission.was_executed = True
+	submission.save()
+	
 	#TODO ACHO QUE EH AQUI O PROFESSOR VAI SER AVISADO DO RESULTADO DE SUBMISSÔES
+	
 	
 def create_or_update_test(sender, instance, signal, *args, **kwargs):
 	"""This function is called when a test is modified or is created. It execute the students programs."""

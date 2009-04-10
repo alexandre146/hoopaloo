@@ -274,17 +274,17 @@ def calculate_percentual(percentual_list, number_tests, students, exercise):
 		for s in students:
 			try:
 				last_submission = queries.get_last_submission(exercise.id, s.id)
-				aux = (last_submission.pass_number * 100) / exercise.number_tests
-				if aux == p:
+				execution = queries.get_last_execution(last_submission.id)
+				aux = (execution.pass_number * 100) / exercise.number_tests
+				if aux <= p[0] or aux >= p[1]:
 					num += 1
 			except:
-				if p == 0:
-					num += 1
-		element = MyTuple(p, num*100/len(students) )
+				pass
+		element = MyTuple("%s - %s" % (p[1], p[0]), num*100/len(students) )
 		result_p.append(element)
 	return result_p
 
-def calculate_note_percentual(percentual_list, results, exercise):
+def calculate_score_percentual(percentual_list, results, exercise):
 	"""Returns a list in which each element has a percentual.
 	This percentual is a percent of note. For example: 20% of class received note between 8 and 9."""
 	
@@ -293,10 +293,10 @@ def calculate_note_percentual(percentual_list, results, exercise):
 	for p in percentual_list:
 		num = 0
 		for r in results:
-			if r.note <= p[0] and r.note >= p[1]:
+			if r.score <= p[0] and r.score >= p[1]:
 				num += 1
-		if len(results) > 0:
-			element = MyTuple("%.1f - %.1f" % (p[0], p[1]), num*100/len(results), count)
+		if results.count() > 0:
+			element = MyTuple("%.1f - %.1f" % (p[0], p[1]), num*100/results.count(), count)
 		else:
 			element = MyTuple("%.1f - %.1f" % (p[0], p[1]), 0, count)
 		result_p.append(element)
@@ -342,27 +342,32 @@ def calculate_mean(exercise):
 			pass
 	return mean(results)
 			
-def get_students_percent(percent, id_ex):
-	"""Returns the students that passed in percentual (percent) of right tests"""
+def get_students_percent(index, id_ex):
+	"""Returns the students that passed in specific percentual tests"""
 	
 	students = queries.get_all_students()
 	exercise = queries.get_exercise(id_ex)
 	st_percent = []
+	
+	percent = configuration.PERCENT_OF_TESTS[index]
+	percent1 = percent[0]
+	percent2 = percent[1]
+	
 	for s in students:
 		aux = 0
 		try:
 			last_submission = queries.get_last_submission(id_ex, s.id)
-			aux = (last_submission.pass_number * 100) / exercise.number_tests
-			if aux == int(percent):
+			execution = queries.get_last_execution(last_submission.id)
+			aux = (execution.pass_number * 100) / exercise.number_tests
+			if (aux >= float(percent1) and aux <= float(percent2)):
 				st_percent.append(s)
 		except:
-			if int(percent) == aux :
-				st_percent.append(s)
+			pass
 
 	return st_percent
 
 def get_students_score_percent(index, id_exercise):
-	"""Returns the students that has a specific note (referenced by index)"""
+	"""Returns the students that has a specific score (referenced by index)"""
 	
 	from hoopaloo.models import Exercise, Student, Result
 	students = queries.get_all_students()
@@ -370,14 +375,14 @@ def get_students_score_percent(index, id_exercise):
 	st_percent = []
 
 	score = configuration.PERCENT_OF_SCORE[index]
-	score1 = note[1]
-	score2 = note[0]
+	score1 = score[1]
+	score2 = score[0]
 
 	for s in students:
 		aux = 0
 		try:
 			last_submission = queries.get_last_submission(exercise.id, s.id)
-			if (last_submission.note >= float(score1) and last_submission.note <= float(score2)):
+			if (last_submission.score >= float(score1) and last_submission.score <= float(score2)):
 				st_percent.append(s)
 		except:
 			pass
@@ -626,32 +631,11 @@ def save_test_in_student_folders(test):
 		if test.code.__contains__("from pexpect import *"):
 			number = test.code.count('%')
 			aux2 = number*(path,)
-			dest.write((test.code % aux2) + (configuration.TEST_APPEND_STUDENT_FOLDER % aux))
+			dest.write((test.code % aux2) + '\n\n\n' + (configuration.TEST_APPEND_STUDENT_FOLDER % aux))
 		else:
-			dest.write(test.code + configuration.TEST_APPEND_STUDENT_FOLDER % (test.name, aux))
+			dest.write(test.code + '\n\n\n' + configuration.TEST_APPEND_STUDENT_FOLDER % (test.name, aux))
 		dest.close()
-	
-def code(lines):
-	"""Receive a list of lines of code and convert it to Line_Code in order to maintains the format"""
-	
-	code = []
-	count = 0
-	for line in lines:
-		if str(line).count('\t') == 0:
-			code.append(Line_Code(str(line), 0))
-		elif str(line).count('\t') == (count + 1):
-			code.append(Line_Code(str(line), 1))
-		elif str(line).count('\t') == (count - 1):
-			code.append(Line_Code(str(line), 2))
-			count -= 1
-		elif str(line).count('\t') == count:
-			code.append(Line_Code(str(line), 0))
-		print code[len(code)-1]
-	for n in range(count):
-		code.append(Line_Code("", 3))
-	return code
-	
-		
+			
 class Table_Delivered:
 	"""Contains all necessary informations to the table of delivered exercises"""
 	
