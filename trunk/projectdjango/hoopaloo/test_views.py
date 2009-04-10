@@ -85,13 +85,6 @@ def consolidate_test(request, exercise_id):
 		
 		util.change_test(original_test, under_test)
 		
-		original_test.code = new_test_code
-		original_test.owner = request.user
-		original_test.locked = False
-		
-		under_test.delete()
-		original_test.save()
-		
 		return render_to_response("test_view.html", {'exercise': exercise, 'test':original_test, 'code': original_test.code, 'is_assistant': util.is_assistant(request.user),}, context_instance=RequestContext(request))
 		
 def cancel_undertest(request, exercise_id):

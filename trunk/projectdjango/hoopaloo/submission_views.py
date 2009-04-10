@@ -29,7 +29,7 @@ def submission(request):
 				if form.is_valid():
 					result = form.save(request)
 					form = SubmissionForm()
-					msg = configuration.SUBMISION_SUCESS	
+					msg = [configuration.SUBMISION_SUCESS]
 					submissions = queries.get_student_submissions(student.id)
 					return render_to_response("submission.html", {'form' : form, 'msg' : msg, 'submissions':submissions, 'student': student,}, context_instance=RequestContext(request))
 				else:
