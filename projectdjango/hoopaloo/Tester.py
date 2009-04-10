@@ -84,7 +84,7 @@ class Tester:
 		 self.process.wait()
 		 
 		 #Removing the student file of folder 'under_tests'
-		 #os.remove(copy_file_path)
+		 os.remove(copy_file_path)
 		 
 		 return self.register_temp_results()
 		 

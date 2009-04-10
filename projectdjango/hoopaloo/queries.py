@@ -29,10 +29,10 @@ def get_number_student_submissions(exercise_id, student_id):
 	"""Return the number of submissions of a student for an exercise."""
 	return get_submissions(exercise_id, student_id).count()
 	
-def get_last_submission(exercise_id, students_id):
+def get_last_submission(exercise_id, student_id):
 	"""Return the last submission os a student for an exercise."""
 	try:
-		return get_ordered_submissions(exercise_id, students_id)[0]
+		return get_ordered_submissions(exercise_id, student_id)[0]
 	except:
 		return None
 
@@ -49,6 +49,14 @@ def get_all_submissions():
 	from hoopaloo.models import Submission
 	return Submission.objects.all()
 
+def get_all_last_submissions(execise_id):
+	from hoopaloo.models import Student
+	students = Student.objects.all()
+	results = []
+	for st in students:
+		last_submission = get_last_submission(exercise_id, st.id)
+		results.append(last_submission)
+	return results
 # EXERCISES
 def get_all_exercises():
 	"""Return all exercises."""

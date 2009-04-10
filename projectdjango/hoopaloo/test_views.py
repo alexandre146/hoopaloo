@@ -19,21 +19,6 @@ from Tester import Tester
 
 # ----------------------------------- OPERATIONS WITH TEST (ADD, DELETE, CHANGE) -------------------------------------- #		
 	
-def change_test(request, test_id):
-	"""Change the contend of test represented by test_id."""
-	
-	if request.user.is_authenticated():
-		if request.user.has_perm("hoopaloo.change_test"):
-			t = queries.get_test(test_id)
-			contend = t.code
-			return render_to_response("update_test.html", {'test': t, 'contend':contend, 'is_assistant': util.is_assistant(request.user),}, context_instance=RequestContext(request))
-		else:
-			error = configuration.TEST_UPDATE_NOT_PERMISSION
-			return render_to_response("error_page.html", {'error' : error}, context_instance=RequestContext(request))
-	else:	
-		form = LoginForm()
-		return render_to_response("login.html", {'form' : form}, context_instance=RequestContext(request))
-	
 def under_test(request, test_id):
 	if request.user.is_authenticated():
 		if request.user.has_perm("hoopaloo.change_test"):
@@ -43,8 +28,11 @@ def under_test(request, test_id):
 			under_test = UnderTest().create_test(request.user, exercise, code)
 			util.save_under_test_file(under_test)
 			under_test.save()
+			
+			#locking the original test
 			original_test.locked = True
 			original_test.save()
+			
 			options = queries.get_exercise_submissions(exercise.id)
 			msg = configuration.UNDER_TEST_ADD_SUCESSFULLY
 			return render_to_response("choose_submissions.html", {'options' : options, 'exercise':exercise, 'msg': msg, 'is_assistant': util.is_assistant(request.user),}, context_instance=RequestContext(request))
@@ -59,11 +47,12 @@ def choose_submissions(request, exercise_id):
 	if request.method == 'POST':
 		options = queries.get_exercise_submissions(exercise_id)
 		executions_results = []
+		exercise = queries.get_exercise(exercise_id)
+		test = queries.get_under_test(exercise_id)
+
 		for op in options:
 			if 'submission' + str(op.id) in request.POST:
-				exercise = queries.get_exercise(exercise_id)
 				student = queries.get_student(op.id_student.id)
-				test = queries.get_under_test(exercise_id)
 				
 				tester = Tester(student, test, exercise, op)
 				result = tester.execute_under_test()
@@ -71,7 +60,7 @@ def choose_submissions(request, exercise_id):
 				
 		return render_to_response("temp_results.html", {'executions_results':executions_results, 'exercise': exercise}, context_instance=RequestContext(request))	
 
-#TODO FOI AQUI Q EU PAREIIIII
+		
 def consolidate_test(request, exercise_id):
 	if request.method == 'POST':
 		exercise = queries.get_exercise(exercise_id)
@@ -84,9 +73,33 @@ def consolidate_test(request, exercise_id):
 		
 		new_test_code = under_test.code.replace('undertest_', 'test_')
 		new_test = open(path_test, 'wb')
-		new_test.write(under_test.code + TEST_APPEND % under_test.name)
-		util.save_test_in_student_folders(under_test)
+		new_test.write(new_test_code + '\n\n\n' + configuration.TEST_APPEND % original_test.name)
 		
+		original_test.code = new_test_code
+		original_test.owner = request.user
+		original_test.locked = False
+		
+		util.save_test_in_student_folders(original_test)
+		under_test.delete()
+		original_test.save()
+		
+		return render_to_response("test_view.html", {'exercise': exercise, 'test':original_test, 'code': original_test.code, 'is_assistant': util.is_assistant(request.user),}, context_instance=RequestContext(request))
+		
+def cancel_undertest(request, exercise_id):
+	if request.method == 'POST':
+		exercise = queries.get_exercise(exercise_id)
+		original_test = queries.get_consolidated_test(exercise_id)
+		under_test = queries.get_under_test(exercise_id)
+		
+		path_under_test = settings.MEDIA_ROOT + '/under_tests/' + under_test.path
+		os.remove(path_under_test)
+				
+		original_test.locked = False
+		#nao deve excutar nada
+		original_test.save()
+		under_test.delete()
+		
+		return render_to_response("test_view.html", {'exercise': exercise, 'test':original_test, 'code': original_test.code, 'is_assistant': util.is_assistant(request.user),}, context_instance=RequestContext(request))
 	
 def test_view(request, test_id):
 	"""View that shows test details."""
