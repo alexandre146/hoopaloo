@@ -19,6 +19,22 @@ from Tester import Tester
 
 # ----------------------------------- OPERATIONS WITH TEST (ADD, DELETE, CHANGE) -------------------------------------- #		
 	
+def change_test(request, test_id):
+	"""Change the contend of test represented by test_id."""
+	
+	if request.user.is_authenticated():
+		if request.user.has_perm("hoopaloo.change_test"):
+			t = queries.get_test(test_id)
+			contend = t.code
+			return render_to_response("update_test.html", {'test': t, 'contend':contend, 'is_assistant': util.is_assistant(request.user),}, context_instance=RequestContext(request))
+		else:
+			error = configuration.TEST_UPDATE_NOT_PERMISSION
+			return render_to_response("error_page.html", {'error' : error}, context_instance=RequestContext(request))
+	else:	
+		form = LoginForm()
+		return render_to_response("login.html", {'form' : form}, context_instance=RequestContext(request))
+
+	
 def under_test(request, test_id):
 	if request.user.is_authenticated():
 		if request.user.has_perm("hoopaloo.change_test"):
@@ -67,19 +83,12 @@ def consolidate_test(request, exercise_id):
 		original_test = queries.get_consolidated_test(exercise_id)
 		under_test = queries.get_under_test(exercise_id)
 		
-		path_under_test = settings.MEDIA_ROOT + '/under_tests/' + under_test.path
-		path_test = settings.MEDIA_ROOT + '/tests/' + original_test.path
-		os.remove(path_test)
-		
-		new_test_code = under_test.code.replace('undertest_', 'test_')
-		new_test = open(path_test, 'wb')
-		new_test.write(new_test_code + '\n\n\n' + configuration.TEST_APPEND % original_test.name)
+		util.change_test(original_test, under_test)
 		
 		original_test.code = new_test_code
 		original_test.owner = request.user
 		original_test.locked = False
 		
-		util.save_test_in_student_folders(original_test)
 		under_test.delete()
 		original_test.save()
 		

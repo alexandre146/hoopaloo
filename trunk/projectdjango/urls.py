@@ -60,6 +60,8 @@ urlpatterns = patterns('',
 	
 	# TEST_VIEWS
 	(r'^hoopaloo/tests/$', 'projectdjango.hoopaloo.test_views.tests'),
+	(r'^hoopaloo/change_test/id=(?P<test_id>\d+)/$', 'projectdjango.hoopaloo.test_views.change_test'),
+	(r'^hoopaloo/change_test/id=(?P<test_id>\d+)$', 'projectdjango.hoopaloo.test_views.change_test'),
 	(r'^hoopaloo/test_view/id=(?P<test_id>\d+)$', 'projectdjango.hoopaloo.test_views.test_view'),
 	(r'^hoopaloo/annul_test/id=(?P<test_id>\d+)/$', 'projectdjango.hoopaloo.test_views.annul_test'),
 	(r'^hoopaloo/under_test/id=(?P<test_id>\d+)/$', 'projectdjango.hoopaloo.test_views.under_test'),

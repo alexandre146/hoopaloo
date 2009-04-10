@@ -43,7 +43,6 @@ def add_exercise(request):
 					return render_to_response("add_exercise.html", {'form' : form, 'error':error, 'is_assistant': util.is_assistant(request.user),}, context_instance=RequestContext(request))
 			else:
 				form = ExerciseForm()
-				#TODO VER COMO FAZER PARA QUE ESSA DATA APARECA NA HORA DO CADASTRO
 				day = util.get_next_friday(datetime.today())
 				friday = str(day.year) + "-" + str(day.month) + "-" + str(day.day) + " " + str(day.hour) + ":" + str(day.minute)
 				return render_to_response('add_exercise.html', {'form' : form, 'friday': friday, 'is_assistant': util.is_assistant(request.user),}, context_instance=RequestContext(request))

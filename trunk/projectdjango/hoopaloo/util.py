@@ -111,13 +111,7 @@ def make_message_student(result):
 	from hoopaloo.models import Execution, Submission
 
 	msgs = []
-	
-	#TODO APAGAR DEPOIS
-	msg = 'Your program was updated sucessfully. Check your code submission in table bellow.'	
-	msgs.append(msg)
-	return True, msgs
-	#
-	#TODO ESSA PARTE DO METODO VAI PARA OUTRO LUGAR
+
 	if result == None:
 		msg = configuration.EXECUTION_AFTER
 		msgs.append(msg)
@@ -143,17 +137,15 @@ def make_message_student(result):
 					msgs.append(l)
 			return False, msgs
 			
-def notify_students(students, test, id_ex):
+def notify_students(students, id_ex):
 	"""Notify the students about the result of execution tests."""
 	
 	from hoopaloo.models import Submission
-	test_creation_date = test.creation_date
 	for s in students:
 		submissions = queries.get_number_student_submissions(id_ex, s.id)
 		if submissions.count() != 0:
 			last_submission = queries.get_last_submission(id_ex, s.id)
 			if last_submission.date <= test_creation_date:
-				#TODO LEMBRAR DE MUDAR ESSE METODO MAKE_MESSAGE
 				veredict, message = make_message_student(last_submission)
 				
 				subject = "Notification"
@@ -416,14 +408,6 @@ def get_available_exercises(user):
 		if submited == 0:
 			undelivered.append(ex)
 	return undelivered	
-		
-#TODO ESTE METODO TAH ERRADO
-def delete_association(student_id):
-	
-	student = queries.get_student(student_id)
-	assistant = queries.get_assistant(student.assistant.id)
-	student.assistant = queries.get_assistant_from_name('-')
-	student.save()
 	
 def add_score_and_comments(comments, score, exercise, submission):
 	
@@ -529,12 +513,14 @@ def copy_test_files(student):
 			pass
 
 		
-def change_test(test, contend):
+def change_test(original_test, changed_test):
 	
 	exercise = queries.get_exercise(test.exercise.id)
 	
+	new_test_code = under_test.code.replace('undertest_', 'test_')
+	
 	# exists a copy of test file is in '/tests/'
-	old_file_path = settings.MEDIA_ROOT + '/tests/' + test.path
+	old_file_path = settings.MEDIA_ROOT + '/tests/' + original_test.path
 	# the name of back up file following the form: /tests/backup_test_<exercise_name>.py
 	backup_file = open(settings.MEDIA_ROOT + '/tests/' + configuration.BACKUP_TEST_NAME + '_' + exercise.name + '.py', 'wb')
 	# open the old file of tests in order to read it
@@ -547,11 +533,15 @@ def change_test(test, contend):
 	# remove the old file of tests
 	os.remove(old_file_path)
 	
+	path_under_test = settings.MEDIA_ROOT + '/under_tests/' + changed_test.path
+	os.remove(path_under_test)
+	
 	# save the new conted of test
-	path_tests = settings.MEDIA_ROOT + '/tests/' + test.path
+	path_tests = settings.MEDIA_ROOT + '/tests/' + original_test.path
 	dest = open(path_tests, 'wb')
 	
-	dest.write(contend + configuration.TEST_APPEND)
+	new_test_code = under_test.code.replace('undertest_', 'test_')
+	dest.write(new_test_code + '\n\n\n' + configuration.TEST_APPEND)
 	dest.close()
 			
 	students = queries.get_all_students()
@@ -559,19 +549,19 @@ def change_test(test, contend):
 	for s in students:
 		usr = s.username
 		path_student = settings.MEDIA_ROOT + '/' + usr + '/'
-		old_file_students_path = path_student + test.path
+		old_file_students_path = path_student + original_test.path
 		os.remove(old_file_students_path)
 		
-		test_full_path =  path_student + test.path
+		test_full_path =  path_student + original_test.path
 		if not os.path.exists(path_student):
 			os.makedirs(path_student)
 		dest = open(test_full_path, 'wb')
-		if contend.__contains__("from pexpect import *"):
-			number = contend.count('%')
+		if new_test_code.__contains__("from pexpect import *"):
+			number = new_test_code.count('%')
 			aux = number*(path_student,)
-			dest.write((contend % aux) + (configuration.TEST_APPEND_STUDENT_FOLDER % path_student))
+			dest.write((new_test_code % aux) + '\n\n\n' + (configuration.TEST_APPEND_STUDENT_FOLDER % path_student))
 		else:
-			dest.write(contend + configuration.TEST_APPEND_STUDENT_FOLDER % path_student)
+			dest.write(new_test_code + '\n\n\n' + configuration.TEST_APPEND_STUDENT_FOLDER % path_student)
 		dest.close()
 		
 def save_under_test_file(test):
