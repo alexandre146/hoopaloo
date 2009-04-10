@@ -501,9 +501,9 @@ def copy_test_files(student):
 			if contend.__contains__("from pexpect import *"):
 				number = contend.count('%')
 				aux = number*(path_student,)
-				student_test.write((contend % aux ) + configuration.TEST_APPEND_STUDENT_FOLDER % path_student)
+				student_test.write((contend % aux ) + configuration.TEST_APPEND_STUDENT_FOLDER % (test.name, path_student))
 			else:
-				student_test.write(contend  + configuration.TEST_APPEND_STUDENT_FOLDER % path_student)
+				student_test.write(contend  + configuration.TEST_APPEND_STUDENT_FOLDER % (test.name, path_student))
 			
 			student_test.close()
 			file_test.close()
@@ -515,9 +515,7 @@ def copy_test_files(student):
 		
 def change_test(original_test, changed_test):
 	
-	exercise = queries.get_exercise(test.exercise.id)
-	
-	new_test_code = under_test.code.replace('undertest_', 'test_')
+	exercise = queries.get_exercise(original_test.exercise.id)
 	
 	# exists a copy of test file is in '/tests/'
 	old_file_path = settings.MEDIA_ROOT + '/tests/' + original_test.path
@@ -540,7 +538,7 @@ def change_test(original_test, changed_test):
 	path_tests = settings.MEDIA_ROOT + '/tests/' + original_test.path
 	dest = open(path_tests, 'wb')
 	
-	new_test_code = under_test.code.replace('undertest_', 'test_')
+	new_test_code = changed_test.code.replace('undertest_', 'test_')
 	dest.write(new_test_code + '\n\n\n' + configuration.TEST_APPEND)
 	dest.close()
 			
@@ -548,7 +546,7 @@ def change_test(original_test, changed_test):
 	# in this loop, delete the old test files that were in students' folders
 	for s in students:
 		usr = s.username
-		path_student = settings.MEDIA_ROOT + '/' + usr + '/'
+		path_student = settings.MEDIA_ROOT + '/' + usr + '/' + exercise.name + '/'
 		old_file_students_path = path_student + original_test.path
 		os.remove(old_file_students_path)
 		
@@ -559,11 +557,17 @@ def change_test(original_test, changed_test):
 		if new_test_code.__contains__("from pexpect import *"):
 			number = new_test_code.count('%')
 			aux = number*(path_student,)
-			dest.write((new_test_code % aux) + '\n\n\n' + (configuration.TEST_APPEND_STUDENT_FOLDER % path_student))
+			dest.write((new_test_code % aux) + '\n\n\n' + (configuration.TEST_APPEND_STUDENT_FOLDER % (original_test.name, path_student)))
 		else:
-			dest.write(new_test_code + '\n\n\n' + configuration.TEST_APPEND_STUDENT_FOLDER % path_student)
+			dest.write(new_test_code + '\n\n\n' + configuration.TEST_APPEND_STUDENT_FOLDER % (original_test, path_student))
 		dest.close()
 		
+	original_test.code = new_test_code
+	original_test.locked = False
+	
+	changed_test.delete()
+	original_test.save()
+	
 def save_under_test_file(test):
 	exercise = queries.get_exercise(test.exercise.id)
 	# save the new conted of test
@@ -621,7 +625,7 @@ def save_test_in_student_folders(test):
 		if test.code.__contains__("from pexpect import *"):
 			number = test.code.count('%')
 			aux2 = number*(path,)
-			dest.write((test.code % aux2) + '\n\n\n' + (configuration.TEST_APPEND_STUDENT_FOLDER % aux))
+			dest.write((test.code % aux2) + '\n\n\n' + (configuration.TEST_APPEND_STUDENT_FOLDER % (test.name, aux)))
 		else:
 			dest.write(test.code + '\n\n\n' + configuration.TEST_APPEND_STUDENT_FOLDER % (test.name, aux))
 		dest.close()
