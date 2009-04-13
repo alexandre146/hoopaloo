@@ -43,13 +43,13 @@ def get_exercise_submissions(exercise_id):
 	
 def get_number_total_student_submissions(student_id):
 	"""Return the number of submissions of a student."""
-	return get_student_submissions().count()
+	return get_student_submissions(student_id).count()
 
 def get_all_submissions():
 	from hoopaloo.models import Submission
 	return Submission.objects.all()
 
-def get_all_last_submissions(execise_id):
+def get_all_last_submissions(exercise_id):
 	from hoopaloo.models import Student
 	students = Student.objects.all()
 	results = []

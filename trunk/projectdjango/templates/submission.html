@@ -114,7 +114,7 @@
 		<tbody>
 			{% for s in submissions %}
 				<tr>
-					<td><center><font size=2><a href="../submission/student{{student.id}}/exercise/id={{s.id_exercise.id}}">{{ s.id_exercise.name }}</a></font></center></td>
+					<td><center><font size=2><a href="../submission{{s.id}}/student{{student.id}}/exercise/id={{s.id_exercise.id}}">{{ s.id_exercise.name }}</a></font></center></td>
 					<td><center><font size=2>{{ s.date|date:"Y/m/d H:i" }}</font></center></td>
 					<td><center><font size=2>{{ s.file_length }} bytes</font></center></td>								
 							<td><center><font size=2><a href="../submission{{s.id}}/student{{student.id}}/">View Code</font></center></td>

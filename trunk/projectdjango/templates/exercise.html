@@ -117,12 +117,12 @@
 	<div id="content-main">
 		
 		<form action="/hoopaloo/change_exercise/id={{exercise.id}}" method="GET">
-		<div><font size="3"><b>Exercise Title: </b> {{ exercise.name }}</font></div>
-		<div><font size="3"><b>Description: </b><pre>{{ exercise.description }}</pre></font></div>
-		<div><font size="3"><b>Available: </b>{% if exercise.available %} Yes {% else %} No {% endif %}</font></div>
-		<div><font size="3"><b>Owner: </b> {{ exercise.owner.username }}</font></div>
-		<div><font size="3"><b>Available Since: </b>{{ exercise.date_availability|date:"d/m/Y H:i:s" }}</font></div>
-		<div><font size="3"><b>Available Until: </b>{{ exercise.date_finish|date:"d/m/Y H:i:s" }}</font></div>
+			<div><font size="3"><b>Exercise Title: </b> {{ exercise.name }}</font></div>
+			<div><font size="3"><b>Description: </b><pre>{{ exercise.description }}</pre></font></div>
+			<div><font size="3"><b>Available: </b>{% if exercise.available %} Yes {% else %} No {% endif %}</font></div>
+			<div><font size="3"><b>Owner: </b> {{ exercise.owner.username }}</font></div>
+			<div><font size="3"><b>Available Since: </b>{{ exercise.date_availability|date:"d/m/Y H:i:s" }}</font></div>
+			<div><font size="3"><b>Available Until: </b>{{ exercise.date_finish|date:"d/m/Y H:i:s" }}</font></div>
 		<br><p><input type="submit" value="Edit this exercise" /></p></br>
 		</form>
 

@@ -109,9 +109,9 @@ urlpatterns = patterns('',
 
 if settings.DEBUG:
     urlpatterns += patterns('',
-        (r'^media/(?P<path>.*)$', 'django.views.static.serve', {'document_root': 'E:/projectdjango/media/'}),
-		(r'^admin-media/(?P<path>.*)$', 'django.views.static.serve', {'document_root': 'E:/projectdjango/admin-media/'}),
-		#(r'^media/(?P<path>.*)$', 'django.views.static.serve', {'document_root': 'C:\\Documents and Settings\\Mari\\workspaceVE\\projectdjango\\media\\'}),
-		#(r'^admin-media/(?P<path>.*)$', 'django.views.static.serve', {'document_root': 'C:\\Documents and Settings\\Mari\\workspaceVE\\projectdjango\\admin-media\\'}),
+        #(r'^media/(?P<path>.*)$', 'django.views.static.serve', {'document_root': 'E:/projectdjango/media/'}),
+		#(r'^admin-media/(?P<path>.*)$', 'django.views.static.serve', {'document_root': 'E:/projectdjango/admin-media/'}),
+		(r'^media/(?P<path>.*)$', 'django.views.static.serve', {'document_root': 'C:\\Documents and Settings\\Mari\\workspaceVE\\projectdjango\\media\\'}),
+		(r'^admin-media/(?P<path>.*)$', 'django.views.static.serve', {'document_root': 'C:\\Documents and Settings\\Mari\\workspaceVE\\projectdjango\\admin-media\\'}),
     )
 

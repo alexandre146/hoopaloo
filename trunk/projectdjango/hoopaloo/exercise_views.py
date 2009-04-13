@@ -63,11 +63,13 @@ def exercise(request, exercise_id):
 				exercise = queries.get_exercise(exercise_id)
 				students = queries.get_all_students()
 				for st in students:
-					num_submissions = queries.get_number_student_submissions(st.id, exercise.id)
+					num_submissions = queries.get_number_student_submissions(exercise.id, st.id)
+					print num_submissions
 					if num_submissions > 0:
-						submission = queries.get_last_submission(st.id, exercise.id)
+						submission = queries.get_last_submission(exercise.id, st.id)
+						
 						try:
-							execution = queries,get_last_execution(submission.id)
+							execution = queries.get_last_execution(submission.id)
 						except:
 							execution = None
 						results = util.Student_Results(st, exercise, num_submissions, submission, execution)

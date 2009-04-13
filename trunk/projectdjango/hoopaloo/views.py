@@ -83,7 +83,7 @@ def score_percentual(request, exercise_id):
 				results = queries.get_all_last_submissions(exercise.id)
 				score_percentual = configuration.PERCENT_OF_SCORE
 				score_percent = util.calculate_score_percentual(score_percentual, results, exercise)
-				return render_to_response("note_percentual.html", {'note_percent':note_percent, 'exercise':exercise, 'is_assistant': util.is_assistant(request.user),}, context_instance=RequestContext(request))
+				return render_to_response("note_percentual.html", {'note_percent':score_percent, 'exercise':exercise, 'is_assistant': util.is_assistant(request.user),}, context_instance=RequestContext(request))
 		else:
 			error = configuration.EXERCISE_SEE_NOT_PERMISSION
 			return render_to_response("error_page.html", {'error' : error}, context_instance=RequestContext(request))
