@@ -120,7 +120,7 @@ def make_message_student(result):
 		submission = queries.get_last_submission(result.id_exercise.id, result.id_student.id)
 		execution = queries.get_last_execution(submission.id)
 		if result.veredict == "Pass":
-			msg = configuration.EXECUTION_PASS % (result.pass_number)
+			msg = configuration.EXECUTION_PASS % (execution.pass_number)
 			msgs.append(msg)
 			return True, msgs
 		elif (result.veredict == "Fail") and (execution.loop):
@@ -129,9 +129,9 @@ def make_message_student(result):
 			return False, msgs
 			
 		elif result.veredict == "Fail":
-			msg = configuration.EXECUTION_FAILED % (result.pass_number + result.errors_number, result.errors_number)
+			msg = configuration.EXECUTION_FAILED % (execution.pass_number + execution.errors_number, execution.errors_number)
 			msgs.append(msg)
-			lines = result.errors_to_student.split('\n')
+			lines = execution.errors_to_student.split('\n')
 			for l in lines:
 				if l != "":
 					msgs.append(l)
@@ -140,17 +140,15 @@ def make_message_student(result):
 def notify_students(students, id_ex):
 	"""Notify the students about the result of execution tests."""
 	
-	from hoopaloo.models import Submission
 	for s in students:
 		submissions = queries.get_number_student_submissions(id_ex, s.id)
-		if submissions.count() != 0:
+		if submissions != 0:
 			last_submission = queries.get_last_submission(id_ex, s.id)
-			if last_submission.date <= test_creation_date:
-				veredict, message = make_message_student(last_submission)
+			veredict, message = make_message_student(last_submission)
 				
-				subject = "Notification"
-				send_email(s.user.email, subject, message)
-				
+			subject = "Notification"
+			send_email(s.user.email, subject, message)
+			
 def register_action(user, action):
 	"""Register the action executed by user in database"""
 	
@@ -296,7 +294,7 @@ def calculate_score_percentual(percentual_list, results, exercise):
 	
 def mean(results):
 	"""Calculates the arithmetic mean of elements of the parameter "results" """
-	
+
 	mean = 0
 	sum = 0
 	count = 0
@@ -304,7 +302,7 @@ def mean(results):
 		if r.score != None:
 			sum += r.score
 			count +=1
-	if len(results) != 0 and count != 0:
+	if (len(results) != 0) and (count != 0):
 		mean = sum/count
 	return mean
 	
@@ -313,11 +311,9 @@ def calculate_mean_student(student):
 	exercises = queries.get_unavailable_exercises()
 	results = []
 	for ex in exercises:
-		try:
-			last_submission = queries.get_last_submission(ex.id, student.id)
+		last_submission = queries.get_last_submission(ex.id, student.id)
+		if last_submission:
 			results.append(last_submission)
-		except:
-			pass
 	return mean(results)
 
 def calculate_mean(exercise):
@@ -360,7 +356,6 @@ def get_students_percent(index, id_ex):
 def get_students_score_percent(index, id_exercise):
 	"""Returns the students that has a specific score (referenced by index)"""
 	
-	from hoopaloo.models import Exercise, Student, Result
 	students = queries.get_all_students()
 	exercise = queries.get_exercise(id_exercise)
 	st_percent = []
@@ -430,8 +425,10 @@ def add_score_and_comments(comments, score, exercise, submission):
 		else:
 			submission.score = n
 	submission.save()
+	
 	exercise.mean_notes = calculate_mean(exercise)
 	exercise.save()
+	
 	student = queries.get_student(submission.id_student.id)
 	student.mean = calculate_mean_student(student)
 	student.save()
