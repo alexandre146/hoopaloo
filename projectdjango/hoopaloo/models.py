@@ -181,10 +181,11 @@ class Test(models.Model):
 	owner = models.ForeignKey(User)
 	exercise = models.ForeignKey(Exercise) # the exercise related to this test
 	locked = models.BooleanField()
+	locked_by = models.CharField(max_length=30)
 	
 	def create_test(self, owner, exercise, code):
 		new_test = Test()
-		new_test.name = 'Teste_' + exercise.name
+		new_test.name = 'Test_' + exercise.name
 		new_test.code = code
 		new_test.creation_date = datetime.datetime.now()
 		new_test.owner = owner
@@ -242,11 +243,14 @@ def execution_saved(sender, instance, signal, *args, **kwargs):
 	"""This signal is called always an execution is saved in database. It recovers the informations
 	of execution and creates a result."""
 	
+	print 'METODO DE ATUALIZACAO DE SUBMISSION'
+	
 	id_st = instance.id_student.id
 	student = queries.get_student(id_st)
 	submission = queries.get_submission(instance.id_submission.id)
 	exercise = queries.get_exercise(submission.id_exercise.id)
-
+	errors_number = instance.errors_number
+	
 	if (errors_number == 0) and (not instance.loop):
 		veredict = 'Pass'
 	else:
@@ -263,13 +267,15 @@ def execution_saved(sender, instance, signal, *args, **kwargs):
 		teacher = queries.get_user(c.teacher.id)
 		subject = 'Execution Results'
 		msg = configuration.EXECUTION_SUCESS % (student.username, exercise.name, student.id, exercise.id)
-		send_email(teacher.email, subject, msg)
+		util.send_email(teacher.email, subject, msg)
 	#notify students
 	students = queries.get_students_that_submit(exercise.id)
 	notify_students(students, exercise.id)
 	
 def create_or_update_test(sender, instance, signal, *args, **kwargs):
 	"""This function is called when a test is modified or is created. It execute the students programs."""
+	
+	print 'DENTRO DA FUNÇÂO DE SIGNAL'
 	
 	if not instance.locked:
 		from hoopaloo.util import notify_students

@@ -47,6 +47,7 @@ def under_test(request, test_id):
 			
 			#locking the original test
 			original_test.locked = True
+			original_test.locked_by = request.user.username
 			original_test.save()
 			
 			options = queries.get_exercise_submissions(exercise.id)

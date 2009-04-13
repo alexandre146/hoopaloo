@@ -259,7 +259,6 @@ def calculate_percentual(percentual_list, number_tests, students, exercise):
 	"""Returns a list in which each element has a percentual.
 	This percentual is a percent of test right. For example: 20% of class passed in 40% of tests."""
 	
-	from hoopaloo.models import Result
 	result_p = []
 	for p in percentual_list:
 		num = 0
@@ -287,8 +286,8 @@ def calculate_score_percentual(percentual_list, results, exercise):
 		for r in results:
 			if r.score <= p[0] and r.score >= p[1]:
 				num += 1
-		if results.count() > 0:
-			element = MyTuple("%.1f - %.1f" % (p[0], p[1]), num*100/results.count(), count)
+		if len(results) > 0:
+			element = MyTuple("%.1f - %.1f" % (p[0], p[1]), num*100/len(results), count)
 		else:
 			element = MyTuple("%.1f - %.1f" % (p[0], p[1]), 0, count)
 		result_p.append(element)
@@ -539,6 +538,8 @@ def change_test(original_test, changed_test):
 	dest = open(path_tests, 'wb')
 	
 	new_test_code = changed_test.code.replace('undertest_', 'test_')
+	new_test_code = new_test_code.replace('UnderTest_', 'Test_')
+	
 	dest.write(new_test_code + '\n\n\n' + configuration.TEST_APPEND)
 	dest.close()
 			
@@ -553,17 +554,19 @@ def change_test(original_test, changed_test):
 		test_full_path =  path_student + original_test.path
 		if not os.path.exists(path_student):
 			os.makedirs(path_student)
+		
 		dest = open(test_full_path, 'wb')
-		if new_test_code.__contains__("from pexpect import *"):
+		if new_test_code.__contains__("from pexpect import *") or new_test_code.__contains__("import pexpect"):
 			number = new_test_code.count('%')
-			aux = number*(path_student,)
-			dest.write((new_test_code % aux) + '\n\n\n' + (configuration.TEST_APPEND_STUDENT_FOLDER % (original_test.name, path_student)))
+			aux2 = number*(path_student,)
+			dest.write((new_test_code % aux2) + '\n\n\n' + (configuration.TEST_APPEND_STUDENT_FOLDER % (original_test.name, "'" + path_student + "'")))
 		else:
-			dest.write(new_test_code + '\n\n\n' + configuration.TEST_APPEND_STUDENT_FOLDER % (original_test, path_student))
+			dest.write(new_test_code + '\n\n\n' + configuration.TEST_APPEND_STUDENT_FOLDER % (original_test, "'" + path_student + "'"))
 		dest.close()
 		
 	original_test.code = new_test_code
 	original_test.locked = False
+	original_test.locked_by = "Anyone"
 	
 	changed_test.delete()
 	original_test.save()
@@ -693,7 +696,7 @@ def student_exercises(student_id):
 			submission = submissions.order_by('date').reverse()[0]
 			execution = queries.get_last_execution(submission.id)
 		except:
-			pass
+			execution = None
 		
 		if submission and (submission.veredict == 'Pass'):
 			solved = True

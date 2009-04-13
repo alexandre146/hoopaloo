@@ -52,13 +52,14 @@ class Tester:
 		if num_submissions > 0:
 			# the path of test in students' folder
 		
-			test_file_path = settings.MEDIA_ROOT + '/' + student_username + '/' + test_file_name
+			test_file_path = settings.MEDIA_ROOT + '/' + student_username + '/' + self.exercise.name + '/' + test_file_name
 			
 			#from threading import Timer
 			#cron = Timer(17.0, self.infinite_loop_func)
 			#cron.start()
 			
 			# command to execute the test
+			print 'VAI EXECUTAR O TESTE'
 			cmd = ['python', test_file_path]
 			self.process = subprocess.Popen(args=cmd)
 			self.process.wait()
@@ -131,7 +132,7 @@ class Tester:
 	def infinite_loop_func(self):
 		"""Function to terminate a execution when it will be infinite loop"""
 		
-		if not os.path.exists(settings.MEDIA_ROOT + '/' + self.student.username + '/' + configuration.RESULT_TEST_FILE):
+		if not os.path.exists(settings.MEDIA_ROOT + '/' + self.student.username + '/' + self.exercise.name + '/' + configuration.RESULT_TEST_FILE):
 			self.infinite_loop = True
 			file_error = open(settings.MEDIA_ROOT + "/errors/result.txt", 'wb')
 			file_error.write(configuration.INFINITE_LOOP_MSG)
@@ -152,7 +153,7 @@ class Tester:
 		msg_to_student = ''
 		loop = False
 		try:
-			result_file = open(settings.MEDIA_ROOT + '/' + self.student.username + '/' + configuration.RESULT_TEST_FILE)
+			result_file = open(settings.MEDIA_ROOT + '/' + self.student.username + '/' + self.exercise.name + '/' + configuration.RESULT_TEST_FILE)
 			results = result_file.readlines()
 		
 			num_errors = int(results[0])
@@ -163,7 +164,7 @@ class Tester:
 		
 			msg_to_student = self.get_message_to_student(log_errors)
 			result_file.close()
-			os.remove(settings.MEDIA_ROOT + '/' + self.student.username + '/' + configuration.RESULT_TEST_FILE)
+			os.remove(settings.MEDIA_ROOT + '/' + self.student.username + '/' + self.exercise.name + '/' + configuration.RESULT_TEST_FILE)
 		
 		except:
 			try:
@@ -198,7 +199,7 @@ class Tester:
 		
 		for e in log_errors:
 			execution.log_errors += e
-		
+			
 		execution.save()
 		
 		ex = sb.id_exercise
