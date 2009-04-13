@@ -23,9 +23,6 @@ BACKUP_TEST_NAME = 'backup_test'
 PASSWORD_EMAIL = 'Welcome to Hoopaloo,\n\nYou are registered in the system and your login is: %s and your password is %s.\nThanks,\nHoopaloo.'
 FORGOT_PASSWORD_EMAIL = 'Hello %s,\nYou requested a new password. This password is %s and you must change it when access Hoopaloo system at the next time.\n\nThanks, Hoopaloo.'
 
-SUBMISSION_WITHOUT_TEST_EMAIL_TO_STUDENT = "%s,\nYour program was submited sucessfully, but at the moment there are not tests registered.\nWhen tests will be added, your program will be executed and the results sent to you by email.\n\nDo not reply this message, it is generated automatically.\n\nThanks,\nHoopaloo"
-SUBMISSION_WITHOUT_TEST_EMAIL_TO_TEACHER = "Teacher,\nThere are submissions to the exercise %s, but you do not register any test.\n\nDo not reply this message, it is generated automatically.\n\nThanks,\nHoopaloo."
-
 RESULT_TEST_FILE = 'result.txt'
 
 PERCENT_OF_TESTS = [(100, 91), (90, 71), (70, 51), (50, 31), (30, 11), (10, 0)]

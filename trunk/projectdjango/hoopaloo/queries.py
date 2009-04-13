@@ -160,7 +160,7 @@ def get_undelivered_exercises(student_id):
 		
 def get_number_undelivered_exercises(student_id):
 	"""Return the number of undelivered exercises of a student."""
-	return get_undelivered_exercises(student_id).count()
+	return len(get_undelivered_exercises(student_id))
 	
 	
 # STUDENTS
@@ -211,14 +211,17 @@ def get_students_that_solved(exercise_id):
 	students = get_all_students()
 	result = []
 	for st in students:
-		last_submission = get_last_submission(ex.id, student_id)
-		if last_submission.veredict == 'Pass':
-			result.append(st)
+		last_submission = get_last_submission(exercise_id, st.id)
+		try:
+			if last_submission.veredict == 'Pass':
+				result.append(st)
+		except:
+			pass
 	return result
 
 def number_students_that_solved(exercise_id):
 	"""Return the number of students that solved an exercise."""
-	return get_students_that_solved(exercise_id).count()
+	return len(get_students_that_solved(exercise_id))
 	
 def get_students_that_submit(exercise_id):
 	students = get_all_students()
@@ -301,7 +304,7 @@ def get_class(class_id):
 	return Class.objects.get(pk=class_id)
 	
 # EXECUTIONS
-def get_ordered_executions(submisison_id):
+def get_ordered_executions(submission_id):
 	"""Return all executions of a submission in reverse order by date."""
 	from hoopaloo.models import Execution
 	return Execution.objects.filter(id_submission=submission_id).order_by('date').reverse()

@@ -133,7 +133,7 @@
 			<td><center><font size=2>{{ student.pending_exercises }}</font></center></td>
 			<td><center><font size=2>{{ student.undelivered_exercises }}</font></center></td>
 			<td><center><font size=2>{{ student.submission_by_exercise|floatformat:2 }}</font></center></td>
-			<td><center><font size=2>{{ student.mean }}</font></center></td>
+			<td><center><font size=2>{{ student.mean|floatformat:2 }}</font></center></td>
 			<td><center><font size=2><a href="../../hoopaloo/exercises/student/id={{student.id}}">Exercises of {{ student.username }}</a></font></center></td>
 			
         </tr>

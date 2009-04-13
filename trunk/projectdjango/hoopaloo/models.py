@@ -242,9 +242,7 @@ from django.db.models.signals import post_save, pre_delete, pre_save
 def execution_saved(sender, instance, signal, *args, **kwargs):
 	"""This signal is called always an execution is saved in database. It recovers the informations
 	of execution and creates a result."""
-	
-	print 'METODO DE ATUALIZACAO DE SUBMISSION'
-	
+
 	id_st = instance.id_student.id
 	student = queries.get_student(id_st)
 	submission = queries.get_submission(instance.id_submission.id)
@@ -270,15 +268,13 @@ def execution_saved(sender, instance, signal, *args, **kwargs):
 		util.send_email(teacher.email, subject, msg)
 	#notify students
 	students = queries.get_students_that_submit(exercise.id)
-	notify_students(students, exercise.id)
+	#util.notify_students(students, exercise.id)
 	
 def create_or_update_test(sender, instance, signal, *args, **kwargs):
 	"""This function is called when a test is modified or is created. It execute the students programs."""
 	
-	print 'DENTRO DA FUNÇÂO DE SIGNAL'
-	
 	if not instance.locked:
-		from hoopaloo.util import notify_students
+
 		students = queries.get_all_students()
 		exercise = instance.exercise
 		test = instance
@@ -378,7 +374,7 @@ def post_save_exercise(sender, instance, signal, *args, **kwargs):
 	
 	try:
 		# if this exercise exists and only is being updated
-		test = queries.get_consolidate_test(instance.id)
+		test = queries.get_consolidated_test(instance.id)
 	except:
 		name_test = 'Test_' + instance.name.replace(".", "_")
 		test = Test().create_test(instance.owner, instance, configuration.TEST_DEFAULT_CODE % name_test)

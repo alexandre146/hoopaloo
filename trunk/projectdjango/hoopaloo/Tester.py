@@ -59,7 +59,7 @@ class Tester:
 			#cron.start()
 			
 			# command to execute the test
-			print 'VAI EXECUTAR O TESTE'
+	
 			cmd = ['python', test_file_path]
 			self.process = subprocess.Popen(args=cmd)
 			self.process.wait()
@@ -182,6 +182,12 @@ class Tester:
 			except:
 				return
 				
+		if num_tests != 0:
+			self.exercise.number_tests = num_tests
+			if (num_errors == 0) and (not self.infinite_loop):
+				self.exercise.number_students_that_solved = queries.number_students_that_solved(self.exercise.id) + 1
+			self.exercise.save()
+			
 		# Storing the execution of a test
 		execution = Execution()
 		
@@ -202,9 +208,3 @@ class Tester:
 			
 		execution.save()
 		
-		ex = sb.id_exercise
-		if num_tests != 0:
-			ex.number_tests = num_tests
-			if (execution.errors_number == 0) and (not self.infinite_loop):
-				ex.number_students_that_solved += 1
-			ex.save()
