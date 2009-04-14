@@ -287,6 +287,14 @@ def get_under_test(exercise_id):
 	from hoopaloo.models import UnderTest
 	return UnderTest.objects.get(exercise=exercise_id)
 	
+def get_under_test2(undertest_id):
+	from hoopaloo.models import UnderTest
+	return UnderTest.objects.get(pk=undertest_id)
+	
+def get_user_undertest(user_id):
+	from hoopaloo.models import UnderTest
+	return UnderTest.objects.filter(owner=user_id)
+	
 #CLASSES
 def get_classes(user):
 	"""Return all classes."""

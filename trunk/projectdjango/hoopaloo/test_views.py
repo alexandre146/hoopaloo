@@ -33,6 +33,25 @@ def change_test(request, test_id):
 	else:	
 		form = LoginForm()
 		return render_to_response("login.html", {'form' : form}, context_instance=RequestContext(request))
+		
+def save_under_test(request, undertest_id):
+	if request.user.is_authenticated():
+		if request.user.has_perm("hoopaloo.change_test"):
+			under_test = queries.get_under_test2(undertest_id)
+			code = request.POST['contend']
+			under_test.code = code
+			under_test.save()
+			util.save_under_test_file(under_test)					
+			exercise = queries.get_exercise(under_test.exercise.id)
+			options = queries.get_exercise_submissions(exercise.id)
+			msg = configuration.UNDER_TEST_ADD_SUCESSFULLY
+			return render_to_response("choose_submissions.html", {'options' : options, 'exercise':exercise, 'msg':msg, 'is_assistant': util.is_assistant(request.user),}, context_instance=RequestContext(request))
+		else:
+			error = configuration.TEST_UPDATE_NOT_PERMISSION
+			return render_to_response("error_page.html", {'error' : error}, context_instance=RequestContext(request))
+	else:	
+		form = LoginForm()
+		return render_to_response("login.html", {'form' : form}, context_instance=RequestContext(request))
 
 	
 def under_test(request, test_id):
@@ -40,18 +59,20 @@ def under_test(request, test_id):
 		if request.user.has_perm("hoopaloo.change_test"):
 			original_test = queries.get_test(test_id)
 			exercise = queries.get_exercise(original_test.exercise.id)
-			code = request.POST['contend'].replace('Test_', 'UnderTest_')
-			under_test = UnderTest().create_test(request.user, exercise, code)
-			util.save_under_test_file(under_test)
-			under_test.save()
+			if request.method == 'POST':
+				code = request.POST['contend'].replace('Test_', 'UnderTest_')
+				under_test = UnderTest().create_test(request.user, exercise, original_test, code)
+				util.save_under_test_file(under_test)
+				under_test.save()
 			
-			#locking the original test
-			original_test.locked = True
-			original_test.locked_by = request.user.username
-			original_test.save()
-			
-			options = queries.get_exercise_submissions(exercise.id)
-			msg = configuration.UNDER_TEST_ADD_SUCESSFULLY
+				#locking the original test
+				original_test.locked = True
+				original_test.locked_by = request.user.username
+				original_test.save()
+				msg = configuration.UNDER_TEST_ADD_SUCESSFULLY				
+			else:
+				msg = ""
+			options = queries.get_exercise_submissions(exercise.id)	
 			return render_to_response("choose_submissions.html", {'options' : options, 'exercise':exercise, 'msg': msg, 'is_assistant': util.is_assistant(request.user),}, context_instance=RequestContext(request))
 		else:
 			error = configuration.TEST_UPDATE_NOT_PERMISSION
@@ -76,34 +97,7 @@ def choose_submissions(request, exercise_id):
 				executions_results.append(result)
 				
 		return render_to_response("temp_results.html", {'executions_results':executions_results, 'exercise': exercise}, context_instance=RequestContext(request))	
-
-		
-def consolidate_test(request, exercise_id):
-	if request.method == 'POST':
-		exercise = queries.get_exercise(exercise_id)
-		original_test = queries.get_consolidated_test(exercise_id)
-		under_test = queries.get_under_test(exercise_id)
-		
-		util.change_test(original_test, under_test)
-		
-		return render_to_response("test_view.html", {'exercise': exercise, 'test':original_test, 'code': original_test.code, 'is_assistant': util.is_assistant(request.user),}, context_instance=RequestContext(request))
-		
-def cancel_undertest(request, exercise_id):
-	if request.method == 'POST':
-		exercise = queries.get_exercise(exercise_id)
-		original_test = queries.get_consolidated_test(exercise_id)
-		under_test = queries.get_under_test(exercise_id)
-		
-		path_under_test = settings.MEDIA_ROOT + '/under_tests/' + under_test.path
-		os.remove(path_under_test)
-				
-		original_test.locked = False
-		#nao deve excutar nada
-		original_test.save()
-		under_test.delete()
-		
-		return render_to_response("test_view.html", {'exercise': exercise, 'test':original_test, 'code': original_test.code, 'is_assistant': util.is_assistant(request.user),}, context_instance=RequestContext(request))
-	
+			
 def test_view(request, test_id):
 	"""View that shows test details."""
 	
@@ -164,7 +158,64 @@ def tests(request):
 	if request.user.is_authenticated():
 		if request.method == 'GET':
 			tests = queries.get_all_tests()
-			return render_to_response("tests.html", {'tests' : tests, 'is_assistant': util.is_assistant(request.user),}, context_instance=RequestContext(request))
+			try:
+				undertests = queries.get_user_undertest(request.user.id)
+			except:
+				undertests = None
+			return render_to_response("tests.html", {'tests' : tests, 'undertests':undertests, 'is_assistant': util.is_assistant(request.user),}, context_instance=RequestContext(request))
+	else:	
+		form = LoginForm()
+		return render_to_response("login.html", {'form' : form}, context_instance=RequestContext(request))
+
+def undertest_view(request, undertest_id):
+	"""View that shows test details."""
+	
+	if request.user.is_authenticated():
+		if request.user.has_perm("hoopaloo.see_tests"):
+			if request.method == 'GET':
+				undertest = queries.get_under_test2(undertest_id)
+				lines = undertest.code
+				exercise = queries.get_exercise(undertest.exercise.id)
+				return render_to_response("test_view.html", {'exercise': exercise, 'test':undertest, 'code': lines, 'is_assistant': util.is_assistant(request.user),}, context_instance=RequestContext(request))
+		else:
+			error = configuration.TEST_SEE_NOT_PERMISSION
+			return render_to_response("error_page.html", {'error' : error}, context_instance=RequestContext(request))
+	else:
+		form = LoginForm()
+		return render_to_response("login.html", {'form' : form}, context_instance=RequestContext(request))
+		
+	
+def under_test_action(request, exercise_id):
+	if request.user.is_authenticated():
+		if request.user.has_perm("hoopaloo.change_test"):
+			if 'edit_undertest' in request.POST:
+				t = queries.get_under_test(exercise_id)
+				contend = t.code
+				return render_to_response("update_undertest.html", {'test': t, 'contend':contend, 'is_assistant': util.is_assistant(request.user),}, context_instance=RequestContext(request))
+			if 'cancel_undertest' in request.POST:
+				exercise = queries.get_exercise(exercise_id)
+				original_test = queries.get_consolidated_test(exercise_id)
+				under_test = queries.get_under_test(exercise_id)
+				
+				path_under_test = settings.MEDIA_ROOT + '/under_tests/' + under_test.path
+				os.remove(path_under_test)
+						
+				original_test.locked = False
+				
+				original_test.save()
+				under_test.delete()
+		
+				return render_to_response("test_view.html", {'exercise': exercise, 'test':original_test, 'code': original_test.code, 'is_assistant': util.is_assistant(request.user),}, context_instance=RequestContext(request))
+			if'consolidate_test' in request.POST:
+				exercise = queries.get_exercise(exercise_id)
+				original_test = queries.get_consolidated_test(exercise_id)
+				under_test = queries.get_under_test(exercise_id)
+				util.change_test(original_test, under_test)
+				return render_to_response("test_view.html", {'exercise': exercise, 'test':original_test, 'code': original_test.code, 'is_assistant': util.is_assistant(request.user),}, context_instance=RequestContext(request))
+		
+		else:
+			error = configuration.TEST_UPDATE_NOT_PERMISSION
+			return render_to_response("error_page.html", {'error' : error}, context_instance=RequestContext(request))
 	else:	
 		form = LoginForm()
 		return render_to_response("login.html", {'form' : form}, context_instance=RequestContext(request))

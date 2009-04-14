@@ -147,6 +147,35 @@
 {% else %}
 	<p>"There isn't any test"</p>
 {% endif %}
+
+
+{% if undertests %}
+	<br><br><br>
+	<h1 id="site-name"><font size="4">{% trans 'Under Tests' %}</font></h1>
+	<div>These are the tests that you are editing.</div>
+	<table id="list">
+			<thead>
+	        <tr>
+	            <th scope="col"><center><h4>{% trans 'Test Title' %}</center></h4></th>
+				<th scope="col"><center><h4>{% trans 'Creation Date' %}</center></h4></th>
+				<th scope="col"><center><h4>{% trans 'Owner' %}</center></h4></th>
+				<th scope="col"><center><h4>{% trans 'Exercise' %}</center></h4></th>
+				<th scope="col"><center><h4>{% trans 'Run Tests' %}</center></h4></th>
+	        </tr>
+	        </thead>
+	        <tbody>
+	        {% for t in undertests %}
+				<tr>
+	            <td><font size=2><center><a href="../../hoopaloo/undertest_view/id={{t.id}}">{{ t.name }}</a></center></font></td>
+				<td><font size=2><center>{{ t.creation_date|date:"d/m/Y H:i:s" }}</center></font></td>
+				<td><font size=2><center>{{ t.owner.username }}</center></font></td>
+				<td><font size=2><center>{{ t.exercise.name }}</center></font></td>
+				<td><font size=2><center><a href="../../hoopaloo/under_test/id={{t.test.id}}/">Run Tests</a> </center></font></td>
+	        </tr>
+	        {% endfor %}
+	        </tbody>
+	    </table>
+{% endif %}
 	</div>
 </div>
 {% endblock %}

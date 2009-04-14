@@ -1,12 +1,13 @@
 {% extends "base.html" %}
-<head></head>
+<head>Teste</head>
 {% load i18n %}
 {% block extrahead %}
-<script type="text/javascript" src="/media/js/projectdjango/DHTMLMenuExpanderV2.js"></script>
-<script type="text/javascript" src="/media/js/projectdjango/sample4.js"></script>
-<LINK rel="stylesheet" type="text/css" href="/media/css/projectdjango/horizontal.css">
+<script type="text/javascript" src="../../../media/js/projectdjango/DHTMLMenuExpanderV2.js"></script>
+<script type="text/javascript" src="../../../media/js/projectdjango/sample4.js"></script>
+<LINK rel="stylesheet" type="text/css" href="../../../media/css/projectdjango/horizontal.css">
+<LINK rel="stylesheet" type="text/css" href="../../../admin-media/css/dashboard.css">
 {% endblock %}
-{% block stylesheet %}{% load adminmedia %}{% admin_media_prefix %}css/dashboard.css{% endblock %}
+
 
 {% block breadcrumbs %}
 <div id="menuSystem">
@@ -80,7 +81,7 @@
 			<td>
 				<table>
 					<tr>
-						<th width="100"><a href="../../logout/">Logout</a></th>
+						<th width="100"><a href="../logout/">Logout</a></th>
 					</tr>
 				</table>
 			</td>
@@ -104,33 +105,39 @@
 <!-- Menu end -->
 {% endblock %}
 
-{% block title %}Choose Submissions{% endblock %}
-{% block content %}
-<div id="container">
-		<br>
-		<br>
-		<br>
-		{% block branding %}<h1 id="site-name"><font size="4">{% trans 'Choose Submissions' %}</font></h1>
-		{% endblock %}
+{% block title %}Edit Test{% endblock %}
 
-<div id="content-main">
-	{% if msg %}
-		<ul class="messagelist"><li>{{ msg }}</li></ul>
-	{% endif %}
-	<br>
-	<br>
-	{% if options %}
-	<div>Choose the submission to execute your test. The execution results will be not registered.</div>
-	<form action="/hoopaloo/choose_submissions/id={{exercise.id}}/" method='POST'>
-			{% for option in options %}
-				<input name="submission{{option.id}}" type="checkbox" value="submission{{option.id}}"> Student: {{option.id_student.username}} - SubmissionID: {{option.id}}<br>
-			{% endfor %}
-			<br>
-			<input type="submit" value="{% trans 'Run Test' %}" />
-	</form>
-	{% else %}
-	<div>Nobody made submission to this exercise.</div>
-	{% endif %}
-</div>
+{% block content %}
+
+<div id="container">
+	<br></br>
+	<br></br>
+	<br></br>
+	{% block branding %}<h1 id="site-name"><font size="4">{% trans 'Edit UnderTest' %}</font></h1>
+	{% endblock %}
+
+	<div id="content-main">
+		<br></br>
+		<br></br>
+		{% if msg %}
+			<ul class="messagelist"><li>{{ msg }}</li></ul>
+		{% endif %}
+		{% if error %}
+			<div class="errornote">{{ error }}</div>
+		{% endif %}
+		<div><font size="3"><b>Test Title: </b> {{ test.name }}</font></div>
+		<br><div><font size="3"><b>Exercise: </b> {{ test.exercise }}</font></div></br>
+		<form action="/hoopaloo/save_under_test/id={{test.id}}/" method="POST">
+
+			<br><div class="form-row">
+				<label for="contend"><b><font size=3>{% trans 'Code' %}:</font></b></label>
+				<textarea name="contend" rows="37" cols="80">{{ contend }}</textarea>
+			</div></br>
+			<!--<form action="/hoopaloo/change_test/id={{test.id}}/" method="POST">
+				<input type="submit" value="{% trans 'Save Test' %}" />
+			</form>-->
+			<input type="submit" value="{% trans 'Save Test As Under Test' %}" />
+		</form>
+	</div>
 </div>
 {% endblock %}
