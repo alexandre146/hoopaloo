@@ -207,8 +207,9 @@ class UnderTest(models.Model):
 	creation_date = models.DateTimeField('Creation Date')
 	owner = models.ForeignKey(User)
 	exercise = models.ForeignKey(Exercise) # the exercise related to this test
-
-	def create_test(self, owner, exercise, code):
+	test = models.ForeignKey(Test) # the test related to this test
+	
+	def create_test(self, owner, exercise, test, code):
 		new_test = UnderTest()
 		new_test.name = 'UnderTest_' + exercise.name
 		new_test.code = code
@@ -216,7 +217,8 @@ class UnderTest(models.Model):
 		new_test.owner = owner
 		new_test.exercise = exercise
 		new_test.path = new_test.name + '.py'
-
+		new_test.test = test
+		
 		return new_test
 		
 	def __unicode__(self):
@@ -274,16 +276,18 @@ def create_or_update_test(sender, instance, signal, *args, **kwargs):
 	"""This function is called when a test is modified or is created. It execute the students programs."""
 	
 	if not instance.locked:
-
-		students = queries.get_all_students()
-		exercise = instance.exercise
-		test = instance
-		from hoopaloo.Tester import Tester
-			
-		for s in students:
-			tester = Tester(s, test, exercise) 
-			tester.execute_test()
-			
+		try:
+			undertest = queries.get_under_test(instance.exercise.id)
+		except:
+			students = queries.get_all_students()
+			exercise = instance.exercise
+			test = instance
+			from hoopaloo.Tester import Tester
+				
+			for s in students:
+				tester = Tester(s, test, exercise) 
+				tester.execute_test()
+				
 
 def pre_delete_exercise(sender, instance, signal, *args, **kwargs):
 	"""This function is invoked when an exercise is deleted. 
@@ -392,8 +396,27 @@ def post_save_exercise(sender, instance, signal, *args, **kwargs):
 			
 		util.save_test_in_student_folders(test)
 		test.save()	
+
+def submission_student(sender, instance, signal, *args, **kwargs):
+	"""This signal is invoked always that a new submission is saved in database."""
+	
+	if instance.was_executed == False:	
+
+		file = instance.solution_file
+		student = Student.objects.get(username=instance.id_student.username)
+		id_exercise = instance.id_exercise
 		
+		if Test.objects.filter(exercise=id_exercise).count() != 0:
+			test = Test.objects.get(exercise=id_exercise)
+			
+			from hoopaloo.Tester import Tester
+			# executing the test 
+			tester = Tester(student, test, id_exercise)
+			tester.execute_test()			
+		
+
 # The connection between the signals and the functions
+post_save.connect(submission_student, sender=Submission, dispatch_uid='post_save.submission_student')
 post_save.connect(execution_saved, sender=Execution, dispatch_uid='post_save.execution_saved')
 post_save.connect(create_or_update_test, sender=Test, dispatch_uid='post_save.create_or_update_test')
 pre_save.connect(pre_save_exercise, sender=Exercise, dispatch_uid='pre_save.pre_save_exercise')

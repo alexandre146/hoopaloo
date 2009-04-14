@@ -125,11 +125,14 @@
 		<strong>Number of passed tests:</strong> {{execution.num_pass}}<br>
 		{% if execution.log_errors %}<strong>Messages:</strong> <br>{% for error in execution.log_errors %}{{error}}<br>{% endfor %}{% endif %}<br>
 {% endfor %}
-<form action="/hoopaloo/consolidate_test/id={{exercise.id}}/" method='POST'>
-	<input type="submit" value="{% trans 'Consolidate Test' %}" />
-</form>
-<form action="/hoopaloo/cancel_undertest/id={{exercise.id}}/" method='POST'>
-	<input type="submit" value="{% trans 'Cancel' %}" />
-</form>
-</div>
+
+
+	<form action="/hoopaloo/under_test_action/id={{exercise.id}}/" method='POST'>
+		<input type="submit" name="consolidate_test" id="id_consolidate_test" value="{% trans 'Consolidate Test' %}" />
+
+		<input type="submit" name="cancel_undertest" id="id_cancel_undertest" value="{% trans 'Cancel' %}" />
+
+		<input type="submit" name="edit_undertest" id="id_edit_undertest" value="{% trans 'Back to Edit' %}" />
+	</form>
+	</div>
 {% endblock %}

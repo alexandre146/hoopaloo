@@ -66,8 +66,9 @@ urlpatterns = patterns('',
 	(r'^hoopaloo/annul_test/id=(?P<test_id>\d+)/$', 'projectdjango.hoopaloo.test_views.annul_test'),
 	(r'^hoopaloo/under_test/id=(?P<test_id>\d+)/$', 'projectdjango.hoopaloo.test_views.under_test'),
 	(r'^hoopaloo/choose_submissions/id=(?P<exercise_id>\d+)/$', 'projectdjango.hoopaloo.test_views.choose_submissions'),
-	(r'^hoopaloo/consolidate_test/id=(?P<exercise_id>\d+)/$', 'projectdjango.hoopaloo.test_views.consolidate_test'),
-	(r'^hoopaloo/cancel_undertest/id=(?P<exercise_id>\d+)/$', 'projectdjango.hoopaloo.test_views.cancel_undertest'),
+	(r'^hoopaloo/undertest_view/id=(?P<undertest_id>\d+)$', 'projectdjango.hoopaloo.test_views.undertest_view'),
+	(r'^hoopaloo/save_under_test/id=(?P<undertest_id>\d+)/$', 'projectdjango.hoopaloo.test_views.save_under_test'),
+	(r'^hoopaloo/under_test_action/id=(?P<exercise_id>\d+)/$', 'projectdjango.hoopaloo.test_views.under_test_action'),
 	
 	# SUBMISSION_VIEWS
 	(r'^hoopaloo/submission/$', 'projectdjango.hoopaloo.submission_views.submission'),
@@ -109,9 +110,9 @@ urlpatterns = patterns('',
 
 if settings.DEBUG:
     urlpatterns += patterns('',
-        #(r'^media/(?P<path>.*)$', 'django.views.static.serve', {'document_root': 'E:/projectdjango/media/'}),
-		#(r'^admin-media/(?P<path>.*)$', 'django.views.static.serve', {'document_root': 'E:/projectdjango/admin-media/'}),
-		(r'^media/(?P<path>.*)$', 'django.views.static.serve', {'document_root': 'C:\\Documents and Settings\\Mari\\workspaceVE\\projectdjango\\media\\'}),
-		(r'^admin-media/(?P<path>.*)$', 'django.views.static.serve', {'document_root': 'C:\\Documents and Settings\\Mari\\workspaceVE\\projectdjango\\admin-media\\'}),
+        (r'^media/(?P<path>.*)$', 'django.views.static.serve', {'document_root': 'E:/projectdjango/media/'}),
+		(r'^admin-media/(?P<path>.*)$', 'django.views.static.serve', {'document_root': 'E:/projectdjango/admin-media/'}),
+		#(r'^media/(?P<path>.*)$', 'django.views.static.serve', {'document_root': 'C:\\Documents and Settings\\Mari\\workspaceVE\\projectdjango\\media\\'}),
+		#(r'^admin-media/(?P<path>.*)$', 'django.views.static.serve', {'document_root': 'C:\\Documents and Settings\\Mari\\workspaceVE\\projectdjango\\admin-media\\'}),
     )
 

@@ -695,13 +695,15 @@ def student_exercises(student_id):
 		except:
 			execution = None
 		
-		if submission and (submission.veredict == 'Pass'):
-			solved = True
+		if submission:
+			if submission.veredict == 'Pass':
+				solved = True
+			else:
+				solved = False
 			if execution:
 				errors = execution.errors_number
 			score = submission.score
 		
-		if submission:	
 			date = submission.date
 			percentage = calculate_correct_percentage(ex)
 			d = Table_Delivered(ex, submission, submissions.count(), solved, errors, score, percentage)
