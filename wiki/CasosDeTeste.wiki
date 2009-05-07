@@ -1,17 +1,28 @@
 #summary Documentação dos casos de teste do Hoopaloo
 
-= Testes Automáticos =
+== Testes Automáticos ==
 
-== Testes com unittest ==
+Os testes automáticos estão em duas categorias: testes com unittest e testes com o client do django.
 
-* Cadastro de Tutores
-* Cadastro de Alunos
-* Cadastro de Exercícios
-* Criação de Submissão
-* Atualização de atributos de Alunos
+O client simula requisições a páginas do sistema e confere conteúdo de página, url e código que cada response retornada pelo sistema.
 
-== Testes com Client do Django == 
+=== Testes com unittest ===
 
-* Login
+   * Cadastro de Tutores
+   * Cadastro de Alunos
+   * Cadastro de Exercícios
+   * Criação de Submissão
+   * Atualização de atributos de Alunos
 
-= Testes On-Line =
+=== Testes com Client do Django ===
+
+   * Login
+
+=== Testes On-Line ===
+
+Os testes "on-line" são os testes realizados no próprio sistema, simulando situações de uso.
+
+==== Cenário 1 ====
+
+Ator:
+Sequência de passos:
