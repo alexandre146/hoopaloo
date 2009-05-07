@@ -1,0 +1,17 @@
+#summary Documentação dos casos de teste do Hoopaloo
+
+= Testes Automáticos =
+
+== Testes com unittest ==
+
+* Cadastro de Tutores
+* Cadastro de Alunos
+* Cadastro de Exercícios
+* Criação de Submissão
+* Atualização de atributos de Alunos
+
+== Testes com Client do Django == 
+
+* Login
+
+= Testes On-Line =
