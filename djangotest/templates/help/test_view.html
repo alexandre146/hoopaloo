@@ -1,0 +1,24 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+{% extends "base.html" %}
+{% load i18n %}
+<head>
+</head>
+
+{% block title %}Help - Test View{% endblock %}
+{% block content %}
+
+<div id="content-main">
+<h3><font color="#003333" face="Verdana, Arial, Helvetica, sans-serif">Test View</font></h3>
+<p align="justify">You must access this page by the link in at the name of test
+  in List Test page.</p>
+<p align="justify"><img src="../../media-test/img/djangotest/view_test.jpg" width="808" height="572"></p>
+<p align="justify">In this page you can see one more time the name of test, the
+  name of associated exercise, the number of tests (number of test methods) and
+  you can see the code of test.</p>
+<p align="justify">There are two buttons at the end of page (figure bellow) that
+  permit edit (1) and annul (2) this test.</p>
+<p align="center"><img src="../../media-test/img/djangotest/view_test2.jpg" width="684" height="274"></p>
+<p align="justify">Only the teacher and the assistants can see the details of
+tests.</p>
+</div>
+{%endblock%}

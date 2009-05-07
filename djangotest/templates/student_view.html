@@ -1,0 +1,183 @@
+{% extends "base.html" %}
+<head>
+</head>
+{% load i18n %}
+{% block extrahead %}
+<script type="text/javascript" src="/media-test/js/djangotest/DHTMLMenuExpanderV2.js"></script>
+<script type="text/javascript" src="/media-test/js/djangotest/sample4.js"></script>
+<LINK rel="stylesheet" type="text/css" href="/media-test/css/djangotest/horizontal.css">
+<LINK rel="stylesheet" type="text/css" href="/media-test/css/djangotest/paragraph.css">
+{% endblock %}
+
+
+{% block breadcrumbs %}
+
+<div id="menuSystem">
+	<table id="mainTable">
+		<tr>
+			<td>
+				<table>
+					<tr>
+						<th width="100">Exercises</th>
+					</tr>
+					<tr>
+						<td><a href="../delivered_exercises/">Delivered Exercises</a></td>
+					</tr>
+					<tr>
+						<td><a href="../undelivered_exercises/">Undelivered Exercises</a></td>
+					</tr>
+					<tr>
+						<td><a href="../available_exercises/">Available Exercises</a></td>
+					</tr>
+				</table>
+			</td>
+			<td>
+			<table>
+					<tr>
+						<th width="100">Submissions</th>
+					</tr>
+					<tr>
+						<td><a href="../submission/">Submit</a></td>
+					</tr>
+					<tr>
+						<td><a href="../see_submissions/">See Submissions</a></td>
+					</tr>
+				</table>
+			</td>
+			<td>
+				<table>
+					<tr>
+						<th width="100"><a href="../logout/">Logout</a></th>
+					</tr>
+				</table>
+			</td>
+			<td>
+				<table>
+					<tr>
+						<th width="100"><a href="../help_student" target="_blank">Help</a></th>
+					</tr>
+				</table>
+			</td>
+			<td>
+			<table>
+				<tr>
+					<th width="100"><a href="../change_password/">Change Password</a></th>
+				</tr>
+				</table>
+			</td>
+		</tr>
+	</table>
+</div>
+<!-- Menu end -->
+{% endblock %}
+
+{% block title %}Initial Page{% endblock %}
+
+{% block content %}
+<div id="container">
+	<br></br>
+	<br></br>
+	<br></br>
+	{% block branding %}<h1 id="site-name">{% trans 'Initial Page' %}</h1>
+	{% endblock %}	
+
+	<div id="content-main">
+		
+		{% if msg %}
+			<ul class="messagelist"><li>{{ msg }}</li></ul>
+		{% endif %}
+		{% if delivered %}
+		<div>{{explication}}</div>
+			<br>
+				<br>
+					<table id="list">
+						<thead>
+							<tr>
+								<th scope="col"><center><h3>{% trans 'Exercise Name' %}</h3></center></th>
+								<th scope="col"><center><h3>{% trans 'Number of Submissions' %}</h3></center></th>
+								<th scope="col"><center><h3>{% trans 'Date of Last Submission' %}</h3></center></th>
+								<th scope="col"><center><h3>{% trans 'Number of Tests Registered' %}</h3></center></th>
+								<th scope="col"><center><h3>{% trans 'Number of Errors' %}</h3></center></th>
+								<th scope="col"><center><h3>{% trans 'Note' %}</h3></center></th>
+								<th scope="col"><center><h3>{% trans 'Your Rate of Right' %}</h3></center></th>
+								<th scope="col"><center><h3>{% trans 'Rate of Rigth of Class' %}</h3></center></th>
+							</tr>
+						</thead>
+						<tbody>
+							{% for element in delivered %}
+								<tr>
+									<td><center><font size=2><a href="../submission/student{{student.id}}/exercise/id={{element.exercise.id}}">{{ element.exercise.name }}</a></font></center></td>
+									<td><center><font size=2>{{ element.number_submissions }}</font></center></td>
+									<td><center><font size=2>{{ element.last_submission_date }}</font></center></td>
+									<td><center><font size=2>{{ element.number_tests }}</font></center></td>
+									<td><center><font size=2>{{ element.num_errors }}</font></center></td>
+									<td><center><font size=2>{% if element.note %}{{ element.note }} {% else %}-{% endif %}</font></center></td>
+									<td><center><font size=2>{{ element.your_right }}%</font></center></td>
+									<td><center><font size=2>{{ element.class_percentage }}%</font></center></td>
+								</tr>
+							{% endfor %}
+						</tbody>
+					</table>
+				</br>
+			</br>
+
+		{% endif %}
+		
+		{% if undelivered %}
+		<div>{{explication}}</div>
+			<br>
+				<br>
+					<table id="list">
+						<thead>
+							<tr>
+								<th scope="col"><center><h3>{% trans 'Exercise Name' %}</h3></center></th>
+								<th scope="col"><center><h3>{% trans 'Number of Tests Registered' %}</h3></center></th>
+								<th scope="col"><center><h3>{% trans 'Dead Line' %}</h3></center></th>
+							</tr>
+						</thead>
+						<tbody>
+							{% for exercise in undelivered %}
+								<tr>
+									<td><font size=2><a href="../submission/student{{student.id}}/exercise/id={{exercise.id}}">{{ exercise.name }}</a></font></td>
+									<td><center>{{ exercise.number_tests }}</center></td>
+									<td><center>{{ exercise.date_finish|date:"d/m/Y H:i:s" }}</center></td>
+								</tr>
+							{% endfor %}
+						</tbody>
+					</table>
+				</br>
+			</br>
+
+		{% endif %}
+		
+		{% if available %}
+		<div>{{explication}}</div>
+			<br>
+				<br>
+					<table id="list">
+						<thead>
+							<tr>
+								<th scope="col"><center><h3>{% trans 'Exercise Name' %}</h3></center></th>
+								<th scope="col"><center><h3>{% trans 'Number of Tests Registered' %}</h3></center></th>
+								<th scope="col"><center><h3>{% trans 'Realize Submission' %}</h3></center></th>
+							</tr>
+						</thead>
+						<tbody>
+							{% for exercise in available %}
+								<tr>
+									<td><font size=2>{{ exercise.name }}</font></td>
+									<td><center>{{ exercise.number_tests }}</center></td>
+									<td><center><font size=2><a href="../../hoopaloo_test/submission/">Submit a new solution</a></font></center></td>
+								</tr>
+							{% endfor %}
+						</tbody>
+					</table>
+				</br>
+			</br>
+		{% endif %}
+		
+	</div>
+<br></br>
+</div>
+{% endblock %}
+

@@ -1,0 +1,32 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+{% extends "base.html" %}
+{% load i18n %}
+<head>
+</head>
+
+{% block title %}Help - Student Initial Page{% endblock %}
+{% block content %}
+
+<div id="content-main">
+<h3><font color="#003333" face="Verdana, Arial, Helvetica, sans-serif">Students'
+    Initial Page</font></h3>
+<p>When logged in, the student will be redirect to initial page. In this page
+  he/she will see the available exercises that he/she not submited a solution.</p>
+<p>Clicking at the link in the name of exercise, the student will see details
+  of exercise (description, number of registered tests, date of creation, date
+  in which will be unavailable, etc.).</p>
+<p align="center"><img src="../../media-test/img/djangotest/initial_page.jpg" width="565" height="295"></p>
+<p align="justify">The student can see different informations about exercises
+  by the Exercises menu option.</p>
+<p align="center"><img src="../../media-test/img/djangotest/links_initial_page.jpg" width="495" height="259"></p>
+<p align="justify">At the link indicated by number one (1), the student can see
+  a table with most important informations about the exercises that he/she delivered.</p>
+<p align="center"><img src="../../media-test/img/djangotest/delivered_exercises.jpg" width="1022" height="298"></p>
+<p align="justify">At the link indicated by number two (2) the student can see
+  the undelivered exercises (unavailable exercises that the student not submited
+  a solution).</p>
+<p align="justify">And at the link indicated by number three (3) the student
+  will see all available exercises (exercises that to the which he/she had submited
+  or not).</p>
+</div>
+{%endblock%}

@@ -1,0 +1,26 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+{% extends "base.html" %}
+{% load i18n %}
+<head>
+</head>
+
+{% block title %}Help - List Tests{% endblock %}
+{% block content %}
+
+<div id="content-main">
+<h3><font color="#003333" face="Verdana, Arial, Helvetica, sans-serif">List Tests</font>
+</h3>
+<p align="justify">It is possible see all tests registered in the system by the URL <a href="http://dataccc.gmf.ufcg.edu.br/hoopaloo_test/exercises" target="_blank">http://dataccc.gmf.ufcg.edu.br/hoopaloo_test/tests</a> or
+by Test&gt; List Tests menu option (1).</p>
+<p align="center"><img src="../../media-test/img/djangotest/list_tests.jpg" width="680" height="232"></p>
+<p align="justify">In table (2) is possible to see the <strong>name</strong> of tests, the <strong>creation
+  dat</strong>e, the <strong>owner</strong>, the associated <strong>exercise</strong> and to access the <strong>edition
+  page</strong> (4).
+  Each line is a different test.</p>
+<p align="justify">Cliking at the name of test you will be redirect to a page
+  of test details (3). In this page you can see the code of test and will can
+  edit or annul this test (See Edit a Test and Annul a Test).</p>
+<p align="justify">Only the teacher and the assistants can see the details of
+  tests.</p>
+</div>
+{%endblock%}

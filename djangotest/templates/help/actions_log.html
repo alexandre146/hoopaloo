@@ -1,0 +1,22 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+{% extends "base.html" %}
+{% load i18n %}
+<head>
+</head>
+
+{% block title %}Help - Actions Log{% endblock %}
+{% block content %}
+
+<div id="content-main">
+<h3><font color="#003333" face="Verdana, Arial, Helvetica, sans-serif">Actions
+Log</font></h3>
+<p align="justify">Each important operation made by users of system is stored
+  and the super user can review this actions by URL <a href="http://dataccc.gmf.ufcg.edu.br/hoopaloo_test/actions" target="_blank">http://dataccc.gmf.ufcg.edu.br/hoopaloo_test/actions</a> or
+  by Users &gt; Actions Log of System menu option (1).</p>
+<p align="center"><img src="../../media/img/djangotest/actions_log.jpg" width="885" height="264"></p>
+<p align="justify">This table (2) storage some operations realized in the system
+  like remotions, insertions, login, logout, assignments of students to assistants,
+  etc.</p>
+<p align="justify">Only the teacher and the assistants can see the log of actions..</p>
+</div>
+{% endblock %}

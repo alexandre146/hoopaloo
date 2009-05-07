@@ -1,0 +1,36 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+{% extends "base.html" %}
+{% load i18n %}
+<head>
+</head>
+
+{% block title %}Help - Register Student{% endblock %}
+{% block content %}
+
+<div id="content-main">
+<div align="center">
+  <h3 align="left"><font color="#003333" face="Verdana, Arial, Helvetica, sans-serif">Register
+  Student</font></h3>
+  <p><img src="../../media-test/img/djangotest/Register_student1.jpg" width="722" height="520">
+  </p>
+  <p align="justify">To register students in the system access the URL <a href="http://dataccc.gmf.ufcg.edu.br/hoopaloo_test/register_student/" target="_blank">http://dataccc.gmf.ufcg.edu.br/hoopaloo_test/register_student/</a>.
+    Other way of realize this is cliking at the link Register Students in Users
+    menu (1).</p>
+  <p align="justify">Register is made following: one student by line and each line
+    is composed by <strong>studentID</strong>, <strong>username</strong>, <strong>e-mail</strong> and <strong>complete
+    name </strong>(2). The studentID should have 8 digits and be unique.
+    The username should be unique too. When you confirmed the insertion of the
+    students, if all data be rigth, the following message will be showed:</p>
+  <p align="center"><img src="../../media-test/img/djangotest/Register_student2.jpg" width="1000" height="24"></p>
+  <p align="justify">Observe the figure bellow:</p>
+  <p align="center"><img src="../../media-test/img/djangotest/Register_student3.jpg" width="691" height="154"></p>
+  <p align="justify">The username <strong>student5</strong> is repeated, then the
+    system will show the following message:</p>
+  <p align="center"><img src="../../media-test/img/djangotest/Register_student4.jpg" width="802" height="181"></p>
+  <p align="justify">The line with problems wasn't registered and continues in screen,
+    but the second line was processed normally.</p>
+  <p align="justify">Only the teacher and the assistants can add students to
+    the system.</p>
+</div>
+</div>
+{%endblock%}

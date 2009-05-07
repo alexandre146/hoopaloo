@@ -1,0 +1,151 @@
+{% extends "base.html" %}
+<head></head>
+{% load i18n %}
+{% block extrahead %}
+<script type="text/javascript" src="/media-test/js/djangotest/DHTMLMenuExpanderV2.js"></script>
+<script type="text/javascript" src="/media-test/js/djangotest/sample4.js"></script>
+<LINK rel="stylesheet" type="text/css" href="/media-test/css/djangotest/horizontal.css"/>
+{% endblock %}
+{% block breadcrumbs %}
+<div id="menuSystem">
+	<table id="mainTable">
+		<tr>
+			<td>
+				<table>
+					<tr>
+						<th width="100">Users</th>
+					</tr>
+					<tr>
+						<td><a href="../register_student/">Register Students</a></td>
+					</tr>
+					<tr>
+						<td><a href="../register_assistant/">Register Assistants</a></td>
+					</tr>
+					<tr>
+						<td><a href="../assign_students/">Assign Students to Assitants</a></td>
+					</tr>
+					<tr>
+						<td><a href="../users/">Users Details</a></td>
+					</tr>
+					<tr>
+						<td><a href="../actions/">See System Actions</a></td>
+					</tr>
+				</table>
+			</td>
+			<td>
+				<table>
+					<tr>
+						<th width="140">Exercise</th>
+					</tr>
+					<tr>
+						<td><a href="../add_exercise/">New Exercise</a></td>
+					</tr>
+					<tr>
+						<td><a href="../exercises/">List Exercises</a></td>
+					</tr>
+					<tr>
+						<td><a href="../tests/">List Tests</a></td>
+					</tr>
+				</table>
+			</td>
+			<td>
+				<table>
+					<tr>
+						<th width="100">Views</th>
+					</tr>
+					<tr>
+						<td><a href="../teacher_view/">Your Students</a></td>
+					</tr>
+					<tr>
+						<td><a href="../all_students/">All Students</a></td>
+					</tr>
+					<tr>
+						<td><a href="../assigns/">Assistants - Students</a></td>
+					</tr>
+				</table>
+			</td>
+			<td>
+				<table>
+					<tr>
+						<th width="100"><a href="../logout/">Logout</a></th>
+					</tr>
+				</table>
+			</td>
+			<td>
+				<table>
+					<tr>
+						<th width="100"><a href="../help" target="_blank">Help</a></th>
+					</tr>
+				</table>
+			</td>
+			<td>
+			<table>
+				<tr>
+					<th width="100"><a href="../change_password/">Change Password</a></th>
+				</tr>
+				</table>
+			</td>
+		</tr>
+	</table>
+</div>
+<!-- Menu end -->
+{% endblock %}
+
+{% block title %}General Students View{% endblock %}
+
+{% block content %}
+<div id="container">
+		<br></br>
+		<br></br>
+		<br></br>
+		{% block branding %}<h1 id="site-name"><font size="4">{% trans 'General Students View' %}</font></h1>
+		{% endblock %}
+	
+<div id="content-main">
+	{% if msg %}
+		<ul class="messagelist"><li>{{ msg }}</li></ul>
+	{% endif %}
+{% if students %}
+	<br>
+	<br>
+	<table id="list">
+		<thead>
+        <tr>
+            <th scope="col"><center><h4>{% trans 'Name' %}</h4></center></th>
+			<th scope="col"><center><h4>{% trans 'Class' %}</h4></center></th>
+            <th scope="col"><center><h4>{% trans 'Assistant' %}</h4></center></th>
+			<th scope="col"><center><h4>{% trans 'Number of Submissions' %}</h4></center></th>
+			<th scope="col"><center><h4>{% trans 'Pending Exercises' %}</h4></center></th>
+			<th scope="col"><center><h4>{% trans 'Undelivered Exercises' %}</h4></center></th>
+			<th scope="col"><center><h4>{% trans 'Submission by Exercise' %}</h4></center></th>
+			<th scope="col"><center><h4>{% trans 'Mean' %}</h4></center></th>
+			<th scope="col"><center><h4>{% trans 'Exercises Page' %}</h4></center></th>
+
+        </tr>
+        </thead>
+        <tbody>
+        {% for student in students %}
+		<tr>
+            <td><font size=2><a href="../../hoopaloo_test/submissions/student{{student.id}}/">{{ student.user.first_name }} {{ student.user.last_name }}</a></font></td>
+            <td><center><font size=2>{{ student.student_class }}</a><font size=2></center></td>
+			<td><center><font size=2>{{ student.assistant.username }}</a><font size=2></center></td>
+			<td><center><font size=2>{{ student.number_submissions }}</font></center></td>
+			<td><center><font size=2>{{ student.pending_exercises }}</font></center></td>
+			<td><center><font size=2>{{ student.undelivered_exercises }}</font></center></td>
+			<td><center><font size=2>{{ student.submission_by_exercise|floatformat:2 }}</font></center></td>
+			<td><center><font size=2>{{ student.mean|floatformat:2 }}</font></center></td>
+			<td><center><font size=2><a href="../../hoopaloo_test/exercises/student/id={{student.id}}">Exercises of {{ student.username }}</a></font></center></td>
+			
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+	</br>
+	</br>
+	{% else %}
+	<div>There are not students registered.<div>
+{% endif %}
+	</div>
+</div>
+
+{% endblock %}
