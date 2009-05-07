@@ -1,0 +1,11 @@
+p {
+text-indent: 3em;
+}
+
+#mycode{
+font-size: 13;
+font-family: Verdana, Arial, Helvetica, sans-serif;
+background: #CCCCCC;
+color: #000066;
+text-align: justify;
+}

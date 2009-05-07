@@ -1,0 +1,33 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+{% extends "base.html" %}
+{% load i18n %}
+<head>
+</head>
+
+{% block title %}Help - Register Assistant{% endblock %}
+{% block content %}
+
+<div id="content-main">
+<div align="center">
+  <h3 align="left"><font color="#003333" face="Verdana, Arial, Helvetica, sans-serif">Assistants
+      Registration</font></h3>
+  <p><img src="../../media-test/img/djangotest/Register_assistant1.jpg" width="638" height="478"> </p>
+  <p align="left">To register students in the system access the URL <a href="http://dataccc.gmf.ufcg.edu.br/hoopaloo_test/register_student/" target="_blank">http://dataccc.gmf.ufcg.edu.br/hoopaloo_test/register_assistant/</a>.
+    Other way of realize this is cliking at the link Register Assistant in Users
+    menu (1).</p>
+  <p align="left">Register is made following: one assistant by line and each
+    line is composed by <strong>username</strong>, <strong>e-mail</strong> and <strong>complete
+    name </strong>(2). The username should be unique. When you confirmed
+    the insertion of the assistants, if all data be rigth, the following message
+    will be showed:</p>
+  <p align="center"><img src="../../media-test/img/djangotest/Register_assistant2.jpg" width="1002" height="29"></p>
+  <p align="left">Observe the figure bellow:</p>
+  <p align="center"><img src="../../media-test/img/djangotest/Register_assistant3.jpg" width="696" height="142"></p>
+  <p align="left">The username <strong>assistant5</strong> is repeated, then
+    the system will show the following message:</p>
+  <p align="center"><img src="../../media-test/img/djangotest/Register_assistant4.jpg" width="996" height="37"></p>
+  <p align="left">The line with problems wasn't registered and continues in screen,
+    but the second line was processed normally.</p>
+</div>
+</div>
+{%endblock%}

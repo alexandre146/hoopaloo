@@ -1,0 +1,28 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+{% extends "base.html" %}
+{% load i18n %}
+<head>
+</head>
+
+{% block title %}Help - Exercise View{% endblock %}
+{% block content %}
+
+<div id="content-main">
+<h3><font color="#003333" face="Verdana, Arial, Helvetica, sans-serif">Exercise
+    View</font></h3>
+<p><font color="#000000">In List Exercises page, if you click at link in the
+    name of exercise you will be redirect to this page, Exercise View.</font> Here,
+    you can edit the exercise (1), see the details of exercise (name, owner,
+    date of creation, number of registered tests, etc.) and the results of students
+    to
+    this exercise
+    (number of submissions, number of passed tests, number of errors, note and
+    result
+    - Pass or Fail) (2).</p>
+<p>Additionally, you can see the percentual of right relative to the tests (3)
+  and the note percentual of class (4).</p>
+<p align="center"><img src="../../media-test/img/djangotest/Exercise_view.jpg" width="1024" height="506"></p>
+<p align="justify">Only the teacher and the assistants can see the details of
+an exercise.</p>
+</div>
+{%endblock%}

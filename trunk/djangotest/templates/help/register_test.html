@@ -1,0 +1,36 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+{% extends "base.html" %}
+{% load i18n %}
+<head>
+</head>
+
+{% block title %}Help - Register Test{% endblock %}
+{% block content %}
+
+<div id="content-main">
+<h3><font color="#003333" face="Verdana, Arial, Helvetica, sans-serif">New Test</font>
+</h3>
+<p align="justify">Each exercise can be associated to one test. One test is a
+  unittest file that will be executed by the system and applicated to each program
+  submited by the
+  students. This page can be accessed by URL <a href="http://dataccc.gmf.ufcg.edu.br/hoopaloo_test/add_test" target="_blank">http://dataccc.gmf.ufcg.edu.br/hoopaloo_test/add_test</a> or
+  by Test &gt; New Test menu option (1).</p>
+<p align="center"><img src="../../media-test/img/djangotest/register_test.jpg" width="758" height="768"></p>
+<p align="justify">In order to register a new test is necessary informs a <strong>name</strong> to
+  test (when the test file was saved this will be its name) (2), the Python <strong>code</strong>  of
+  test (the test is a Python file that uses the module unittest). The code of
+  test is very important and before of you insert any code exists a template
+  provide by system (3), you must change the name of &lt;module solution&gt; (this
+  is the name of module that contains the solution) and the &lt;function name&gt; (this
+  is the name of ths function will be invocated by test).<strong> Not change
+  the &quot;main&quot; of test, it is important for register the result of execution. </strong>And
+  infomrs too the <strong>exercise</strong> related to this test. This message
+  of success is:</p>
+<p align="justify"><img src="../../media-test/img/djangotest/register_test2.jpg" width="983" height="29"></p>
+<p align="justify">Always a new test is added and there are submitions for the exercise
+  related to this test, all programs submited will be executed by the test and
+  the students will be advised by e-mail. If any submition exist, at the moment
+  of submitions the programs will be executed.</p>
+<p align="justify">Only the teacher and the assistants can add new tests.</p>
+</div>
+{%endblock%}
