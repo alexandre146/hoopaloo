@@ -8,11 +8,12 @@ O client simula requisições a páginas do sistema e confere conteúdo de pági
 
 === Testes com unittest ===
 
-   * Cadastro de Tutores
-   * Cadastro de Alunos
-   * Cadastro de Exercícios
-   * Criação de Submissão
-   * Atualização de atributos de Alunos
+   * Cadastro de tutores
+   * Cadastro de alunos
+   * Cadastro de exercícios
+   * Criação de submissão
+   * Atualização de atributos de alunos
+   * Verificação de atributos de alunos (número de submissões, exercícios pendentes, exercícios entregues e não entregies, etc.) após cadastro de exercícios e diversas submissões.
 
 === Testes com Client do Django ===
 
