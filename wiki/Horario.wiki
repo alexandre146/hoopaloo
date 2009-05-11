@@ -2,9 +2,8 @@
 
 - 10 horas de trabalho por semana de 11/05 a 01/06 (totalizando 30 horas).
 
-|| *Horário* || *Segunda* || *Terça* || *Quarta* || *Quinta* || *Sexta*
-|| 10h || || X || || X ||
-|| 12h || || || || ||
-|| 14h || X || || X || ||
-|| 16h || X || || || ||
-
+|| *Horário* || *Segunda* || *Terça* || *Quarta* || *Quinta* || *Sexta* ||
+|| 10h || || X || || X || ||
+|| 12h || || || || || ||
+|| 14h || X || || X || || ||
+|| 16h || X || || || || ||
