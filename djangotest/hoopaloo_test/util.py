@@ -59,17 +59,21 @@ def send_new_password(self, email, user):
 		
 def listToString(list):
 	"""Converts the elements of a list in string"""
-	
-	r = []
+	r = ""
 	for element in list:
-		r = element + '\n'
+		r += element + '\n'
 	return r
 	
 
 def isValidUsername(field_data):
 	"""Verifies if the username provided is valid.
 	An username is valid when there are not an equal username in database."""
-	
+	if field_data is None:
+		return False
+	if not field_data.strip():
+		return False
+	if not re.match("[a-zA-Z]\w+$", field_data):
+		return False
 	try:
 		queries.get_user_from_username(field_data)
 		return False
@@ -239,7 +243,6 @@ class Change_Availability():
 		
 	def change_availability(self):
 		"""Change the availability of an exerciese."""
-		from hoopaloo_test.models import Exercise
 		exercise = queries.get_exercise_from_name(self.exercise_name)
 		exercise.available = False
 		update_students(exercise)
