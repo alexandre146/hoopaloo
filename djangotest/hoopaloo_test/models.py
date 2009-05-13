@@ -365,15 +365,15 @@ def pre_delete_student(sender, instance, signal, *args, **kwargs):
 	
 def pre_save_exercise(sender, instance, signal, *args, **kwargs):
 	"""This functions is invoked before an exercise to be saved. It add one more exercise pending to students if this exercise is available."""
-	
+
 	try:
-		ex = queries.get_exercise(instance.id)
+		ex = queries.get_exercise(instance.id)		
 	except:
 		if instance.available:
 			students = queries.get_all_students()
 			for s in students:
 				s.pending_exercises = queries.get_number_available_exercises() + 1
-				s.save()		
+				s.save()
 	
 def post_save_exercise(sender, instance, signal, *args, **kwargs):
 	
