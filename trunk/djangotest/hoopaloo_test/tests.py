@@ -1,12 +1,14 @@
 # coding: utf-8
-from django.test import TestCase
-from django.test.client import Client
+import os
 from datetime import datetime, date, timedelta
 from django.conf import settings
+from django.test import TestCase
+from django.test.client import Client
 from django.contrib.auth.models import User
-from hoopaloo_test.models import Exercise, Student, Assistant, Submission, Exercise, Execution, Test, Class
 from hoopaloo_test import forms
+from hoopaloo_test.models import Exercise, Student, Assistant, Submission, Exercise, Execution, Test, Class
 from hoopaloo_test.util import *
+import queries
 
 class MyTestCase(TestCase):
 	
@@ -46,6 +48,7 @@ class MyTestCase(TestCase):
 		st_class = Class().create_and_save_class('turma', user)
 
 	def aux_create_student(self):
+		self.aux_create_assistant()
 		self.aux_create_class()
 		
 		user = User.objects.create_user('student_test', 'student_test@test.com', generate_aleatory_password())
@@ -65,7 +68,14 @@ class MyTestCase(TestCase):
 		submission = Submission().create_submission(st, filename, ex, 100)
 		submission.score = 0.0
 		submission.veredict = ""
+		print 'aux_create_submission', exercise_name
 		submission.save()
+		
+	def aux_do_submission(self, student, exercise_name):
+		self.aux_create_submission(exercise_name)
+		student.number_submissions += 1
+		student.submission_by_exercise = student.number_submissions/len(Exercise.objects.all())
+		student.save()
 		
 	def Oktest_create_exercise(self):
 		self.aux_create_exercise(5)
@@ -96,7 +106,6 @@ class MyTestCase(TestCase):
 				
 	def OKtest_create_submission(self):
 		
-		self.aux_create_assistant()
 		self.aux_create_student()
 		self.aux_create_exercise()
 		self.aux_create_submission('Ex_test')
@@ -138,7 +147,6 @@ class MyTestCase(TestCase):
 		print 'studentID_test'
 		
 	def Oktest_cenario_one(self):
-		self.aux_create_assistant()
 		# saving a new student
 		self.aux_create_student()		
 		st = Student.objects.get(username="student_test")
@@ -157,41 +165,148 @@ class MyTestCase(TestCase):
 		
 		# simulating a submission of student_test2 to exercise ex1
 		# first submission
-		self.aux_create_submission("Ex_test1")
-		st.number_submissions += 1
-		st.submission_by_exercise = st.number_submissions/len(Exercise.objects.all())
-		st.save()
+		self.aux_do_submission(st, "Ex_test1")
 		#second submission
-		self.aux_create_submission("Ex_test1")
-		st.number_submissions += 1
-		st.submission_by_exercise = st.number_submissions/len(Exercise.objects.all())
-		st.save()
+		self.aux_do_submission(st, "Ex_test1")
+
 		# simulating a submission of student_test2 to exercise ex2
 		# first submission
-		self.aux_create_submission("Ex_test2")
-		st.number_submissions += 1
-		st.submission_by_exercise = st.number_submissions/len(Exercise.objects.all())
-		st.save()
+		self.aux_do_submission(st, "Ex_test2")
 		#second submission
-		self.aux_create_submission("Ex_test2")
-		st.number_submissions += 1
-		st.submission_by_exercise = st.number_submissions/len(Exercise.objects.all())
-		st.save()
+		self.aux_do_submission(st, "Ex_test2")
 		#thrird submission
-		self.aux_create_submission("Ex_test2")
-		st.number_submissions += 1
-		st.submission_by_exercise = st.number_submissions/len(Exercise.objects.all())
-		st.save()
+		self.aux_do_submission(st, "Ex_test2")
 		#fourth submission
-		self.aux_create_submission("Ex_test2")
-		st.number_submissions += 1
-		st.submission_by_exercise = st.number_submissions/len(Exercise.objects.all())
-		st.save()			
+		self.aux_do_submission(st, "Ex_test2")
 					
 		student = Student.objects.get(pk=st.id)
 		# verifyng student data
 		self.assertEquals(student.number_submissions, 6)
 		self.assertEquals(student.submission_by_exercise, 3.0)
+		
+	def OKtest_pre_and_post_save_exercise(self):
+		self.aux_create_student()
+		st1 = Student.objects.get(username="student_test")
+		
+		self.assertEquals(0, st1.pending_exercises)
+		self.aux_create_exercise(1)
+		
+		st2 = Student.objects.get(username="student_test")
+		self.assertEquals(1, st2.pending_exercises)
+		self.failureException(Test.objects.get(name='Test_Ex_test1'))
+		self.assertTrue(os.path.exists(settings.MEDIA_ROOT + '/tests/Test_Ex_test1.py'))
+		
+# TESTING QUERIES
+	
+	def test_submissions_queries(self):
+		self.aux_create_student()		
+		st = Student.objects.get(username="student_test")
+		self.aux_create_exercise(1)
+		self.aux_create_exercise(2)
+		
+		ex1 = Exercise.objects.get(name='Ex_test1')
+		ex2 = Exercise.objects.get(name='Ex_test2')
+		
+		self.aux_do_submission(st, "Ex_test1")
+		sub1 = Submission.objects.filter(id_exercise=ex1).order_by('date')[0]
+		
+		self.aux_do_submission(st, "Ex_test2")
+		sub2 = Submission.objects.filter(id_exercise=ex2).order_by('date')[0]
+		
+		self.aux_do_submission(st, "Ex_test1")
+		sub3 = Submission.objects.filter(id_exercise=ex1).order_by('date')[1]
+		
+		self.aux_do_submission(st, "Ex_test2")
+		sub4 = Submission.objects.filter(id_exercise=ex2).order_by('date')[1]
+		
+		self.aux_do_submission(st, "Ex_test2")
+		sub5 = Submission.objects.filter(id_exercise=ex2).order_by('date')[2]
+		
+		# get_submissions(exercise_id, student_id)
+		submissions = queries.get_submissions(ex1.id, st.id)
+		self.assertEquals(2, len(submissions))
+		
+		# get_ordered_submissions(exercise_id, student_id)
+		submissions_ordered = queries.get_ordered_submissions(ex1.id, st.id)
+		self.assertEquals(2, len(submissions_ordered))
+		d1 = submissions_ordered[0]
+		d2 = submissions_ordered[1]
+		self.assertTrue(d2 < d1)
+		
+		# get_student_submissions(student_id)
+#		all_student_submissions = queries.get_student_submissions(st.id)
+#		self.assertEquals(5, len(all_student_submissions))
+#		self.assertEquals("Ex_test1", all_student_submissions[0].id_exercise.name)
+#		self.assertEquals("Ex_test2", all_student_submissions[1].id_exercise.name)
+#		self.assertEquals("Ex_test1", all_student_submissions[2].id_exercise.name)
+#		self.assertEquals("Ex_test2", all_student_submissions[3].id_exercise.name)
+#		self.assertEquals("Ex_test2", all_student_submissions[4].id_exercise.name)
+		
+		# get_submission(submission_id)
+#		self.assertEquals(sub1.id, queries.get_submission(sub1.id).id)
+#		self.assertEquals(sub2.id, queries.get_submission(sub2.id).id)
+#		self.assertEquals(sub3.id, queries.get_submission(sub3.id).id)
+#		self.assertEquals(sub4.id, queries.get_submission(sub4.id).id)
+#		self.assertEquals(sub5.id, queries.get_submission(sub5.id).id)
+		
+		# get_ordered_student_submissions(student_id)
+		all_ordered_student_submissions = queries.get_ordered_student_submissions(st.id)
+		self.assertEquals(5, len(all_ordered_student_submissions))
+	
+	#	self.assertEquals("Ex_test2", all_ordered_student_submissions[0].id_exercise.name)
+	#	self.assertEquals("Ex_test2", all_ordered_student_submissions[1].id_exercise.name)
+	#	self.assertEquals("Ex_test2", all_ordered_student_submissions[2].id_exercise.name)
+	#	self.assertEquals("Ex_test1", all_ordered_student_submissions[3].id_exercise.name)
+	#	self.assertEquals("Ex_test1", all_ordered_student_submissions[4].id_exercise.name)
+		
+		# get_number_student_submissions(exercise_id, student_id)
+	#	number_submissions1 = queries.get_number_student_submissions(ex1.id, st.id)
+	#	number_submissions2 = queries.get_number_student_submissions(ex2.id, st.id)
+	#	self.assertEquals(2, number_submissions1)
+	#	self.assertEquals(3, number_submissions2)
+		
+		# get_last_submission(exercise_id, student_id)
+	#	last_submission1 = queries.get_last_submission(ex1.id, st.id)
+	#	last_submission2 = queries.get_last_submission(ex2.id, st.id)
+	#	self.assertEquals(all_ordered_student_submissions[3].id, last_submission1.id)
+	#	self.assertEquals(all_ordered_student_submissions[0].id, last_submission2.id)
+		
+		# get_exercise_submissions(exercise_id)
+	#	exercise_submissions1 = queries.get_exercise_submissions(ex1.id)
+	#	self.assertEquals(2, len(exercise_submissions1))
+	#	self.assertEquals(all_ordered_student_submissions[4].id, exercise_submissions1[0].id)
+	#	self.assertEquals(all_ordered_student_submissions[3].id, exercise_submissions1[1].id)
+		
+	#	exercise_submissions2 = queries.get_exercise_submissions(ex2.id)
+	#	self.assertEquals(3, len(exercise_submissions2))
+		
+	#	self.assertEquals(all_ordered_student_submissions[2].id, exercise_submissions2[0].id)
+	#	self.assertEquals(all_ordered_student_submissions[1].id, exercise_submissions2[2].id)
+	#	self.assertEquals(all_ordered_student_submissions[0].id, exercise_submissions2[1].id)
+		
+		# get_number_total_student_submissions(student_id)
+	#	number = queries.get_number_total_student_submissions(st.id)
+	#	self.assertEquals(5, number)
+		
+		# get_all_submissions()
+		all_submissions = queries.get_all_submissions()
+	#	self.assertEquals(5, len(all_submissions))
+	#	self.assertEquals("Ex_test1", all_submissions[0].id_exercise.name)
+	#	self.assertEquals("Ex_test2", all_submissions[1].id_exercise.name)
+	#	self.assertEquals("Ex_test1", all_submissions[2].id_exercise.name)
+	#	self.assertEquals("Ex_test2", all_submissions[3].id_exercise.name)
+	#	self.assertEquals("Ex_test2", all_submissions[4].id_exercise.name)
+		
+		# get_all_last_submissions(exercise_id)
+		last_submissions = queries.get_all_last_submissions(ex1.id)
+		self.assertEquals(1, len(last_submissions))
+		print all_ordered_student_submissions[0].id, all_ordered_student_submissions[0].id_exercise.name
+		print all_ordered_student_submissions[1].id, all_ordered_student_submissions[1].id_exercise.name
+		print all_ordered_student_submissions[2].id, all_ordered_student_submissions[2].id_exercise.name
+		print all_ordered_student_submissions[3].id, all_ordered_student_submissions[3].id_exercise.name
+		print all_ordered_student_submissions[4].id, all_ordered_student_submissions[4].id_exercise.name
+		
+		self.assertEquals(all_ordered_student_submissions[1].id, last_submissions[0].id)
 		
 # TESTING UTIL FUNCTIONS 
 
