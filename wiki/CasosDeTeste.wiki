@@ -28,7 +28,12 @@ Os testes "on-line" são os testes realizados no próprio sistema, simulando sit
 ==== Cenário 2 ==== 
    * Ator: qualquer usuário
    * Página: login
-   * Ação: Digitar a senha incorretamente
+   * Ação: Digitar a senha incorretamente==== Cenário 27 ====
+   * Ator: professor (superusuário)
+   * Página: atribuição de alunos a tutores
+   * Ação: submeter o cadastro com o campo vazio
+   * Resultado esperado: mensagem de erro ("This field is required.")
+   * Resultado obtido: BUG#2: página de erro (Server Error (500))
    * Resultado esperado: página de login do hoopaloo com mensagem de erro ("Invalid Acess")
    * Resultado obtido: página de login do hoopaloo com mensagem de erro ("Invalid Acess")
 
@@ -216,3 +221,10 @@ Os testes "on-line" são os testes realizados no próprio sistema, simulando sit
    * Ação: submeter o cadastro com varios tutores, alguns incorretos
    * Resultado esperado: cadastro efetuado com sucesso e mensagem ("The assistants bellow are not registered. Review usernames, studentID and emails for them."), email enviado para os usuários cadastrados
    * Resultado obtido:  cadastro efetuado com sucesso, mas mensagem ("The assistants bellow are not registered. Review usernames, studentID and emails for them."), email enviado para os usuários cadastrados e permanece no campo os alunos que não foram registrados
+
+<font color='red'==== Cenário 27 ====
+   * Ator: professor (superusuário)
+   * Página: atribuição de alunos a tutores
+   * Ação: submeter o cadastro com o campo vazio
+   * Resultado esperado: mensagem de erro ("This field is required.")
+   * Resultado obtido: BUG#2: página de erro (Server Error (500)) </font>
