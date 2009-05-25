@@ -17,7 +17,6 @@ Os testes automáticos estão em duas categorias: testes com unittest.
 === Testes On-Line ===
 
 Os testes "on-line" são os testes realizados no próprio sistema, simulando situações de uso.
-Testes: 25/05
 
 ==== Cenário 1 ====
    * Ator: qualquer usuário
@@ -47,15 +46,15 @@ Testes: 25/05
    * Resultado esperado: página que pede o email
    * Resultado obtido: página que pede o email
 
-==== Cenário 5 ====
+<font color='red'> ==== Cenário 5 ====
    * Ator: qualquer usuário
    * Página: forgot password
    * Ação: Usuário informa email
    * Resultado esperado: mensagem ("Please check your email. If you did not receive any message, check your spam folder.") e que chegue um email em sua caixa de emails
-   * Resultado obtido: mensagem ("Please check your email. If you did not receive any message, check your spam folder.") e BUG#1: o email não é enviado.
+   * Resultado obtido: mensagem ("Please check your email. If you did not receive any message, check your spam folder.") e BUG#1: o email não é enviado.</font>
 
 ==== Cenário 6 ====
-   * Ator: professor (superusuário)página de login do hoopaloo com mensagem de erro ("Invalid Acess")
+   * Ator: professor (superusuário)
    * Página: página inicial de professor (tabela com todos os alunos da turma daquele professor)
    * Ação: clicar no link "Register Students" no menu Users
    * Resultado esperado: redirecionamento para a páginpágina inicial do usuárioa de cadastro de alunos
@@ -138,7 +137,7 @@ Testes: 25/05
    * Resultado esperado: redirecionamento para a página de mudança de senha
    * Resultado obtido: redirecionamento para a página de mudança de senha
 
-==== Cenário 17 ====
+<font color='blue'> ==== Cenário 17 ====
    * Ator: professor (superusuário)
    * Página: página de mudança de senha
    * Ação: inserir uma nova senha
@@ -153,7 +152,7 @@ Testes: 25/05
    * Página: login
    * Ação: inserir a senha nova
    * Resultado esperado: página inicial do usuário
-   * Resultado obtido: página inicial do usuário
+   * Resultado obtido: página inicial do usuário </font>
 
 ==== Cenário 18 ====
    * Ator: professor (superusuário)
@@ -161,6 +160,3 @@ Testes: 25/05
    * Ação: clicar no link "Logout" no menu principal
    * Resultado esperado: redirecionamento para a página de login com a mensagem de logout ("You are unlogged")
    * Resultado obtido: redirecionamento para a página de login com a mensagem de logout ("You are unlogged")
-   * Ação: clicar no link "Register Assistants" no menu Users
-   * Resultado esperado: redirecionamento para a página de cadastro de tutores
-   * Resultado obtido: redirecionamento para a página de cadastro de tutores
