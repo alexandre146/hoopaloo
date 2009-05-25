@@ -24,32 +24,12 @@ Os testes "on-line" são os testes realizados no próprio sistema, simulando sit
    * Ação: Digitar o login incorretamente
    *Resultado esperado: página de login do hoopaloo com mensagem de erro ("Invalid Acess")
    *Resultado obtido: página de login do hoopaloo com mensagem de erro ("Invalid Acess")
-==== Cenário 27 ====
-   * Ator: professor (superusuário)
-   * Página: atribuição de alunos a tutores==== Cenário 28 ====
-   * Ator: professor (superusuário)
-   * Página:  atribuição de alunos a tutores
-   * Ação: submeter o cadastro com apenas uma atribuição
-   * Resultado esperado: atribuição efetuada com sucesso e mensagem ("The assign students to assistant(s) was done sucessfully.")
-   * Resultado obtido:  atribuição efetuada com sucesso e mensagem ("The assign students to assistant(s) was done sucessfully.")
-   * Ação: submeter o cadastro com o campo vazio
-   * Resultado esperado: mensagem de erro ("This field is required.")
-   * Resultado obtido: BUG#2: página de erro (Server Error (500))
+
 ==== Cenário 2 ==== 
    * Ator: qualquer usuário
    * Página: login
-   * Ação: Digitar a senha incorretamente==== Cenário 27 ====
-   * Ator: professor (superusuário)
-   * Página: atribuição de alunos a tutores
-   * Ação: submeter o cadastro com o campo vazio
-   * Resultado esperado: mensagem de erro ("This field is required.")
-   * Resultado obtido: BUG#2: página de erro (Server Error (500))
-   * Resultado esperado: página de login do hoopaloo com mensagem de erro ("Invalid Acess")==== Cenário 28 ====
-   * Ator: professor (superusuário)
-   * Página:  atribuição de alunos a tutores
-   * Ação: submeter o cadastro com apenas uma atribuição
-   * Resultado esperado: atribuição efetuada com sucesso e mensagem ("The assign students to assistant(s) was done sucessfully.")
-   * Resultado obtido:  atribuição efetuada com sucesso e mensagem ("The assign students to assistant(s) was done sucessfully.")
+   * Ação: Digitar a senha incorretamente
+   * Resultado esperado: página de login do hoopaloo com mensagem de erro ("Invalid Acess")
    * Resultado obtido: página de login do hoopaloo com mensagem de erro ("Invalid Acess")
 
 ==== Cenário 3 ====
@@ -66,21 +46,16 @@ Os testes "on-line" são os testes realizados no próprio sistema, simulando sit
    * Resultado esperado: página que pede o email
    * Resultado obtido: página que pede o email
 
-<font color='red'> ==== Cenário 5 ====
+==== Cenário 5 ====
    * Ator: qualquer usuário
    * Página: forgot password
    * Ação: Usuário informa email
    * Resultado esperado: mensagem ("Please check your email. If you did not receive any message, check your spam folder.") e que chegue um email em sua caixa de emails
-   * Resultado obtido: mensagem ("Please check your email. If you did not receive any message, check your spam folder.") e BUG#1: o email não é enviado.</font>
+   * Resultado obtido: mensagem ("Please check your email. If you did not receive any message, check your spam folder.") e BUG#1: o email não é enviado.
 
 ==== Cenário 6 ====
-   * Ator: professor (superusuário)
-   * Página: página inicial de professor (tabela com todos os alunos da turma daquele professor)==== Cenário 28 ====
-   * Ator: professor (superusuário)
-   * Página:  atribuição de alunos a tutores
-   * Ação: submeter o cadastro com apenas uma atribuição
-   * Resultado esperado: atribuição efetuada com sucesso e mensagem ("The assign students to assistant(s) was done sucessfully.")
-   * Resultado obtido:  atribuição efetuada com sucesso e mensagem ("The assign students to assistant(s) was done sucessfully.")
+   * Ator: professor (superusuário)página de login do hoopaloo com mensagem de erro ("Invalid Acess")
+   * Página: página inicial de professor (tabela com todos os alunos da turma daquele professor)
    * Ação: clicar no link "Register Students" no menu Users
    * Resultado esperado: redirecionamento para a páginpágina inicial do usuárioa de cadastro de alunos
    * Resultado obtido: redirecionamento para a página de cadastro de alunos
@@ -100,12 +75,7 @@ Os testes "on-line" são os testes realizados no próprio sistema, simulando sit
    * Resultado obtido: redirecionamento para a página de atribuição de alunos a tutores
 
 ==== Cenário 9 ====
-   * Ator: professor (superusuário)==== Cenário 28 ====
    * Ator: professor (superusuário)
-   * Página:  atribuição de alunos a tutores
-   * Ação: submeter o cadastro com apenas uma atribuição
-   * Resultado esperado: atribuição efetuada com sucesso e mensagem ("The assign students to assistant(s) was done sucessfully.")
-   * Resultado obtido:  atribuição efetuada com sucesso e mensagem ("The assign students to assistant(s) was done sucessfully.")
    * Página: página inicial de professor (tabela com todos os alunos da turma daquele professor)
    * Ação: clicar no link "Assign Students to Assistants" no menu Users
    * Resultado esperado: redirecionamento para a página de atribuição de alunos a tutores
@@ -117,7 +87,7 @@ Os testes "on-line" são os testes realizados no próprio sistema, simulando sit
    * Ação: clicar no link "User Details" no menu Users
    * Resultado esperado: redirecionamento para a página de visualização de  informações dos usuários (email ultima vez que logou, username, data de cadastro)
    * Resultado obtido: redirecionamento para a página de visualização de  informações dos usuários (email ultima vez que logou, username, data de cadastro)
-
+* 
 ==== Cenário 10 ====
    * Ator: professor (superusuário)
    * Página: página inicial de professor (tabela com todos os alunos da turma daquele professor)
@@ -134,25 +104,20 @@ Os testes "on-line" são os testes realizados no próprio sistema, simulando sit
 
 ==== Cenário 12 ====
    * Ator: professor (superusuário)
-   * Página: página inicial de professor (tabela com todos os alunos da turma daquele professor)==== Cenário 28 ====
-   * Ator: professor (superusuário)
-   * Página:  atribuição de alunos a tutores
-   * Ação: submeter o cadastro com apenas uma atribuição
-   * Resultado esperado: atribuição efetuada com sucesso e mensagem ("The assign students to assistant(s) was done sucessfully.")
-   * Resultado obtido:  atribuição efetuada com sucesso e mensagem ("The assign students to assistant(s) was done sucessfully.")
+   * Página: página inicial de professor (tabela com todos os alunos da turma daquele professor)
    * Ação: clicar no link "List Exercises" no menu Exercise
    * Resultado esperado: redirecionamento para a página que lista todos os exercícios
    * Resultado obtido: redirecionamento para a página que lista todos os exercícios
 
 ==== Cenário 13 ====
    * Ator: professor (superusuário)
-   * Página: página inicial de professor (tabela com todos os alunos da turma daquele professor)
+   * Página: página inicial de professor (tabela com todos os alunos da turma daquele professor)BBUGUG
    * Ação: clicar no link "List Tests" no menu Exercise
    * Resultado esperado: redirecionamento parlista todos os alunos cadastradosa a página que lista todos os testes referentes aos exercícios cadastrados
    * Resultado obtido: redirecionamento para a página que lista todos os testes referentes aos exercícios cadastrados
 
 ==== Cenário 14 ====
-   * Ator: professor (superusuário)
+   * Ator: professor (superusuário)BUGBUGBUG
    * Página: página inicial de professor (tabela com todos os alunos da turma daquele professor)
    * Ação: clicar no link "All Students" no menu Views
    * Resultado esperado: redirecionamento para a página que lista todos os alunos cadastrados
@@ -162,33 +127,29 @@ Os testes "on-line" são os testes realizados no próprio sistema, simulando sit
    * Ator: professor (superusuário)
    * Página: página inicial de professor (tabela com todos os alunos da turma daquele professor)
    * Ação: clicar no link "Assistants - Students" no menu Views
-   * Resultado esperado: redirecionamento para a página que lista as associações entre tutores e alunos
+   * Resultado esperado: redirecionamento para a página que lista as associações entre tutores e BUGalunos
    * Resultado obtido: redirecionamento para a página que lista as associações entre tutores e alunos
 
 ==== Cenário 16 ====
    * Ator: professor (superusuário)
-   * Página: página inicial de professor (tabela com todos os alunos da turma daquele professor)
+   * Página: página inicial de professor (tabela com todos os alunos da turma daquele professor)BUG
    * Ação: clicar no link "Change Password" no menu principal
    * Resultado esperado: redirecionamento para a página de mudança de senha
    * Resultado obtido: redirecionamento para a página de mudança de senha
 
 ==== Cenário 17 ====
-   * Ator: professor (superusuário)==== Cenário 28 ====
    * Ator: professor (superusuário)
-   * Página:  atribuição de alunos a tutores
-   * Ação: submeter o cadastro com apenas uma atribuição
-   * Resultado esperado: atribuição efetuada com sucesso e mensagem ("The assign students to assistant(s) was done sucessfully.")
-   * Resultado obtido:  atribuição efetuada com sucesso e mensagem ("The assign students to assistant(s) was done sucessfully.")
+
    * Página: página de mudança de senha
    * Ação: inserir uma nova senha
    * Resultado esperado: redirecionamento para a pagina de login informando que a senha foi alterada
    * Resultado obtido: redirecionamento para a pagina de login informando que a senha foi alterada
------------
+
    * Página: loginpágina inicial do usuário
    * Ação: inserir a senha antiga
    * Resultado esperado: página de login do hoopaloo com mensagem de erro ("Invalid Acess")
    * Resultado obtido: página de login do hoopaloo com mensagem de erro ("Invalid Acess")
------------
+
    * Página: login
    * Ação: inserir a senha nova
    * Resultado esperado: página inicial do usuário
@@ -211,17 +172,7 @@ Os testes "on-line" são os testes realizados no próprio sistema, simulando sit
 ==== Cenário 20 ====
    * Ator: professor (superusuário)
    * Página: cadastro de alunos
-   * Ação: submeter o cadastro com apenas um aluno==== Cenário 27 ====
-   * Ator: professor (superusuário)
-   * Página: atribuição de alunos a tutores
-   * Ação: submeter o cadastro com o campo vazio
-   * Resultado esperado: mensagem de erro ("This field is required.")
-   * Resultado obtido: BUG#2: página de erro (Server Error (500))==== Cenário 28 ====
-   * Ator: professor (superusuário)
-   * Página:  atribuição de alunos a tutores
-   * Ação: submeter o cadastro com apenas uma atribuição
-   * Resultado esperado: atribuição efetuada com sucesso e mensagem ("The assign students to assistant(s) was done sucessfully.")
-   * Resultado obtido:  atribuição efetuada com sucesso e mensagem ("The assign students to assistant(s) was done sucessfully.")
+   * Ação: submeter o cadastro com apenas um aluno
    * Resultado esperado: cadastro efetuado com sucesso e mensagem ("The students were added successfully."), email enviado para o usuário cadastrado
    * Resultado obtido:  cadastro efetuado com sucesso e mensagem ("The students were added successfully."), email enviado para o usuário cadastrado
 
@@ -257,12 +208,7 @@ Os testes "on-line" são os testes realizados no próprio sistema, simulando sit
    * Ator: professor (superusuário)
    * Página: cadastro de tutores
    * Ação: submeter o cadastro com varios tutores, todos corretos
-   * Resultado esperado: cadastro efetuado com sucesso e mensagem ("The assistants were added successfully."), email enviado para os usuários cadastrados==== Cenário 28 ====
-   * Ator: professor (superusuário)
-   * Página:  atribuição de alunos a tutores
-   * Ação: submeter o cadastro com apenas uma atribuição
-   * Resultado esperado: atribuição efetuada com sucesso e mensagem ("The assign students to assistant(s) was done sucessfully.")
-   * Resultado obtido:  atribuição efetuada com sucesso e mensagem ("The assign students to assistant(s) was done sucessfully.")
+   * Resultado esperado: cadastro efetuado com sucesso e mensagem ("The assistants were added successfully."), email enviado para os usuários cadastrados
    * Resultado obtido:  cadastro efetuado com sucesso e mensagem ("The assistants were added successfully."), email enviado para os usuários cadastrados
 
 ==== Cenário 26 ====
@@ -271,6 +217,7 @@ Os testes "on-line" são os testes realizados no próprio sistema, simulando sit
    * Ação: submeter o cadastro com varios tutores, alguns incorretos
    * Resultado esperado: cadastro efetuado com sucesso e mensagem ("The assistants bellow are not registered. Review usernames, studentID and emails for them."), email enviado para os usuários cadastrados
    * Resultado obtido:  cadastro efetuado com sucesso, mas mensagem ("The assistants bellow are not registered. Review usernames, studentID and emails for them."), email enviado para os usuários cadastrados e permanece no campo os alunos que não foram registrados
+
 
 <font color='red'>==== Cenário 27 ====
    * Ator: professor (superusuário)
