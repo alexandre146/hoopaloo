@@ -187,7 +187,7 @@ Os testes "on-line" são os testes realizados no próprio sistema, simulando sit
    * Ator: professor (superusuário)
    * Página: cadastro de alunos
    * Ação: submeter o cadastro com varios alunos, alguns incorretos
-   * Resultado esperado: cadastro efetuado com sucesso e mensagem ("The students bellow are not registered. Review usernames, studentID and emails for them."), email enviado para os usuários cadastrados
+   * Resultado esperado: cadastro efetuado com sucesso e mensagem ("The students bellow are not registered. Review usernames, studentID and emails for them."), email enviado para os usuários cadastrados e permanece no campo os alunos que não foram registrados
    * Resultado obtido:  cadastro efetuado com sucesso, mas mensagem ("The students bellow are not registered. Review usernames, studentID and emails for them."), email enviado para os usuários cadastrados e permanece no campo os alunos que não foram registrados
 
 ==== Cenário 23 ====
@@ -215,16 +215,18 @@ Os testes "on-line" são os testes realizados no próprio sistema, simulando sit
    * Ator: professor (superusuário)
    * Página: cadastro de tutores
    * Ação: submeter o cadastro com varios tutores, alguns incorretos
-   * Resultado esperado: cadastro efetuado com sucesso e mensagem ("The assistants bellow are not registered. Review usernames, studentID and emails for them."), email enviado para os usuários cadastrados
-   * Resultado obtido:  cadastro efetuado com sucesso, mas mensagem ("The assistants bellow are not registered. Review usernames, studentID and emails for them."), email enviado para os usuários cadastrados e permanece no campo os alunos que não foram registrados
+   * Resultado esperado: cadastro efetuado com sucesso e mensagem ("The assistants bellow are not registered. Review usernames, studentID and emails for them."), email enviado para os usuários cadastrados e permanece no campo os tutores que não foram registrados
+   * Resultado obtido:  cadastro efetuado com sucesso, mas mensagem ("The assistants bellow are not registered. Review usernames, studentID and emails for them."), email enviado para os usuários cadastrados e permanece no campo os tutores que não foram registrados
 
+###### A PARTIR DAQUI
 
-<font color='red'>==== Cenário 27 ====
+==== Cenário 27 ====
    * Ator: professor (superusuário)
    * Página: atribuição de alunos a tutores
    * Ação: submeter o cadastro com o campo vazio
    * Resultado esperado: mensagem de erro ("This field is required.")
-   * Resultado obtido: BUG#2: página de erro (Server Error (500)) </font>
+   * Resultado obtido: BUG#2: página de erro (Server Error (500))
+
 
 ==== Cenário 28 ====
    * Ator: professor (superusuário)
@@ -232,3 +234,17 @@ Os testes "on-line" são os testes realizados no próprio sistema, simulando sit
    * Ação: submeter o cadastro com apenas uma atribuição
    * Resultado esperado: atribuição efetuada com sucesso e mensagem ("The assign students to assistant(s) was done sucessfully.")
    * Resultado obtido:  atribuição efetuada com sucesso e mensagem ("The assign students to assistant(s) was done sucessfully.")
+
+==== Cenário 29 ====
+   * Ator: professor (superusuário)
+   * Página:  atribuição de alunos a tutores
+   * Ação: submeter o cadastro com varias atribuições, todas corretas
+   * Resultado esperado: atribuição efetuada com sucesso e mensagem ("The assign students to assistant(s) was done sucessfully.")
+   * Resultado obtido:  atribuição efetuada com sucesso e mensagem ("The assign students to assistant(s) was done sucessfully.")
+
+==== Cenário 30 ====
+   * Ator: professor (superusuário)
+   * Página:  atribuição de alunos a tutores
+   * Ação: submeter o cadastro com varias atribuições, algumas incorretas
+   * Resultado esperado: algumas atribuições efetuadas com sucesso,mas mensagem ("Review the assigns students to assistant(s) bellow. See usernames with attention.") e permanece no campo as atribuições que não foram registrados
+   * Resultado obtido:  algumas atribuições com sucesso, mas mensagem ("Review the assigns students to assistant(s) bellow. See usernames with attention." e permanece no campo as atribuições que não foram registrados
