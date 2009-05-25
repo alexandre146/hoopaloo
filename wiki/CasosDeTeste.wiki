@@ -2,9 +2,7 @@
 
 == Testes Automáticos ==
 
-Os testes automáticos estão em duas categorias: testes com unittest e testes com o client do django.
-
-O client simula requisições a páginas do sistema e confere conteúdo de página, url e código que cada response retornada pelo sistema.
+Os testes automáticos estão em duas categorias: testes com unittest.
 
 === Testes com unittest ===
 
@@ -14,10 +12,7 @@ O client simula requisições a páginas do sistema e confere conteúdo de pági
    * Criação de submissão
    * Atualização de atributos de alunos
    * Verificação de atributos de alunos (número de submissões, exercícios pendentes, exercícios entregues e não entregies, etc.) após cadastro de exercícios e diversas submissões.
-
-=== Testes com Client do Django ===
-
-   * Login
+   * Consultas diversas sobre os modelos do BD
 
 === Testes On-Line ===
 
