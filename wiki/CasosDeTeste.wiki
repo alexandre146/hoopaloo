@@ -26,7 +26,12 @@ Os testes "on-line" são os testes realizados no próprio sistema, simulando sit
    *Resultado obtido: página de login do hoopaloo com mensagem de erro ("Invalid Acess")
 ==== Cenário 27 ====
    * Ator: professor (superusuário)
-   * Página: atribuição de alunos a tutores
+   * Página: atribuição de alunos a tutores==== Cenário 28 ====
+   * Ator: professor (superusuário)
+   * Página:  atribuição de alunos a tutores
+   * Ação: submeter o cadastro com apenas uma atribuição
+   * Resultado esperado: atribuição efetuada com sucesso e mensagem ("The assign students to assistant(s) was done sucessfully.")
+   * Resultado obtido:  atribuição efetuada com sucesso e mensagem ("The assign students to assistant(s) was done sucessfully.")
    * Ação: submeter o cadastro com o campo vazio
    * Resultado esperado: mensagem de erro ("This field is required.")
    * Resultado obtido: BUG#2: página de erro (Server Error (500))
@@ -39,7 +44,12 @@ Os testes "on-line" são os testes realizados no próprio sistema, simulando sit
    * Ação: submeter o cadastro com o campo vazio
    * Resultado esperado: mensagem de erro ("This field is required.")
    * Resultado obtido: BUG#2: página de erro (Server Error (500))
-   * Resultado esperado: página de login do hoopaloo com mensagem de erro ("Invalid Acess")
+   * Resultado esperado: página de login do hoopaloo com mensagem de erro ("Invalid Acess")==== Cenário 28 ====
+   * Ator: professor (superusuário)
+   * Página:  atribuição de alunos a tutores
+   * Ação: submeter o cadastro com apenas uma atribuição
+   * Resultado esperado: atribuição efetuada com sucesso e mensagem ("The assign students to assistant(s) was done sucessfully.")
+   * Resultado obtido:  atribuição efetuada com sucesso e mensagem ("The assign students to assistant(s) was done sucessfully.")
    * Resultado obtido: página de login do hoopaloo com mensagem de erro ("Invalid Acess")
 
 ==== Cenário 3 ====
@@ -65,7 +75,12 @@ Os testes "on-line" são os testes realizados no próprio sistema, simulando sit
 
 ==== Cenário 6 ====
    * Ator: professor (superusuário)
-   * Página: página inicial de professor (tabela com todos os alunos da turma daquele professor)
+   * Página: página inicial de professor (tabela com todos os alunos da turma daquele professor)==== Cenário 28 ====
+   * Ator: professor (superusuário)
+   * Página:  atribuição de alunos a tutores
+   * Ação: submeter o cadastro com apenas uma atribuição
+   * Resultado esperado: atribuição efetuada com sucesso e mensagem ("The assign students to assistant(s) was done sucessfully.")
+   * Resultado obtido:  atribuição efetuada com sucesso e mensagem ("The assign students to assistant(s) was done sucessfully.")
    * Ação: clicar no link "Register Students" no menu Users
    * Resultado esperado: redirecionamento para a páginpágina inicial do usuárioa de cadastro de alunos
    * Resultado obtido: redirecionamento para a página de cadastro de alunos
@@ -85,7 +100,12 @@ Os testes "on-line" são os testes realizados no próprio sistema, simulando sit
    * Resultado obtido: redirecionamento para a página de atribuição de alunos a tutores
 
 ==== Cenário 9 ====
+   * Ator: professor (superusuário)==== Cenário 28 ====
    * Ator: professor (superusuário)
+   * Página:  atribuição de alunos a tutores
+   * Ação: submeter o cadastro com apenas uma atribuição
+   * Resultado esperado: atribuição efetuada com sucesso e mensagem ("The assign students to assistant(s) was done sucessfully.")
+   * Resultado obtido:  atribuição efetuada com sucesso e mensagem ("The assign students to assistant(s) was done sucessfully.")
    * Página: página inicial de professor (tabela com todos os alunos da turma daquele professor)
    * Ação: clicar no link "Assign Students to Assistants" no menu Users
    * Resultado esperado: redirecionamento para a página de atribuição de alunos a tutores
@@ -114,7 +134,12 @@ Os testes "on-line" são os testes realizados no próprio sistema, simulando sit
 
 ==== Cenário 12 ====
    * Ator: professor (superusuário)
-   * Página: página inicial de professor (tabela com todos os alunos da turma daquele professor)
+   * Página: página inicial de professor (tabela com todos os alunos da turma daquele professor)==== Cenário 28 ====
+   * Ator: professor (superusuário)
+   * Página:  atribuição de alunos a tutores
+   * Ação: submeter o cadastro com apenas uma atribuição
+   * Resultado esperado: atribuição efetuada com sucesso e mensagem ("The assign students to assistant(s) was done sucessfully.")
+   * Resultado obtido:  atribuição efetuada com sucesso e mensagem ("The assign students to assistant(s) was done sucessfully.")
    * Ação: clicar no link "List Exercises" no menu Exercise
    * Resultado esperado: redirecionamento para a página que lista todos os exercícios
    * Resultado obtido: redirecionamento para a página que lista todos os exercícios
@@ -148,7 +173,12 @@ Os testes "on-line" são os testes realizados no próprio sistema, simulando sit
    * Resultado obtido: redirecionamento para a página de mudança de senha
 
 ==== Cenário 17 ====
+   * Ator: professor (superusuário)==== Cenário 28 ====
    * Ator: professor (superusuário)
+   * Página:  atribuição de alunos a tutores
+   * Ação: submeter o cadastro com apenas uma atribuição
+   * Resultado esperado: atribuição efetuada com sucesso e mensagem ("The assign students to assistant(s) was done sucessfully.")
+   * Resultado obtido:  atribuição efetuada com sucesso e mensagem ("The assign students to assistant(s) was done sucessfully.")
    * Página: página de mudança de senha
    * Ação: inserir uma nova senha
    * Resultado esperado: redirecionamento para a pagina de login informando que a senha foi alterada
@@ -186,7 +216,12 @@ Os testes "on-line" são os testes realizados no próprio sistema, simulando sit
    * Página: atribuição de alunos a tutores
    * Ação: submeter o cadastro com o campo vazio
    * Resultado esperado: mensagem de erro ("This field is required.")
-   * Resultado obtido: BUG#2: página de erro (Server Error (500))
+   * Resultado obtido: BUG#2: página de erro (Server Error (500))==== Cenário 28 ====
+   * Ator: professor (superusuário)
+   * Página:  atribuição de alunos a tutores
+   * Ação: submeter o cadastro com apenas uma atribuição
+   * Resultado esperado: atribuição efetuada com sucesso e mensagem ("The assign students to assistant(s) was done sucessfully.")
+   * Resultado obtido:  atribuição efetuada com sucesso e mensagem ("The assign students to assistant(s) was done sucessfully.")
    * Resultado esperado: cadastro efetuado com sucesso e mensagem ("The students were added successfully."), email enviado para o usuário cadastrado
    * Resultado obtido:  cadastro efetuado com sucesso e mensagem ("The students were added successfully."), email enviado para o usuário cadastrado
 
@@ -222,7 +257,12 @@ Os testes "on-line" são os testes realizados no próprio sistema, simulando sit
    * Ator: professor (superusuário)
    * Página: cadastro de tutores
    * Ação: submeter o cadastro com varios tutores, todos corretos
-   * Resultado esperado: cadastro efetuado com sucesso e mensagem ("The assistants were added successfully."), email enviado para os usuários cadastrados
+   * Resultado esperado: cadastro efetuado com sucesso e mensagem ("The assistants were added successfully."), email enviado para os usuários cadastrados==== Cenário 28 ====
+   * Ator: professor (superusuário)
+   * Página:  atribuição de alunos a tutores
+   * Ação: submeter o cadastro com apenas uma atribuição
+   * Resultado esperado: atribuição efetuada com sucesso e mensagem ("The assign students to assistant(s) was done sucessfully.")
+   * Resultado obtido:  atribuição efetuada com sucesso e mensagem ("The assign students to assistant(s) was done sucessfully.")
    * Resultado obtido:  cadastro efetuado com sucesso e mensagem ("The assistants were added successfully."), email enviado para os usuários cadastrados
 
 ==== Cenário 26 ====
@@ -238,3 +278,10 @@ Os testes "on-line" são os testes realizados no próprio sistema, simulando sit
    * Ação: submeter o cadastro com o campo vazio
    * Resultado esperado: mensagem de erro ("This field is required.")
    * Resultado obtido: BUG#2: página de erro (Server Error (500)) </font>
+
+==== Cenário 28 ====
+   * Ator: professor (superusuário)
+   * Página:  atribuição de alunos a tutores
+   * Ação: submeter o cadastro com apenas uma atribuição
+   * Resultado esperado: atribuição efetuada com sucesso e mensagem ("The assign students to assistant(s) was done sucessfully.")
+   * Resultado obtido:  atribuição efetuada com sucesso e mensagem ("The assign students to assistant(s) was done sucessfully.")
