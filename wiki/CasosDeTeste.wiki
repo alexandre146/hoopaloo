@@ -137,7 +137,7 @@ Os testes "on-line" são os testes realizados no próprio sistema, simulando sit
    * Resultado esperado: redirecionamento para a página de mudança de senha
    * Resultado obtido: redirecionamento para a página de mudança de senha
 
-<font color='blue'> ==== Cenário 17 ====
+==== Cenário 17 ====
    * Ator: professor (superusuário)
    * Página: página de mudança de senha
    * Ação: inserir uma nova senha
@@ -152,7 +152,7 @@ Os testes "on-line" são os testes realizados no próprio sistema, simulando sit
    * Página: login
    * Ação: inserir a senha nova
    * Resultado esperado: página inicial do usuário
-   * Resultado obtido: página inicial do usuário </font>
+   * Resultado obtido: página inicial do usuário
 
 ==== Cenário 18 ====
    * Ator: professor (superusuário)
@@ -160,3 +160,59 @@ Os testes "on-line" são os testes realizados no próprio sistema, simulando sit
    * Ação: clicar no link "Logout" no menu principal
    * Resultado esperado: redirecionamento para a página de login com a mensagem de logout ("You are unlogged")
    * Resultado obtido: redirecionamento para a página de login com a mensagem de logout ("You are unlogged")
+
+==== Cenário 19 ====
+   * Ator: professor (superusuário)
+   * Página: cadastro de alunos
+   * Ação: submeter o cadastro com o campo vazio
+   * Resultado esperado: mensagem de erro ("This field is required.")
+   * Resultado obtido: mensagem de erro ("This field is required.")
+
+==== Cenário 20 ====
+   * Ator: professor (superusuário)
+   * Página: cadastro de alunos
+   * Ação: submeter o cadastro com apenas um aluno
+   * Resultado esperado: cadastro efetuado com sucesso e mensagem ("The students were added successfully."), email enviado para o usuário cadastrado
+   * Resultado obtido:  cadastro efetuado com sucesso e mensagem ("The students were added successfully."), email enviado para o usuário cadastrado
+
+==== Cenário 21 ====
+   * Ator: professor (superusuário)
+   * Página: cadastro de alunos
+   * Ação: submeter o cadastro com varios alunos, todos corretos
+   * Resultado esperado: cadastro efetuado com sucesso e mensagem ("The students were added successfully."), email enviado para os usuários cadastrados
+   * Resultado obtido:  cadastro efetuado com sucesso e mensagem ("The students were added successfully."), email enviado para os usuários cadastrados
+
+==== Cenário 22 ====
+   * Ator: professor (superusuário)
+   * Página: cadastro de alunos
+   * Ação: submeter o cadastro com varios alunos, alguns incorretos
+   * Resultado esperado: cadastro efetuado com sucesso e mensagem ("The students bellow are not registered. Review usernames, studentID and emails for them."), email enviado para os usuários cadastrados
+   * Resultado obtido:  cadastro efetuado com sucesso, mas mensagem ("The students bellow are not registered. Review usernames, studentID and emails for them."), email enviado para os usuários cadastrados e permanece no campo os alunos que não foram registrados
+
+==== Cenário 23 ====
+   * Ator: professor (superusuário)
+   * Página: cadastro de tutores
+   * Ação: submeter o cadastro com o campo vazio
+   * Resultado esperado: mensagem de erro ("This field is required.")
+   * Resultado obtido: mensagem de erro ("This field is required.")
+
+==== Cenário 24 ====
+   * Ator: professor (superusuário)
+   * Página: cadastro de tutores
+   * Ação: submeter o cadastro com apenas um tutor
+   * Resultado esperado: cadastro efetuado com sucesso e mensagem ("The assistants were added successfully."), email enviado para o usuário cadastrado
+   * Resultado obtido:  cadastro efetuado com sucesso e mensagem ("The assistants were added successfully."), email enviado para o usuário cadastrado
+
+==== Cenário 25 ====
+   * Ator: professor (superusuário)
+   * Página: cadastro de tutores
+   * Ação: submeter o cadastro com varios tutores, todos corretos
+   * Resultado esperado: cadastro efetuado com sucesso e mensagem ("The assistants were added successfully."), email enviado para os usuários cadastrados
+   * Resultado obtido:  cadastro efetuado com sucesso e mensagem ("The assistants were added successfully."), email enviado para os usuários cadastrados
+
+==== Cenário 26 ====
+   * Ator: professor (superusuário)
+   * Página: cadastro de tutores
+   * Ação: submeter o cadastro com varios tutores, alguns incorretos
+   * Resultado esperado: cadastro efetuado com sucesso e mensagem ("The assistants bellow are not registered. Review usernames, studentID and emails for them."), email enviado para os usuários cadastrados
+   * Resultado obtido:  cadastro efetuado com sucesso, mas mensagem ("The assistants bellow are not registered. Review usernames, studentID and emails for them."), email enviado para os usuários cadastrados e permanece no campo os alunos que não foram registrados
