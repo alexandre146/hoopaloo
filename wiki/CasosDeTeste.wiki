@@ -21,6 +21,7 @@ Os testes "on-line" são os testes realizados no próprio sistema, simulando sit
 ==== Cenário 1 ====
    * Ator: qualquer usuário
    * Página: login 
+
    * Ação: Digitar o login incorretamente
    *Resultado esperado: página de login do hoopaloo com mensagem de erro ("Invalid Acess")
    *Resultado obtido: página de login do hoopaloo com mensagem de erro ("Invalid Acess")
@@ -48,6 +49,7 @@ Os testes "on-line" são os testes realizados no próprio sistema, simulando sit
 ==== Cenário 3 ====
    * Ator: professor (superusuário)
    * Página: página inicial de professor (tabela com todos os alunos da turma daquele professor)
+
    * Ação: clicar no link "Register Students" no menu Users
    * Resultado esperado: redirecionamento par
 
@@ -107,7 +109,7 @@ Os testes "on-line" são os testes realizados no próprio sistema, simulando sit
    * Resultado esperado: redirecionamento para a pagina de login informando que a senha foi alterada
    * Resultado obtido: redirecionamento para a pagina de login informando que a senha foi alterada
 
-   * Página: loginpágina inicial do usuário
+   * Página: login página inicial do usuário
    * Ação: inserir a senha antiga
    * Resultado esperado: página de login do hoopaloo com mensagem de erro ("Invalid Acess")
    * Resultado obtido: página de login do hoopaloo com mensagem de erro ("Invalid Acess")
@@ -228,9 +230,11 @@ Os testes "on-line" são os testes realizados no próprio sistema, simulando sit
    * Ação: Habilitar um exercicio que estava desabilitado clicando em uma checkbox na coluna "Unable/Enable Availability"
    * Resultado esperado: redirecionamento para página de confirmação
    * Resultado obtido: redirecionamento para página de confirmação
+   
    * Ação: confirmar operação
    * Resultado esperado: mensagem "The exercise was updated sucessfully. Please, check the deadline to this exercise."
    * Resultado obtido: mensagem "The exercise was updated sucessfully. Please, check the deadline to this exercise."
+
    * Ação: clicar em "Back to list exercises"
    * Resultado esperado: redirecionamento para página que lista os exercícios e exercício modificado
    * Resultado obtido: redirecionamento para página que lista os exercícios e exercício modificado
@@ -238,9 +242,11 @@ Os testes "on-line" são os testes realizados no próprio sistema, simulando sit
    * Ação: Desabilitar um exercicio que estava habilitado clicando em uma checkbox na coluna "Unable/Enable Availability"
    * Resultado esperado: redirecionamento para página de confirmação
    * Resultado obtido: redirecionamento para página de confirmação
+
    * Ação: confirmar operação
    * Resultado esperado: mensagem "The exercise was updated sucessfully. Please, check the deadline to this exercise."
    * Resultado obtido: mensagem "The exercise was updated sucessfully. Please, check the deadline to this exercise."
+
    * Ação: clicar em "Back to list exercises"
    * Resultado esperado: redirecionamento para página que lista os exercícios e exercício modificado
    * Resultado obtido: redirecionamento para página que lista os exercícios e exercício modificado
@@ -248,6 +254,7 @@ Os testes "on-line" são os testes realizados no próprio sistema, simulando sit
    * Ação: Habilitar/desabilitar um exercicio que estava desabilitado/habilitado clicando em uma checkbox na coluna "Unable/Enable Availability"
    * Resultado esperado: redirecionamento para página de confirmação
    * Resultado obtido: redirecionamento para página de confirmação
+
    * Ação: clicar em "Back to list exercises"
    * Resultado esperado: redirecionamento para página que lista os exercícios e exercício não modificado
    * Resultado obtido: redirecionamento para página que lista os exercícios e exercício não modificado
@@ -255,12 +262,15 @@ Os testes "on-line" são os testes realizados no próprio sistema, simulando sit
    * Ação: clicar no botão "Delete" referente a um exercício na lista
    * Resultado esperado: redirecionamento para página de confirmação
    * Resultado obtido: redirecionamento para página de confirmação
+
    * Ação: confirmar operação
    * Resultado esperado: mensagem The exercise was deleted sucessfully.
    * Resultado obtido: mensagem The exercise was deleted sucessfully.
+
    * Ação: clicar em "Back to list exercises"
    * Resultado esperado: redirecionamento para página que lista os exercícios e exercício não mais presente na lista
    * Resultado obtido: redirecionamento para página que lista os exercícios e exercício não mais presente na lista
+
    * Ação: clicar no botão "Delete" referente a um exercício na lista
    * Resultado esperado: redirecionamento para página de confirmação
    * Resultado obtido: redirecionamento para página de confirmação
