@@ -25,122 +25,84 @@ Os testes "on-line" são os testes realizados no próprio sistema, simulando sit
    *Resultado esperado: página de login do hoopaloo com mensagem de erro ("Invalid Acess")
    *Resultado obtido: página de login do hoopaloo com mensagem de erro ("Invalid Acess")
 
-==== Cenário 2 ==== 
-   * Ator: qualquer usuário
-   * Página: login
    * Ação: Digitar a senha incorretamente
    * Resultado esperado: página de login do hoopaloo com mensagem de erro ("Invalid Acess")
    * Resultado obtido: página de login do hoopaloo com mensagem de erro ("Invalid Acess")
 
-==== Cenário 3 ====
-   * Ator: qualquer usuário
-   * Página: login
    * Ação: Digitar login e senha corretamente
    * Resultado esperado: página inicial do usuário
    * Resultado obtido: página inicial do usuário
 
-==== Cenário 4 ====
-   * Ator: qualquer usuário
-   * Página: login
    * Ação: Usuário esqueceu a senha e clica em "Forgot your password?"
    * Resultado esperado: página que pede o email
    * Resultado obtido: página que pede o email
 
-==== Cenário 5 ====
+==== Cenário 2 ====
    * Ator: qualquer usuário
    * Página: forgot password
-   * Ação: Usuário informa email
+   
+   * <font color='red'>Ação: Usuário informa email
    * Resultado esperado: mensagem ("Please check your email. If you did not receive any message, check your spam folder.") e que chegue um email em sua caixa de emails
-   * Resultado obtido: mensagem ("Please check your email. If you did not receive any message, check your spam folder.") e BUG#1: o email não é enviado.
+   * Resultado obtido: mensagem ("Please check your email. If you did not receive any message, check your spam folder.") e BUG#1: o email não é enviado. CORRIGIDO!!!!!!</font>
 
-==== Cenário 6 ====
-   * Ator: professor (superusuário)página de login do hoopaloo com mensagem de erro ("Invalid Acess")
+==== Cenário 3 ====
+   * Ator: professor (superusuário)
    * Página: página inicial de professor (tabela com todos os alunos da turma daquele professor)
    * Ação: clicar no link "Register Students" no menu Users
-   * Resultado esperado: redirecionamento para a páginpágina inicial do usuárioa de cadastro de alunos
-   * Resultado obtido: redirecionamento para a página de cadastro de alunos
+   * Resultado esperado: redirecionamento par
 
-==== Cenário 7 ====
-   * Ator: professor (superusuário)
-   * Página: página inicial de professor (tabela com todos os alunos da turma daquele professor)
    * Ação: clicar no link "Register Assistants" no menu Users
    * Resultado esperado: redirecionamento para a página de cadastro de tutores
-   * Resultado obtido: redirecionamento para a página de cadastro de tutores
-
-==== Cenário 8 ====
-   * Ator: professor (superusuário)
-   * Página: página inicial de professor (tabela com todos os alunos da turma daquele professor)
+   * resultado obtido: redirecionamento para a página de cadastro de tutores
+   
    * Ação: clicar no link "Assign Students to Assistants" no menu Users
    * Resultado esperado: redirecionamento para a página de atribuição de alunos a tutores
    * Resultado obtido: redirecionamento para a página de atribuição de alunos a tutores
 
-==== Cenário 9 ====
-   * Ator: professor (superusuário)
-   * Página: página inicial de professor (tabela com todos os alunos da turma daquele professor)
    * Ação: clicar no link "Assign Students to Assistants" no menu Users
    * Resultado esperado: redirecionamento para a página de atribuição de alunos a tutores
    * Resultado obtido: redirecionamento para a página de atribuição de alunos a tutores
 
-==== Cenário 10 ====
-   * Ator: professor (superusuário)
-   * Página: página inicial de professor (tabela com todos os alunos da turma daquele professor)
    * Ação: clicar no link "User Details" no menu Users
    * Resultado esperado: redirecionamento para a página de visualização de  informações dos usuários (email ultima vez que logou, username, data de cadastro)
    * Resultado obtido: redirecionamento para a página de visualização de  informações dos usuários (email ultima vez que logou, username, data de cadastro)
-* 
-==== Cenário 10 ====
-   * Ator: professor (superusuário)
-   * Página: página inicial de professor (tabela com todos os alunos da turma daquele professor)
+
    * Ação: clicar no link "Actions Log of System" no menu Users
    * Resultado esperado: redirecionamento para a página que contém as últimas 100 ações dos usuários no hoopaloo
    * Resultado obtido: redirecionamento para a página que contém as últimas 100 ações dos usuários no hoopaloo
 
-==== Cenário 11 ====
-   * Ator: professor (superusuário)
-   * Página: página inicial de professor página inicial do usuário(tabela com todos os alunos da turma daquele professor)
    * Ação: clicar no link "New Exercise" no menu Exercise
    * Resultado esperado: redirecionamento para a página de cadastro de exercício
    * Resultado obtido: redirecionamento para a página de cadastro de exercício
 
-==== Cenário 12 ====
-   * Ator: professor (superusuário)
-   * Página: página inicial de professor (tabela com todos os alunos da turma daquele professor)
    * Ação: clicar no link "List Exercises" no menu Exercise
    * Resultado esperado: redirecionamento para a página que lista todos os exercícios
    * Resultado obtido: redirecionamento para a página que lista todos os exercícios
 
-==== Cenário 13 ====
-   * Ator: professor (superusuário)
-   * Página: página inicial de professor (tabela com todos os alunos da turma daquele professor)BBUGUG
    * Ação: clicar no link "List Tests" no menu Exercise
    * Resultado esperado: redirecionamento parlista todos os alunos cadastradosa a página que lista todos os testes referentes aos exercícios cadastrados
    * Resultado obtido: redirecionamento para a página que lista todos os testes referentes aos exercícios cadastrados
 
-==== Cenário 14 ====
-   * Ator: professor (superusuário)BUGBUGBUG
-   * Página: página inicial de professor (tabela com todos os alunos da turma daquele professor)
    * Ação: clicar no link "All Students" no menu Views
    * Resultado esperado: redirecionamento para a página que lista todos os alunos cadastrados
    * Resultado obtido: redirecionamento para a página que lista todos os alunos cadastrados
 
-==== Cenário 15 ====
-   * Ator: professor (superusuário)
-   * Página: página inicial de professor (tabela com todos os alunos da turma daquele professor)
    * Ação: clicar no link "Assistants - Students" no menu Views
-   * Resultado esperado: redirecionamento para a página que lista as associações entre tutores e BUGalunos
+   * Resultado esperado: redirecionamento para a página que lista as associações entre tutores e alunos
    * Resultado obtido: redirecionamento para a página que lista as associações entre tutores e alunos
 
-==== Cenário 16 ====
-   * Ator: professor (superusuário)
-   * Página: página inicial de professor (tabela com todos os alunos da turma daquele professor)BUG
    * Ação: clicar no link "Change Password" no menu principal
    * Resultado esperado: redirecionamento para a página de mudança de senha
    * Resultado obtido: redirecionamento para a página de mudança de senha
 
-==== Cenário 17 ====
-   * Ator: professor (superusuário)
+   * Ação: clicar no link "Logout" no menu principal
+   * Resultado esperado: redirecionamento para a página de login com a mensagem de logout ("You are unlogged")
+   * Resultado obtido: redirecionamento para a página de login com a mensagem de logout ("You are unlogged")
 
+==== Cenário 4 ====
+   * Ator: professor (superusuário)
    * Página: página de mudança de senha
+   
    * Ação: inserir uma nova senha
    * Resultado esperado: redirecionamento para a pagina de login informando que a senha foi alterada
    * Resultado obtido: redirecionamento para a pagina de login informando que a senha foi alterada
@@ -155,94 +117,186 @@ Os testes "on-line" são os testes realizados no próprio sistema, simulando sit
    * Resultado esperado: página inicial do usuário
    * Resultado obtido: página inicial do usuário
 
-==== Cenário 18 ====
-   * Ator: professor (superusuário)
-   * Página: página inicial de professor (tabela com todos os alunos da turma daquele professor)
-   * Ação: clicar no link "Logout" no menu principal
-   * Resultado esperado: redirecionamento para a página de login com a mensagem de logout ("You are unlogged")
-   * Resultado obtido: redirecionamento para a página de login com a mensagem de logout ("You are unlogged")
-
-==== Cenário 19 ====
+==== Cenário 5 ====
    * Ator: professor (superusuário)
    * Página: cadastro de alunos
+   
    * Ação: submeter o cadastro com o campo vazio
    * Resultado esperado: mensagem de erro ("This field is required.")
    * Resultado obtido: mensagem de erro ("This field is required.")
 
-==== Cenário 20 ====
-   * Ator: professor (superusuário)
-   * Página: cadastro de alunos
    * Ação: submeter o cadastro com apenas um aluno
    * Resultado esperado: cadastro efetuado com sucesso e mensagem ("The students were added successfully."), email enviado para o usuário cadastrado
    * Resultado obtido:  cadastro efetuado com sucesso e mensagem ("The students were added successfully."), email enviado para o usuário cadastrado
 
-==== Cenário 21 ====
-   * Ator: professor (superusuário)
-   * Página: cadastro de alunos
    * Ação: submeter o cadastro com varios alunos, todos corretos
    * Resultado esperado: cadastro efetuado com sucesso e mensagem ("The students were added successfully."), email enviado para os usuários cadastrados
    * Resultado obtido:  cadastro efetuado com sucesso e mensagem ("The students were added successfully."), email enviado para os usuários cadastrados
 
-==== Cenário 22 ====
-   * Ator: professor (superusuário)
-   * Página: cadastro de alunos
    * Ação: submeter o cadastro com varios alunos, alguns incorretos
    * Resultado esperado: cadastro efetuado com sucesso e mensagem ("The students bellow are not registered. Review usernames, studentID and emails for them."), email enviado para os usuários cadastrados e permanece no campo os alunos que não foram registrados
    * Resultado obtido:  cadastro efetuado com sucesso, mas mensagem ("The students bellow are not registered. Review usernames, studentID and emails for them."), email enviado para os usuários cadastrados e permanece no campo os alunos que não foram registrados
 
-==== Cenário 23 ====
-   * Ator: professor (superusuário)
-   * Página: cadastro de tutores
    * Ação: submeter o cadastro com o campo vazio
    * Resultado esperado: mensagem de erro ("This field is required.")
    * Resultado obtido: mensagem de erro ("This field is required.")
 
-==== Cenário 24 ====
+==== Cenário 6 ====
    * Ator: professor (superusuário)
    * Página: cadastro de tutores
+   
+   * Ação: submeter o cadastro com o campo vazio
+   * Resultado esperado: mensagem de erro ("This field is required.")
+   * Resultado obtido: mensagem de erro ("This field is required.")
+
    * Ação: submeter o cadastro com apenas um tutor
    * Resultado esperado: cadastro efetuado com sucesso e mensagem ("The assistants were added successfully."), email enviado para o usuário cadastrado
    * Resultado obtido:  cadastro efetuado com sucesso e mensagem ("The assistants were added successfully."), email enviado para o usuário cadastrado
 
-==== Cenário 25 ====
-   * Ator: professor (superusuário)
-   * Página: cadastro de tutores
    * Ação: submeter o cadastro com varios tutores, todos corretos
    * Resultado esperado: cadastro efetuado com sucesso e mensagem ("The assistants were added successfully."), email enviado para os usuários cadastrados
    * Resultado obtido:  cadastro efetuado com sucesso e mensagem ("The assistants were added successfully."), email enviado para os usuários cadastrados
 
-==== Cenário 26 ====
-   * Ator: professor (superusuário)
-   * Página: cadastro de tutores
    * Ação: submeter o cadastro com varios tutores, alguns incorretos
    * Resultado esperado: cadastro efetuado com sucesso e mensagem ("The assistants bellow are not registered. Review usernames, studentID and emails for them."), email enviado para os usuários cadastrados e permanece no campo os tutores que não foram registrados
    * Resultado obtido:  cadastro efetuado com sucesso, mas mensagem ("The assistants bellow are not registered. Review usernames, studentID and emails for them."), email enviado para os usuários cadastrados e permanece no campo os tutores que não foram registrados
 
-==== Cenário 27 ====
+==== Cenário 7 ====
    * Ator: professor (superusuário)
    * Página: atribuição de alunos a tutores
-   * Ação: submeter o cadastro com o campo vazio
+   
+   * <font color='red'>Ação: submeter o cadastro com o campo vazio
    * Resultado esperado: mensagem de erro ("This field is required.")
-   * Resultado obtido: BUG#2: página de erro (Server Error (500))
+   * Resultado obtido: BUG#2: página de erro (Server Error (500)) CORRIGIDO!!!! </font>
 
-
-==== Cenário 28 ====
-   * Ator: professor (superusuário)
-   * Página:  atribuição de alunos a tutores
    * Ação: submeter o cadastro com apenas uma atribuição
    * Resultado esperado: atribuição efetuada com sucesso e mensagem ("The assign students to assistant(s) was done sucessfully.")
    * Resultado obtido:  atribuição efetuada com sucesso e mensagem ("The assign students to assistant(s) was done sucessfully.")
 
-==== Cenário 29 ====
-   * Ator: professor (superusuário)
-   * Página:  atribuição de alunos a tutores
    * Ação: submeter o cadastro com varias atribuições, todas corretas
    * Resultado esperado: atribuição efetuada com sucesso e mensagem ("The assign students to assistant(s) was done sucessfully.")
    * Resultado obtido:  atribuição efetuada com sucesso e mensagem ("The assign students to assistant(s) was done sucessfully.")
 
-==== Cenário 30 ====
-   * Ator: professor (superusuário)
-   * Página:  atribuição de alunos a tutores
    * Ação: submeter o cadastro com varias atribuições, algumas incorretas
    * Resultado esperado: algumas atribuições efetuadas com sucesso,mas mensagem ("Review the assigns students to assistant(s) bellow. See usernames with attention.") e permanece no campo as atribuições que não foram registrados
    * Resultado obtido:  algumas atribuições com sucesso, mas mensagem ("Review the assigns students to assistant(s) bellow. See usernames with attention." e permanece no campo as atribuições que não foram registrados
+
+==== Cenário 8 ====
+   * Ator: professor (superusuário)
+   * Página: página de visualização de  informações dos usuários
+   
+   * Ação: deletar algum usuário
+   * Resultado esperado: redirecionamento para página com confirmação
+   * Resultado obtido: redirecionamento para página com confirmação
+
+==== Cenário 9 ====
+   * Ator: professor (superusuário)
+   * Página: página de cadastro de exercício
+   
+   * Ação: cadastrar um exercicio corretamente
+   * Resultado esperado: mensagem "The exercise was added sucessfully. If you want edit the default test to this exercise click on link "Exercises > List Tests" and edit it."
+   * Resultado obtido: mensagem "The exercise was added sucessfully. If you want edit the default test to this exercise click on link "Exercises > List Tests" and edit it."   
+   
+   * Ação: cadastrar um exercicio faltando nome
+   * Resultado esperado: mensagem de erro "Some error exists in your form."
+   * Resultado obtido: mensagem de erro "Some error exists in your form."
+   
+   * Ação: cadastrar um exercicio faltando data
+   * Resultado esperado: mensagem de erro "Review the date."
+   * Resultado obtido: mensagem de erro "Review the date."
+   
+   * Ação: cadastrar um exercicio faltando descrição
+   * Resultado esperado: mensagem "The exercise was added sucessfully. If you want edit the default test to this exercise click on link "Exercises > List Tests" and edit it."
+   * Resultado obtido: mensagem "The exercise was added sucessfully. If you want edit the default test to this exercise click on link "Exercises > List Tests" and edit it."
+   
+   * Ação: cadastrar um exercicio indisponivel
+   * Resultado esperado: mensagem "The exercise was added sucessfully. If you want edit the default test to this exercise click on link "Exercises > List Tests" and edit it."
+   * Resultado obtido: mensagem "The exercise was added sucessfully. If you want edit the default test to this exercise click on link "Exercises > List Tests" and edit it."
+   
+   * Ação: cadastrar um exercicio com o nome de um exercicio que já existe
+   * Resultado esperado: mensagem de erro 'An exercise with the same name already exists.'
+   * Resultado obtido: mensagem de erro 'An exercise with the same name already exists.'
+   
+==== Cenário 10 ====
+   * Ator: professor (superusuário)
+   * Página: lista de exercícios
+   
+   * Ação: Clicar no nome de um exercício
+   * Resultado esperado: redirecionamento para página com uma visão mais detalhada do exercício
+   * Resultado obtido: redirecionamento para página com uma visão mais detalhada do exercício
+   
+   * Ação: Habilitar um exercicio que estava desabilitado clicando em uma checkbox na coluna "Unable/Enable Availability"
+   * Resultado esperado: redirecionamento para página de confirmação
+   * Resultado obtido: redirecionamento para página de confirmação
+   * Ação: confirmar operação
+   * Resultado esperado: mensagem "The exercise was updated sucessfully. Please, check the deadline to this exercise."
+   * Resultado obtido: mensagem "The exercise was updated sucessfully. Please, check the deadline to this exercise."
+   * Ação: clicar em "Back to list exercises"
+   * Resultado esperado: redirecionamento para página que lista os exercícios e exercício modificado
+   * Resultado obtido: redirecionamento para página que lista os exercícios e exercício modificado
+   
+   * Ação: Desabilitar um exercicio que estava habilitado clicando em uma checkbox na coluna "Unable/Enable Availability"
+   * Resultado esperado: redirecionamento para página de confirmação
+   * Resultado obtido: redirecionamento para página de confirmação
+   * Ação: confirmar operação
+   * Resultado esperado: mensagem "The exercise was updated sucessfully. Please, check the deadline to this exercise."
+   * Resultado obtido: mensagem "The exercise was updated sucessfully. Please, check the deadline to this exercise."
+   * Ação: clicar em "Back to list exercises"
+   * Resultado esperado: redirecionamento para página que lista os exercícios e exercício modificado
+   * Resultado obtido: redirecionamento para página que lista os exercícios e exercício modificado
+   
+   * Ação: Habilitar/desabilitar um exercicio que estava desabilitado/habilitado clicando em uma checkbox na coluna "Unable/Enable Availability"
+   * Resultado esperado: redirecionamento para página de confirmação
+   * Resultado obtido: redirecionamento para página de confirmação
+   * Ação: clicar em "Back to list exercises"
+   * Resultado esperado: redirecionamento para página que lista os exercícios e exercício não modificado
+   * Resultado obtido: redirecionamento para página que lista os exercícios e exercício não modificado
+   
+   * Ação: clicar no botão "Delete" referente a um exercício na lista
+   * Resultado esperado: redirecionamento para página de confirmação
+   * Resultado obtido: redirecionamento para página de confirmação
+   * Ação: confirmar operação
+   * Resultado esperado: mensagem The exercise was deleted sucessfully.
+   * Resultado obtido: mensagem The exercise was deleted sucessfully.
+   * Ação: clicar em "Back to list exercises"
+   * Resultado esperado: redirecionamento para página que lista os exercícios e exercício não mais presente na lista
+   * Resultado obtido: redirecionamento para página que lista os exercícios e exercício não mais presente na lista
+   * Ação: clicar no botão "Delete" referente a um exercício na lista
+   * Resultado esperado: redirecionamento para página de confirmação
+   * Resultado obtido: redirecionamento para página de confirmação
+   
+   * Ação: clicar em "Back to list exercises"
+   * Resultado esperado: redirecionamento para página que lista os exercícios e exercício não deletado
+   * Resultado obtido: redirecionamento para página que lista os exercícios e exercício não deletado
+   
+==== Cenário 11 ==== 
+   * Ator: professor (superusuário)
+   * Página: visão detalhada de um exercício
+   
+   * Ação: clicar no botão "Edit this exercise"
+   * Resultado esperado: redirecionamento para a página de edição
+   * Resultado obtido: redirecionamento para a página de edição
+
+   * Ação: não alterar nada e clicar no botão "Change Exercise"
+   * Resultado esperado: redirecionamento para a página com visão detalhada de um exercício sem nenhuma alteração
+   * Resultado obtido: redirecionamento para a página com  visão detalhada de um exercício sem nenhuma alteração
+   
+   * Ação: editar o nome do exercício e clicar no botão "Change Exercise"
+   * Resultado esperado: redirecionamento para a página com visão detalhada de um exercício com nome modificado
+   * Resultado obtido: redirecionamento para a página com  visão detalhada de um exercício com nome modificado
+   
+   * Ação: editar a descrição do exercício e clicar no botão "Change Exercise"
+   * Resultado esperado: redirecionamento para a página com visão detalhada de um exercício com descrição modificada
+   * Resultado obtido: redirecionamento para a página com  visão detalhada de um exercício com descrição modificada
+   
+   * Ação: editar a disponibilidade do exercício e clicar no botão "Change Exercise"
+   * Resultado esperado: redirecionamento para a página com visão detalhada de um exercício com disponibilidade modificada
+   * Resultado obtido: redirecionamento para a página com  visão detalhada de um exercício com disponibilidade modificada
+   
+   * Ação: editar a data do exercício e clicar no botão "Change Exercise"
+   * Resultado esperado: redirecionamento para a página com visão detalhada de um exercício com data modificada
+   * Resultado obtido: redirecionamento para a página com  visão detalhada de um exercício com data modificada
+
+   * Ação: alterar todos os dados e clicar no botão "Change Exercise"
+   * Resultado esperado: redirecionamento para a página com visão detalhada de um exercício com todas as alterações
+   * Resultado obtido: redirecionamento para a página com  visão detalhada de um exercício com todas as alterações
