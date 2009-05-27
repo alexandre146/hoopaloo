@@ -485,3 +485,113 @@ Os testes "on-line" são os testes realizados no próprio sistema, simulando sit
    * <font color='red'>Ação: clicar em qualquer link do menu a partir dessa página
    * Resultado esperado: redirecionamento para a página indicada pelo link
    * Resultado obtido: BUG#5: Page not found (links quebrados) </font>
+
+==== Cenário 15 ====
+   * Ator: professor ou tutor
+   * Página: página que lista todos os testes (List Test no menu Exercise)
+   
+   * Ação: clicar no nome de um teste
+   * Resultado esperado: abrir uma nova página com uma visão do teste para aquela questão, incluindo o código
+   * Resultado obtido: abrir uma nova página com uma visão do teste para aquela questão, incluindo o código
+
+   * Página: lista de todos os testes (voltar para página anterior)
+   * Ação: clicar no link "Edit it" para algum teste
+   * Resultado esperado: redirecionamento para página de edição do teste
+   * Resultado obtido: redirecionamento para página de edição do teste
+   
+   * Ação: não editar nada e voltar para a página anterior
+   * Resultado esperado: nenhuma alteração na lista de teste (teste ainda unlocked)
+   * Resultado obtido: nenhuma alteração na lista de teste (teste ainda unlocked)
+   
+   * Ação: clicar no link "Edit it" para algum teste
+   * Resultado esperado: redirecionamento para página de edição do teste
+   * Resultado obtido: redirecionamento para página de edição do teste
+   
+   * Ação: não editar nada, mas clicar no botão "Save Test As Under Test"
+   * Resultado esperado: redirecionamento para uma página com todas as submissões para a questão relativa ao teste editado, mensagem "The test under test was added sucessfullty. Choose the student submissions to execute."
+   * Resultado obtido: redirecionamento para uma página com todas as submissões para a questão relativa ao teste editado, mensagem "The test under test was added sucessfullty. Choose the student submissions to execute."
+   
+   * Ação: voltar 2 páginas
+   * Resultado esperado: alteração na lista de teste (teste editado agora está locked - Locked by <fulano>), uma nova tabela "Under Tests", que possui o teste que acabou de ser supostamente editado
+   * Resultado obtido: alteração na lista de teste (teste editado agora está locked - Locked by <fulano>), uma nova tabela "Under Tests", que possui o teste que acabou de ser supostamente editado
+   
+   * Ação: clicar em "Edit it" para um teste qualquer cujo exercício já possua submissões
+   * Resultado esperado: redirecionamento para página de edição do teste
+   * Resultado obtido: redirecionamento para página de edição do teste
+	
+   * Ação: realmente editar o código do teste (lembrar de fazer o import do módulo de solução) e clicar o botão "Save As Under Test"
+   * Resultado esperado: redirecionamento para uma página com todas as submissões para a questão relativa ao teste editado, mensagem "The test under test was added sucessfullty. Choose the student submissions to execute."
+   * Resultado obtido: redirecionamento para uma página com todas as submissões para a questão relativa ao teste editado, mensagem "The test under test was added sucessfullty. Choose the student submissions to execute."
+   
+   * Ação: escolher/marcar uma (ou mais) submissão (submissões) e clicar no botão "Run Test" 
+   * Resultado esperado: redirecionamento para página com os resultados da exercução do teste editado sobre a submissão (ou submissões) escolhida(s)
+   * Resultado obtido: redirecionamento para página com os resultados da exercução do teste editado sobre a submissão (ou submissões) escolhida(s)
+   
+   * Página: página com resultados temporários (obtida no passo anterior)
+   * Ação: clicar no botão "Back to Edit"
+   * Resultado esperado: redirecionamento para a página de edição do teste
+   * Resultado obtido: redirecionamento para a página de edição do teste
+   
+   * Ação: não alterar nada (apenas por simplicidade, para voltar à págian de resultados temporários) e clicar em "Save Test Under Test"
+   * Resultado esperado: redirecionamento para uma página com todas as submissões para a questão relativa ao teste editado, mensagem "The test under test was added sucessfullty. Choose the student submissions to execute."
+   * Resultado obtido: redirecionamento para uma página com todas as submissões para a questão relativa ao teste editado, mensagem "The test under test was added sucessfullty. Choose the student submissions to execute."
+
+   * Ação: escolher/marcar uma (ou mais) submissão (submissões) e clicar no botão "Run Test" 
+   * Resultado esperado: redirecionamento para página com os resultados da exercução do teste editado sobre a submissão (ou submissões) escolhida(s)
+   * Resultado obtido: redirecionamento para página com os resultados da exercução do teste editado sobre a submissão (ou submissões) escolhida(s)
+
+   * Ação: clicar no botão "Cancel"
+   * Resultado esperado: redirecionamento para a página de visão do teste
+   * Resultado obtido:  redirecionamento para a página de visão do teste
+   
+   * <font color='red'>Ação: clicar em qualquer link do menu a partir dessa página
+   * Resultado esperado: redirecionamento para a página indicada pelo link
+   * Resultado obtido: BUG#4: Page not found (links quebrados)  </font>
+   
+   * Ação: chegar até a página de resultados temporários novamente e clicar no botão "Consolidate Test"
+   * Resultado esperado: redirecionamento para a página de visão de teste já com o código alterado
+   * Resultado obtido:  redirecionamento para a página de visão de teste já com o código alterado
+   
+   * <font color='red'>Ação: clicar em qualquer link do menu a partir dessa página
+   * Resultado esperado: redirecionamento para a página indicada pelo link
+   * Resultado obtido: BUG#5: Page not found (links quebrados) </font>
+   
+==== Cenário 16 ====
+   * Ator: professor ou tutor
+   * Página: lista de exercicios
+   
+   * Ação: clicar no nome do exercício
+   * Resultado esperado: redirecionamento para página com uma visão mais detalhada do exercício, dessa vez com uma tabela de resultados e dois links que vão dar uma visão do percentual de testes acertados eplos alunos e das notas obtidas
+   * Resultado obtido: redirecionamento para página com uma visão mais detalhada do exercício, dessa vez com uma tabela de resultados e dois links que vão dar uma visão do percentual de testes acertados eplos alunos e das notas obtidas
+   
+   * Página: página inicial ou visão dos alunos
+   * Ação: clicar no link "Exercises of <Nome do aluno>"
+   * Resultado esperado: redirecionamento para uma página contendo uma tabela com resultado sumarizados sobre as submissões do aluno
+   * Resultado obtido:  redirecionamento para uma página contendo uma tabela com resultado sumarizados sobre as submissões do aluno
+   
+   * Ação: clicar no nome de algum exercício
+   * Resultado esperado: visualização dados sobre a questão e sobre a submissão do aluno (nome do aluno, enunciado da questão, número de testes, número de erros, mensagens de erro, código do aluno)
+   * Resultado obtido: visualização dados sobre a questão e sobre a submissão do aluno (nome do aluno, enunciado da questão, número de testes, número de erros, mensagens de erro, código do aluno)
+
+   * Ação: inserir comentário e/ou nota para aquela submissão
+   * Resultado esperado: mensagem "ADD_COMMENT_SCORE_SUCESS"
+   * Resultado obtido: BUG#5: Server Error (500) CORRIGIDO
+   
+   * Ação: clicar no link "Logout" no menu principal
+   * Resultado esperado: redirecionamento para a página de login com a mensagem de logout ("You are unlogged")
+   * Resultado obtido: redirecionamento para a página de login com a mensagem de logout ("You are unlogged")
+  
+   * Ator: aluno
+   * Página: página de login
+   
+   * Ação: realizar login
+   * Resultado esperado: redirecionamento para a página inicial de aluno (lista as submissões já realizadas pelo aluno)
+   * Resultado obtido: redirecionamento para a página inicial de aluno (lista as submissões já realizadas pelo aluno)
+   
+   * Ação: clicar no link "Views Code"
+   * Resultado esperado: opção de salvar o código
+   * Resultado obtido: opção de salvar o código WARNING#2: Colocar um nome no arquivo que vai se salvo
+   
+   * Ação: clicar no nome da questão
+   * Resultado esperado: redirecionamento para a página de vsão da submissão (enunciado da questão, número de testes, núemro de erros, mensagens de erro, comnetários e nota, além do código)
+   * resiltado obtido: redirecionamento para a página de vsão da submissão (enunciado da questão, número de testes, núemro de erros, mensagens de erro, comnetários e nota, além do código)
