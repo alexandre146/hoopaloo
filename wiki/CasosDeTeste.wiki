@@ -397,3 +397,21 @@ Os testes "on-line" são os testes realizados no próprio sistema, simulando sit
    * <font color='red'>Ação: clicar no nome no aluno
    * Resultado esperado: ver uma lista das submissões dos alunos (assim como eles vêem)
    * Resultado obtido: BUG#3: página de erro (Page not found) </font>
+
+   * Ação: clicar no link "Exercises of <Nome do aluno>"
+   * Resultado esperado: redirecionamento para uma página contendo uma tabela com resultado sumárizados sobre as submissões do aluno
+   * Resultado obtido:  redirecionamento para uma página contendo uma tabela com resultado sumárizados sobre as submissões do aluno
+   
+   * Página: Exercises of <Nome do aluno> (página obtida no passo anterior)
+   * Ação: clicar no nome do exercício
+   * Resultado esperado: visualização dados sobre a questão e sobre a submissão do aluno (nome do aluno, enunciado da questão, número de testes, número de erros, mensagens de erro, código do aluno)
+   * Resultado obtido: visualização dados sobre a questão e sobre a submissão do aluno (nome do aluno, enunciado da questão, número de testes, número de erros, mensagens de erro, código do aluno)
+   
+   * Ação: clicar no link "See Code of the Test" logo abaixo do código do aluno
+   * Resultado esperado: abrir uma nova página com uma visão do teste para aquela questão, incluindo o código
+   * Resultado obtido: abrir uma nova página com uma visão do teste para aquela questão, incluindo o código
+   
+   * Página: Exercises of <Nome do aluno> (voltar para a página anterior)
+   * Ação: clicar no link "Code"
+   * Resultado esperado: baixar o arquivo do aluno
+   * Resultado obtido: baixar o arquivo do aluno <font color='yellow'> WARNING#1: Dar um jeito de nomear o arquivo porque ele salva com um nome dado pelo browser</font>
