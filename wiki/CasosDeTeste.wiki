@@ -366,3 +366,34 @@ Os testes "on-line" são os testes realizados no próprio sistema, simulando sit
    * Ação: clicar no link "Logout" no menu principal
    * Resultado esperado: redirecionamento para a página de login com a mensagem de logout ("You are unlogged")
    * Resultado obtido: redirecionamento para a página de login com a mensagem de logout ("You are unlogged")
+
+==== Cenário 14 ====
+   * Ator: aluno
+   * Página: página de submissões
+   
+   * Ação: Fazer upload corretamente de um arquivo para um exercício
+   * Resultado esperado: mensagem de sucesso "Your program was updated sucessfully. Check your code submission in table bellow.", mensagem de sucesso nos testes (nenhum teste registrado ainda para o exercício) "Your program passed in all tests (0 tests)." e apresentação do arquivo submetido na lista de submissões já realizadas
+   * Resultado obtido: mensagem de sucesso "Your program was updated sucessfully. Check your code submission in table bellow.", mensagem de sucesso nos testes (nenhum teste registrado ainda para o exercício) "Your program passed in all tests (0 tests)." e apresentação do arquivo submetido na lista de submissões já realizadas
+   
+   * Ação: clicar em "See Submisisons" no menu Submissions
+   * Resultado esperado: redirecionar para a página que mostra a lista das submissões já realizadas, incluindo a realizada agora
+   * Resultado obtido: redirecionar para a página que mostra a lista das submissões já realizadas, incluindo a realizada agora
+   
+   * Ação: clicar no link "Logout" no menu principal
+   * Resultado esperado: redirecionamento para a página de login com a mensagem de logout ("You are unlogged")
+   * Resultado obtido: redirecionamento para a página de login com a mensagem de logout ("You are unlogged")
+   
+   * Ator: professor ou tutor
+   * Página: login
+   
+   * Ação: fazer login
+   * Resultado esperado: página inicial de professor ou tutor
+   * Resultado obtido: página inicial de professor ou tutor
+   
+   * Ação: ver a tabela de informações sobre os alunos na página inicial
+   * Resultado esperado: visualização do número 1 no número de submissões do aluno que estava logado anteriormente
+   * Resultado obtido: visualização do número 1 no número de submissões do aluno que estava logado anteriormente
+   
+   * <font color='red'>Ação: clicar no nome no aluno
+   * Resultado esperado: ver uma lista das submissões dos alunos (assim como eles vêem)
+   * Resultado obtido: BUG#3: página de erro (Page not found) </font>
