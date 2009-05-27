@@ -414,4 +414,4 @@ Os testes "on-line" são os testes realizados no próprio sistema, simulando sit
    * Página: Exercises of <Nome do aluno> (voltar para a página anterior)
    * Ação: clicar no link "Code"
    * Resultado esperado: baixar o arquivo do aluno
-   * Resultado obtido: baixar o arquivo do aluno <font color='yellow'> WARNING#1: Dar um jeito de nomear o arquivo porque ele salva com um nome dado pelo browser</font>
+   * Resultado obtido: baixar o arquivo do aluno <font color='green'> WARNING#1: Dar um jeito de nomear o arquivo porque ele salva com um nome dado pelo browser</font>
