@@ -310,3 +310,59 @@ Os testes "on-line" são os testes realizados no próprio sistema, simulando sit
    * Ação: alterar todos os dados e clicar no botão "Change Exercise"
    * Resultado esperado: redirecionamento para a página com visão detalhada de um exercício com todas as alterações
    * Resultado obtido: redirecionamento para a página com  visão detalhada de um exercício com todas as alterações
+
+==== Cenário 12 ====
+   * Ator: aluno
+   * Página: login
+   
+   * Ação: realizar primeiro login (1º acesso ao Hoopaloo)
+   * Resultado esperado: redirecionamento para a página de mudança de senha 
+   * Resultado obtido: redirecionamento para a página de mudança de senha 
+   
+   * Ação: mudar a senha
+   * Resultado esperado: redirecionamento para a página de login com a mensagem "Your password was changed."
+   * Resultado obtido: redirecionamento para a página de login com a mensagem "Your password was changed."
+   
+   * Ação: fazer login
+   * Resultado esperado: redirecionamento para a página inicial de aluno (lista as submissões já realizadas pelo aluno), nesse caso a lista está vazia
+   * Resultado obtido: redirecionamento para a página inicial de aluno (lista as submissões já realizadas pelo aluno), nesse caso a lista está vazia
+   
+==== Cenário 13 ====
+   * Ator: aluno
+   * Página: página inciial de aluno
+
+   * Ação: clicar em "Change Password" no menu principal
+   * Resultado esperado: redirecionamento para página de mudança de senha
+   * Resultado obtido:  redirecionamento para página de mudança de senha
+   
+   * Ação: alterar a senha
+   * Resultado esperado: redirecionamento para página de login com a mensagem "Your password was changed."
+   * Resultado obtido:  redirecionamento para página de login com a mensagem "Your password was changed."
+   
+   * Ação: fazer login com a nova senha
+   * Resultado esperado: redirecionamento para a página inicial de aluno (lista as submissões já realizadas pelo aluno)
+   * Resultado obtido: redirecionamento para a página inicial de aluno (lista as submissões já realizadas pelo aluno)
+   
+   * Ação: clicar em "Delivered Exercises" no menu Exercises
+   * Resultado esperado: redirecionar para a página que mostra os exercícios já entregues pelo aluno
+   * Resultado obtido: 
+   
+   * Ação: clicar em "Undelivered Exercises" no menu Exercises
+   * Resultado esperado: redirecionar para a página que mostra os exercícios não entregues pelo aluno
+   * Resultado obtido: redirecionar para a página que mostra os exercícios não entregues pelo aluno
+   
+   * Ação: clicar em "Available Exercises" no menu Exercises
+   * Resultado esperado: redirecionar para a página que mostra os exercícios disponíveis para entrega
+   * Resultado obtido: redirecionar para a página que mostra os exercícios disponíveis para entrega
+   
+   * Ação: clicar em "Submit" no menu Submissions
+   * Resultado esperado: redirecionar para a página de submissões, que possui o campo para fazer upload e uma lista das submissões já realizadas
+   * Resultado obtido: redirecionar para a página de submissões, que possui o campo para fazer upload e uma lista das submissões já realizadas
+   
+   * Ação: clicar em "See Submisisons" no menu Submissions
+   * Resultado esperado: redirecionar para a página que mostra a lista das submissões já realizadas
+   * Resultado obtido: redirecionar para a página que mostra a lista das submissões já realizadas
+   
+   * Ação: clicar no link "Logout" no menu principal
+   * Resultado esperado: redirecionamento para a página de login com a mensagem de logout ("You are unlogged")
+   * Resultado obtido: redirecionamento para a página de login com a mensagem de logout ("You are unlogged")
