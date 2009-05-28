@@ -521,7 +521,7 @@ Os testes "on-line" são os testes realizados no próprio sistema, simulando sit
    
    * Ação: clicar no link "Views Code"
    * Resultado esperado: opção de salvar o código
-   * Resultado obtido: opção de salvar o código WARNING#2: Colocar um nome no arquivo que vai se salvo
+   * Resultado obtido: opção de salvar o código <font color='green'>WARNING#2: Colocar um nome no arquivo que vai se salvo </font>
    
    * Ação: clicar no nome da questão
    * Resultado esperado: redirecionamento para a página de vsão da submissão (enunciado da questão, número de testes, núemro de erros, mensagens de erro, comnetários e nota, além do código)
