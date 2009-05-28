@@ -233,17 +233,17 @@ class ForgotPasswordForm(forms.Form):
 class AssignStudentsForm(forms.Form):
 	"""Form to register assigns between assistants and students."""
 	
-	assigns = forms.Field(widget=forms.Textarea({'cols': '50', 'rows': '15'}), required=True)
+	assigns = forms.Field(widget=forms.Textarea({'cols': '60', 'rows': '15'}), required=True)
 	
 	def save(self, new_data):
+		errors = []
+		result = dict()
 		assigns = new_data.POST['assigns'].split('\r\n')
-		
 		for a in assigns:
 			line = a.split()
 			assistant = line[0]
 			students = line[1:]
 			str_students = []
-			errors = []
 			
 			for s in students:
 				try:
@@ -259,15 +259,15 @@ class AssignStudentsForm(forms.Form):
 				str_students.append(str(s)) 
 			register_action(new_data.user, configuration.LOG_ASSIGN_STUDENTS % (assistant, str_students))
 		
-		result = dict()
 		if len(errors) != 0:
 			result['assigns'] = listToString(errors)
-		return result
-				
+		
+		return result	
+					
 class RegisterAssistantForm(forms.Form):
 	"""Register a new assistant and add him to the system"""
 
-	assistants = forms.Field(widget=forms.Textarea({'cols': '50', 'rows': '15'}), required=True)
+	assistants = forms.Field(widget=forms.Textarea({'cols': '90', 'rows': '18'}), required=True)
 	
 	# This method receives an object 'request.POST' and gets its informations.
 	# Makes the validation of username and passowrd and save the new teacher in database
@@ -287,9 +287,11 @@ class RegisterAssistantForm(forms.Form):
 					name = ''
 					for n in info[2:]:
 						name += str(n)+' '
-						
+					
+					print isValidUsername(username)
+					print isValidEmail(email)
+					
 					if (isValidUsername(username) and isValidEmail(email)):
-		
 						pwd = generate_aleatory_password()
 						u = User.objects.create_user(username, email, pwd)
 						u.first_name = info[2]
@@ -307,7 +309,7 @@ class RegisterAssistantForm(forms.Form):
 						
 						msg = configuration.PASSWORD_EMAIL % (smart_str(username), smart_str(pwd))
 						subject = "Welcome to Hoopaloo"
-						send_email(u.email, subject, msg)
+						#send_email(u.email, subject, msg)
 					else:
 						assistants_err.append(str(assistant))
 					
@@ -325,7 +327,7 @@ class RegisterAssistantForm(forms.Form):
 class RegisterStudentForm(forms.Form):
 	"""Register a new student and add him to the system"""
 	
-	students = forms.Field(widget=forms.Textarea({'cols': '80', 'rows': '20'}), required=True)
+	students = forms.Field(widget=forms.Textarea({'cols': '100', 'rows': '30'}), required=True)
 
 	# This method receives an object 'request.POST' and gets its informations.
 	# Makes the validation of username and password and save the new student in database
@@ -339,40 +341,40 @@ class RegisterStudentForm(forms.Form):
 		for student in students:
 			if (student != '' and student != ' '):
 				info = student.split()
-				#try:
-				matr = info[0]
-				username = info[1]
-				email = info[2]
-				_class = info[3]
-				name = ''
-				for n in info[4:]:
-					name += str(n)+' '
-				if (isValidUsername(username) and isValidEmail(email) and isValidStudentID(matr)):
-					pwd = generate_aleatory_password()
-					u = User.objects.create_user(username, email, pwd)
-					u.first_name = info[4]
-					if (u.first_name != info[len(info)-1]):
-						u.last_name = info[len(info)-1]
-					u.is_active = True
-					u.issuperuser = False
-					u.is_staff = False
-					u.user_permissions.add(37, 54, 55)
-					u.save()
-					st = Student().create_student(u, username, int(matr), str(_class))
-					st.save()
+				try:
+					matr = info[0]
+					username = info[1]
+					email = info[2]
+					_class = info[3]
+					name = ''
+					for n in info[4:]:
+						name += str(n)+' '
+					if (isValidUsername(username) and isValidEmail(email) and isValidStudentID(matr)):
+						pwd = generate_aleatory_password()
+						u = User.objects.create_user(username, email, pwd)
+						u.first_name = info[4]
+						if (u.first_name != info[len(info)-1]):
+							u.last_name = info[len(info)-1]
+						u.is_active = True
+						u.issuperuser = False
+						u.is_staff = False
+						u.user_permissions.add(37, 54, 55)
+						u.save()
+						st = Student().create_student(u, username, int(matr), str(_class))
+						st.save()
+						
+						util.copy_test_files(st)
+						register_action(new_data.user, configuration.LOG_ADD_STUDENT % st.username)
 					
-					util.copy_test_files(st)
-					register_action(new_data.user, configuration.LOG_ADD_STUDENT % st.username)
-				
-					msg = configuration.PASSWORD_EMAIL % (smart_str(username), smart_str(pwd))
-					subject = "Welcome to Hoopaloo"
+						msg = configuration.PASSWORD_EMAIL % (smart_str(username), smart_str(pwd))
+						subject = "Welcome to Hoopaloo"
+						
+						#send_email(u.email, subject, msg)
 					
-					send_email(u.email, subject, msg)
-				
-				else:
-					students_err.append(str(student))
-				#except:
-						#students_err.append(str(student))
+					else:
+						students_err.append(str(student))
+				except:
+						students_err.append(str(student))
 			else:
 				count+=1
 		if count == len(students):

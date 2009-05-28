@@ -25,15 +25,18 @@ def register_assistant(request):
 		if request.user.has_perm("hoopaloo_test.add_assistant"):
 			if request.method == 'POST':
 				form = RegisterAssistantForm(request.POST)
-				errors = form.save(request)
-				if (len(errors)==0):
-					form = RegisterAssistantForm()
-					msg = configuration.ASSISTANT_ADD_SUCESS
-					return render_to_response("register_assistant.html", {'form':form, 'msg':msg, 'is_assistant': util.is_assistant(request.user),}, context_instance=RequestContext(request))
+				if form.is_valid():
+					errors = form.save(request)
+					if len(errors) == 0:
+						form = RegisterAssistantForm()
+						msg = configuration.ASSISTANT_ADD_SUCESS
+						return render_to_response("register_assistant.html", {'form':form, 'msg':msg, 'is_assistant': util.is_assistant(request.user),}, context_instance=RequestContext(request))
+					else:
+						error = configuration.ASSISTANT_ADD_ERROR
+						form = RegisterAssistantForm(errors)
+						return render_to_response("register_assistant.html", {'form' : form, 'error':error, 'is_assistant': util.is_assistant(request.user),}, context_instance=RequestContext(request))
 				else:
-					error = configuration.ASSISTANT_ADD_ERROR
-					form = RegisterAssistantForm(errors)
-					return render_to_response("register_assistant.html", {'form' : form, 'error':error, 'is_assistant': util.is_assistant(request.user),}, context_instance=RequestContext(request))
+					return render_to_response("register_student.html", {'form' : form, 'is_assistant': util.is_assistant(request.user),}, context_instance=RequestContext(request))
 			else:
 				form = RegisterAssistantForm()
 				return render_to_response("register_assistant.html", {'form' : form, 'is_assistant': util.is_assistant(request.user),}, context_instance=RequestContext(request))
@@ -64,8 +67,7 @@ def register_student(request):
 						form = RegisterStudentForm(errors)
 						return render_to_response("register_student.html", {'form' : form, 'error':error, 'is_assistant': util.is_assistant(request.user),}, context_instance=RequestContext(request))
 				else:
-					error = configuration.STUDENT_ADD_ERROR
-					return render_to_response("register_student.html", {'form' : form, 'error':error, 'is_assistant': util.is_assistant(request.user),}, context_instance=RequestContext(request))
+					return render_to_response("register_student.html", {'form' : form, 'is_assistant': util.is_assistant(request.user),}, context_instance=RequestContext(request))
 			else:
 				form = RegisterStudentForm()
 				return render_to_response("register_student.html", {'form' : form, 'is_assistant': util.is_assistant(request.user),}, context_instance=RequestContext(request))
@@ -126,7 +128,7 @@ def delete_user(request, user_id):
 		form = LoginForm()
 		return render_to_response("login.html", {'form' : form}, context_instance=RequestContext(request))
 
-# ------------------------------------------------- ASSIGN STUDENTS TO ASSISTANTS -------------------------------------------------------- #
+# ------------------- ASSIGN STUDENTS TO ASSISTANTS ----------------------- #
 def assign_students(request):
 	"""Assign students to assistants."""
 	
@@ -134,15 +136,18 @@ def assign_students(request):
 		if request.user.has_perm("hoopaloo_test.assign_student"):
 			if request.method == 'POST':
 				form = AssignStudentsForm(request.POST)
-				errors = form.save(request)
-				if (len(errors)==0):
-					form = AssignStudentsForm()
-					msg = configuration.ASSIGN_SUCESS
-					return render_to_response("assign_students.html", {'form':form, 'msg':msg, 'is_assistant': util.is_assistant(request.user),}, context_instance=RequestContext(request))
+				if form.is_valid():
+					errors = form.save(request)
+					if len(errors) == 0:
+						form = AssignStudentsForm()
+						msg = configuration.ASSIGN_SUCESS
+						return render_to_response("assign_students.html", {'form':form, 'msg':msg, 'is_assistant': util.is_assistant(request.user),}, context_instance=RequestContext(request))
+					else:
+						error = configuration.REVIEW_ASSIGN
+						form = AssignStudentsForm(errors)
+						return render_to_response("assign_students.html", {'form' : form, 'error':error, 'is_assistant': util.is_assistant(request.user),}, context_instance=RequestContext(request))
 				else:
-					error = configuration.REVIEW_ASSIGN
-					form = AssignStudentsForm(errors)
-					return render_to_response("assign_students.html", {'form' : form, 'error':error, 'is_assistant': util.is_assistant(request.user),}, context_instance=RequestContext(request))
+					return render_to_response("assign_students.html", {'form' : form, 'is_assistant': util.is_assistant(request.user),}, context_instance=RequestContext(request))
 			else:
 				form = AssignStudentsForm()
 				return render_to_response("assign_students.html", {'form' : form, 'is_assistant': util.is_assistant(request.user),}, context_instance=RequestContext(request))

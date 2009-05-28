@@ -13,6 +13,7 @@ from datetime import date, datetime, timedelta
 from django.contrib.auth.models import User
 from django.conf import settings
 from django.core.mail import send_mail
+from django.utils.encoding import smart_str
 import configuration
 import queries
 
@@ -38,30 +39,42 @@ def send_email(email_to, subject, message):
 	smtpserver = configuration.SMTP_SERVER
 	servidor.connect(smtpserver,25)
 	text = "From: %s\nTo: %s\nSubject: %s\n%s" % (msg['From'], msg['To'], msg['Subject'], msg['Message'])
+	
+	print ' ==== EMAIL ===='
+	print msg['From'], msg['To'], text
 	servidor.sendmail(msg['From'], msg['To'], text)
 	servidor.quit()
 
 	
-def send_new_password(self, email, user):
+def send_new_password(email, user):
 	"""Send to the user a new password generated automatically"""
 	
 	pwd = generate_aleatory_password()
 	user.set_password(pwd)
 	new_password = user.password
-	user.save()
-	profile = user.get_profile()
-	profile.realized_login = False
-	profile.save()
 	
-	msg = configuration.FORGOT_PASSWORD_EMAIL % (smart_str(user.first_name), smart_str(pwd))
+	user.save()
+	try:
+		profile = user.get_profile()
+		profile.realized_login = False
+		profile.save()
+	except: 
+		# in this case, the user is a superuser and have not profile
+		pass
+	
+	msg = configuration.FORGOT_PASSWORD_EMAIL % (smart_str(user.first_name), smart_str(pwd))	
 	subject = "Your New Password"
 	send_email(email, subject, msg)
 		
 def listToString(list):
 	"""Converts the elements of a list in string"""
 	r = ""
+	if not list:
+		return r
+		
 	for element in list:
-		r += element + '\n'
+		if element:
+			r += str(element) + '\n'
 	return r
 	
 
@@ -332,11 +345,9 @@ def calculate_mean(exercise):
 	students = queries.get_all_students()
 	results = []
 	for st in students:
-		try:
-			last_submission = queries.get_last_submission(exercise.id, st.id)
+		last_submission = queries.get_last_submission(exercise.id, st.id)
+		if last_submission:
 			results.append(last_submission)
-		except:
-			pass
 	return mean(results)
 			
 def get_students_percent(index, id_ex):

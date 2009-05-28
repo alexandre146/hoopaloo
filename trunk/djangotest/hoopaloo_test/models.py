@@ -322,7 +322,7 @@ def pre_delete_exercise(sender, instance, signal, *args, **kwargs):
 						s.unsolved_exercises =  - 1
 			except:
 				# the student not submit a solution for this exercise
-				number = queries.get_undelivered_exercises()
+				number = queries.get_undelivered_exercises(s.id)
 				if number > 0:
 					s.undelivered_exercises = number - 1
 		

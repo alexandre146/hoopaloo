@@ -88,24 +88,12 @@ def choose_submissions(request, exercise_id):
 		exercise = queries.get_exercise(exercise_id)
 		test = queries.get_under_test(exercise_id)
 		
-		oie = open('/home/mariana/www/relogio.txt', 'wb')
 		for op in options:
 			if 'submission' + str(op.id) in request.POST:
 				student = queries.get_student(op.id_student.id)
-				
 				tester = Tester(student, test, exercise, op)
-				result = tester.execute_under_test()
-				
-				oie.write(result.student.username + '\n')
-				oie.write(str(result.num_tests)  + '\n')
-				oie.write(str(result.num_errors)  + '\n')
-				oie.write(str(result.num_failures)  + '\n')
-				oie.write(str(result.num_pass)  + '\n')
-				oie.write(str(result.log_errors))
-				oie.write('==================')
-				
+				result = tester.execute_under_test()								
 				executions_results.append(result)
-		oie.close()	
 		return render_to_response("temp_results.html", {'executions_results':executions_results, 'exercise': exercise}, context_instance=RequestContext(request))	
 			
 def test_view(request, test_id):
