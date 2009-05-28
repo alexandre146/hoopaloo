@@ -160,15 +160,16 @@ def forgot_password(request):
 		if form.is_valid():
 			e = request.POST['email']
 			try:
-				user = get_user_from_email(e)
+				user = queries.get_user_from_email(e)
 				# generate the new password and send to email
 				util.send_new_password(e, user)
 				form = LoginForm()
 				util.register_action(user, configuration.LOG_FORGOT_PASSWORD % e )
-				return render_to_response("login.html", {'form': form,}, context_instance=RequestContext(request))
+				msg = configuration.FORGOT_PASSWORD
+				return render_to_response("login.html", {'form': form, 'msg': msg}, context_instance=RequestContext(request))
 			except:
-				errors = configuration.FORGOT_PASSWORD
-				return render_to_response("forgot_password.html", {'errors': errors, 'form': form, }, context_instance=RequestContext(request))
+				msg = configuration.FORGOT_PASSWORD
+				return render_to_response("forgot_password.html", {'msg': msg, 'form': form, }, context_instance=RequestContext(request))
 		else:
 			return render_to_response("forgot_password.html", {'form': form, }, context_instance=RequestContext(request))	
 	else:

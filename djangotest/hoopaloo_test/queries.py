@@ -27,7 +27,7 @@ def get_ordered_student_submissions(student_id):
 	
 def get_number_student_submissions(exercise_id, student_id):
 	"""Return the number of submissions of a student for an exercise."""
-	return get_submissions(exercise_id, student_id).count()
+	return len(get_submissions(exercise_id, student_id))
 	
 def get_last_submission(exercise_id, student_id):
 	"""Return the last submission os a student for an exercise."""
@@ -43,7 +43,7 @@ def get_exercise_submissions(exercise_id):
 	
 def get_number_total_student_submissions(student_id):
 	"""Return the number of submissions of a student."""
-	return get_student_submissions(student_id).count()
+	return len(get_student_submissions(student_id))
 
 def get_all_submissions():
 	from hoopaloo_test.models import Submission
@@ -57,6 +57,7 @@ def get_all_last_submissions(exercise_id):
 		last_submission = get_last_submission(exercise_id, st.id)
 		results.append(last_submission)
 	return results
+
 # EXERCISES
 def get_all_exercises():
 	"""Return all exercises."""
@@ -65,7 +66,7 @@ def get_all_exercises():
 	
 def get_number_exercises():
 	"""Return the number of exercises."""
-	return get_all_exercises().count()
+	return len(get_all_exercises())
 	
 def get_exercise(exercise_id):
 	"""Return the exercise represented by exercise_id."""
@@ -104,15 +105,11 @@ def get_ordered_unavailable_exercises():
 	
 def get_number_available_exercises():
 	"""Return the number of available exercises."""
-	return get_available_exercises().count()
+	return len(get_available_exercises())
 	
 def get_number_unavailable_exercises():
 	"""Return the number of unavailable exercises."""
-	return get_unavailable_exercises().count()
-	
-def get_number_exercises():
-	"""Return the number of exercises."""
-	return get_all_exercises().count()
+	return len(get_unavailable_exercises())
 	
 def get_exercise_from_name(name_exercise):
 	"""Return an exercise from its name."""
@@ -131,7 +128,7 @@ def get_solved_exercises(student_id):
 		
 def get_number_solved_exercises(student_id):
 	"""Return the number of exercises solved by a student."""
-	return get_solved_exercises(student_id).count()
+	return len(get_solved_exercises(student_id))
 
 def get_unsolved_exercises(student_id):
 	"""Return all exercises unsolved by a student."""
@@ -145,7 +142,7 @@ def get_unsolved_exercises(student_id):
 		
 def get_number_unsolved_exercises(student_id):
 	"""Return the number of exercises unsolved by a student."""
-	return get_unsolved_exercises(student_id).count()
+	return len(get_unsolved_exercises(student_id))
 	
 def get_undelivered_exercises(student_id):
 	"""Return all undelivered exercises of a student."""
