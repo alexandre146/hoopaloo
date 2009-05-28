@@ -505,8 +505,8 @@ Os testes "on-line" são os testes realizados no próprio sistema, simulando sit
    * Resultado obtido: visualização dados sobre a questão e sobre a submissão do aluno (nome do aluno, enunciado da questão, número de testes, número de erros, mensagens de erro, código do aluno)
 
    * <font color='red'>Ação: inserir comentário e/ou nota para aquela submissão
-   * Resultado esperado: mensagem "ADD_COMMENT_SCORE_SUCESS"
-   * Resultado obtido: BUG#5: Server Error (500) CORRIGIDO </font>
+   * Resultado esperado: mensagem "Comments/score are addedd sucessfully."
+   * Resultado obtido: BUG#5: Server Error (500) CORRIGIDO!!!!!!!!!!! </font>
    
    * Ação: clicar no link "Logout" no menu principal
    * Resultado esperado: redirecionamento para a página de login com a mensagem de logout ("You are unlogged")
