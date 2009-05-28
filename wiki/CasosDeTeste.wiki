@@ -512,8 +512,8 @@ Os testes "on-line" são os testes realizados no próprio sistema, simulando sit
    * Resultado obtido: redirecionamento para uma página com todas as submissões para a questão relativa ao teste editado, mensagem "The test under test was added sucessfullty. Choose the student submissions to execute."
    
    * Ação: voltar 2 páginas
-   * Resultado esperado: alteração na lista de teste (teste editado agora está locked - Locked by <fulano>), uma nova tabela "Under Tests", que possui o teste que acabou de ser supostamente editado
-   * Resultado obtido: alteração na lista de teste (teste editado agora está locked - Locked by <fulano>), uma nova tabela "Under Tests", que possui o teste que acabou de ser supostamente editado
+   * Resultado esperado: alteração na lista de teste (teste editado agora está locked - Locked by "fulano"), uma nova tabela "Under Tests", que possui o teste que acabou de ser supostamente editado
+   * Resultado obtido: alteração na lista de teste (teste editado agora está locked - Locked by "fulano"), uma nova tabela "Under Tests", que possui o teste que acabou de ser supostamente editado
    
    * Ação: clicar em "Edit it" para um teste qualquer cujo exercício já possua submissões
    * Resultado esperado: redirecionamento para página de edição do teste
