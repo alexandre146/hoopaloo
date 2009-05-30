@@ -397,7 +397,7 @@ Os testes "on-line" são os testes realizados no próprio sistema, simulando sit
    
    * <font color='red'>Ação: clicar no nome no aluno
    * Resultado esperado: ver uma lista das submissões dos alunos (assim como eles vêem)
-   * Resultado obtido: BUG#3: página de erro (Page not found) </font>
+   * Resultado obtido: BUG#3: página de erro (Page not found) CORRIGIDO!!!</font>
 
    * Ação: clicar no link "Exercises of <Nome do aluno>"
    * Resultado esperado: redirecionamento para uma página contendo uma tabela com resultado sumárizados sobre as submissões do aluno
@@ -477,7 +477,7 @@ Os testes "on-line" são os testes realizados no próprio sistema, simulando sit
    
    * <font color='red'>Ação: clicar em qualquer link do menu a partir dessa página
    * Resultado esperado: redirecionamento para a página indicada pelo link
-   * Resultado obtido: BUG#4: Page not found (links quebrados)  </font>
+   * Resultado obtido: BUG#4: Page not found (links quebrados) CORRIGIDO!!! </font>
    
    * Ação: chegar até a página de resultados temporários novamente e clicar no botão "Consolidate Test"
    * Resultado esperado: redirecionamento para a página de visão de teste já com o código alterado
@@ -485,7 +485,7 @@ Os testes "on-line" são os testes realizados no próprio sistema, simulando sit
    
    * <font color='red'>Ação: clicar em qualquer link do menu a partir dessa página
    * Resultado esperado: redirecionamento para a página indicada pelo link
-   * Resultado obtido: BUG#5: Page not found (links quebrados) </font>
+   * Resultado obtido: BUG#5: Page not found (links quebrados) CORRIGIDO!!!</font>
    
 ==== Cenário 16 ====
    * Ator: professor ou tutor
