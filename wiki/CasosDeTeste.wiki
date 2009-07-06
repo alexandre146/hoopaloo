@@ -548,3 +548,8 @@ Reorganizar a página que o professor vê a submissão do aluno para que ele pos
 
 Colocar um botão na página de edição do teste apenas para ele cancelar a ação de editar e voltar a pagina que lista.
 Quando faz um comentario dah erro se clicar no menu, ajeitar os links.
+
+==== Relatos dos monitores ====
+Francisco Thiago
+   * "Quando estou logado como tutor, quando peço para ver os estudantes, vejo o seguinte erro: Server Error (500)" CORRIGIDO
+   * 
