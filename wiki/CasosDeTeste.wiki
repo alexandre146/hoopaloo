@@ -552,4 +552,5 @@ Quando faz um comentario dah erro se clicar no menu, ajeitar os links.
 ==== Relatos dos monitores ====
 Francisco Thiago
    * "Quando estou logado como tutor, quando peço para ver os estudantes, vejo o seguinte erro: Server Error (500)" CORRIGIDO
-   * 
+   * "erro ocorre quando tento registrar uma questão, funcionou na segunda tentativa
+;( Na realidade observei que quando uso determinados caracteres no "Título do exercício" aparece esse erro" CORRIGIDO
