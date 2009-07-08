@@ -535,6 +535,14 @@ Os testes "on-line" são os testes realizados no próprio sistema, simulando sit
    * Resultado esperado: mensagem de erro informando que a operação não foi realizada com sucesso e apresentação das linhas incorretas.
    * Resultado obtido: BUG#7: mensagem de erro informando que a operação não foi realizada com sucesso e apresentação das linhas incorretas, mas ocorreu a repetição das linhas incorretas. Por exemplo, se houvesse 3 nomes de alunos não existentes, haveria 3 repetições da linha incorreta. CORRIGIDO!!!</font>
 
+==== Cenário 18 ====
+   * Ator: professor ou tutor
+   * Página: edição de testes
+   
+   * <font color='red'>Ação: editar um teste, salvar como undertest e depois não escolher nenhuma submissão para executar e mesmo assim clicar em "Run Test"
+   * Resultado esperado: mensagem de erro avisando que ao menos uma submissão deve ser escolhida para que o testes seja executado
+   * Resultado obtido: BUG#8:  nenhuma mensagem. CORRIGIDO!!!</font>
+
 
 === Testes On-Line com Andrea (12-06) ===
 
