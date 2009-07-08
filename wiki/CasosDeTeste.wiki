@@ -552,10 +552,11 @@ Resoluções:
 
 Depois de consolidar um undertest ir para a pagina que lista os testes para evitar que a ação de voltar a pagina anterior dê problemas. Além disso, arrumar uma pagina que nao seja aquele erro 500 para as situações que em o cara voltar no browser e quiser clicar em um daqueles botoes (consolidate, cancel ou back to edit). Colocar um link na página de visualização dos testes para que o usuário possa voltar à pagina de listagem, isso evita quer ele use mto o back do browser.
 
-De alguma forma o undertest não está sendo destruido do bd e isso causa um problema na hora de executar a segunda edição. (Acho quer foi apenas na hora do teste.)
-Quando o professor não colocar mensagem de erro alternativa, não apresentar o resultado da asserção para o usuário.
+<font color='red'>De alguma forma o undertest não está sendo destruido do bd e isso causa um problema na hora de executar a segunda edição. (Acho quer foi apenas na hora do teste.) CORRIGIDO </font>
 
-Visualizar exercicio para aluno que nao tem tutor dah erro!!! Ver isso no arquivo util.py
+<font color='red'>Quando o professor não colocar mensagem de erro alternativa, não apresentar o resultado da asserção para o usuário.</font>
+
+<font color='red'>Visualizar exercicio para aluno que nao tem tutor dah erro!!! Ver isso no arquivo util.py CORRIGIDO </font>
 
 ==== Coisas a ajeitar (menos graves) ====
 
